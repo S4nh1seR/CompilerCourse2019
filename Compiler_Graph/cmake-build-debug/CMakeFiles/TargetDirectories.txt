@@ -1,0 +1,13 @@
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/CMakeFiles/Compiler_Graph.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/graph_lib/CMakeFiles/rebuild_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/graph_lib/CMakeFiles/graph_lib.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/graph_lib/CMakeFiles/edit_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/google_tests/CMakeFiles/rebuild_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/google_tests/CMakeFiles/google_tests_run.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/google_tests/CMakeFiles/edit_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/google_tests/lib/CMakeFiles/rebuild_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/google_tests/lib/CMakeFiles/gtest.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/google_tests/lib/CMakeFiles/edit_cache.dir
+/home/alexandr/CLionProjects/Compiler_Graph/cmake-build-debug/google_tests/lib/CMakeFiles/gtest_main.dir

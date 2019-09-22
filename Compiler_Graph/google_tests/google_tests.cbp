@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="google_tests"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\graph_lib\;CMake Files\google_tests\;CMake Files\google_tests\lib\;CMake Files\google_tests\lib\cmake\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/alexandr/CLionProjects/Compiler_Graph/google_tests"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="google_tests_run">
+				<Option output="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/google_tests_run" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alexandr/CLionProjects/Compiler_Graph/google_tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/graph_lib"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/include"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 google_tests_run"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="google_tests_run/fast">
+				<Option output="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/google_tests_run" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alexandr/CLionProjects/Compiler_Graph/google_tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/graph_lib"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/include"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 google_tests_run/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest">
+				<Option output="/home/alexandr/CLionProjects/Compiler_Graph/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/graph_lib"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/include"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 gtest"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest/fast">
+				<Option output="/home/alexandr/CLionProjects/Compiler_Graph/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/graph_lib"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/include"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 gtest/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest_main">
+				<Option output="/home/alexandr/CLionProjects/Compiler_Graph/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/graph_lib"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/include"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 gtest_main"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest_main/fast">
+				<Option output="/home/alexandr/CLionProjects/Compiler_Graph/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/graph_lib"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/include"/>
+					<Add directory="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 gtest_main/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/src/gtest-all.cc">
+			<Option target="gtest"/>
+		</Unit>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/src/gtest_main.cc">
+			<Option target="gtest_main"/>
+		</Unit>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/simple_test.cpp">
+			<Option target="google_tests_run"/>
+		</Unit>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/graph_lib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\graph_lib\"/>
+		</Unit>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\google_tests\"/>
+		</Unit>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\google_tests\lib\"/>
+		</Unit>
+		<Unit filename="/home/alexandr/CLionProjects/Compiler_Graph/google_tests/lib/cmake/internal_utils.cmake">
+			<Option virtualFolder="CMake Files\google_tests\lib\cmake\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

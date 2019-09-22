@@ -1,0 +1,9 @@
+digraph test_graph {
+	c;
+	d;
+	a;
+	b;
+	a -> b [label=ab]; 
+	b -> c [label=bc]; 
+	b -> d [label=bd]; 
+}
