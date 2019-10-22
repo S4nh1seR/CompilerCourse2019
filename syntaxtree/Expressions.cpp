@@ -10,5 +10,9 @@ namespace SyntaxTree {
         rightOperand(_rightOperand)
         {}
 
+    BinOpExpression::SquareBracketExpression(const ISyntaxTreeNode* _arrayOperator, const ISyntaxTreeNode* _indexOperand)
+    :   arrayOperand(_arrayOperand),
+        indexOperand(_indexOperand)
+        {}
 
 }

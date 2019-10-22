@@ -29,8 +29,8 @@ namespace SyntaxTree {
         virtual void AcceptVisitor(const IVisitor& visitor) const override { visitor.VisitNode(this); }
 
         TBinOperationType GetOperationType() const { return boType; }
-        const ISyntaxTreeNode* GetLeftOperand() const { return leftOperand; }
-        const ISyntaxTreeNode* GetRightOperand() const { return rightOperand; }
+        const ISyntaxTreeNode* GetLeftOperand() const { return leftOperand.get(); }
+        const ISyntaxTreeNode* GetRightOperand() const { return rightOperand.get(); }
 
     private:
         TBinOperationType boType;
@@ -38,5 +38,20 @@ namespace SyntaxTree {
         std::unique_ptr<ISyntaxTreeNode> leftOperand;
         std::unique_ptr<ISyntaxTreeNode> rightOperand;
     };
+
+    class SquareBracketExpression : public IExpression {
+    public:
+        SquareBracketExpression(const ISyntaxTreeNode* _arrayOperator, const ISyntaxTreeNode* _indexOperand);
+
+        virtual void AcceptVisitor(const IVisitor& visitor) const override { visitor.VisitNode(this); }
+
+        const ISyntaxTreeNode* GetArrayOperand() const { return arrayOperand.get(); }
+        const ISyntaxTreeNode* GetIndexOperand() const { return indexOperand.get(); }
+
+    private:
+        std::unique_ptr<ISyntaxTreeNode> arrayOperand;
+        std::unique_ptr<ISyntaxTreeNode> indexOperand;
+    };
+
 
 }
