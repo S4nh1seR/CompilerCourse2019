@@ -9,7 +9,7 @@ namespace SyntaxTree {
     class ISyntaxTreeNode {
     public:
         virtual ~ISyntaxTreeNode() = default;
-        virtual void AcceptVisitor(const IVisitor&) const { assert(false); }
+        virtual void AcceptVisitor(const IVisitor*) const { assert(false); }
     };
 
 }
