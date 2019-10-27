@@ -31,6 +31,11 @@ namespace SyntaxTree {
         }
     }
 
+    const IStatement* CompoundStatement::GetStatement(int index) const {
+        assert(index >= 0 && index < internalStatements.size());
+        return internalStatements[index].get();
+    }
+
     void CompoundStatement::GetAllStatements(std::vector<const IStatement*>& _internalStatements) {
         _internalStatements.clear();
         for (int i = 0; i < internalStatements.size(); ++i) {

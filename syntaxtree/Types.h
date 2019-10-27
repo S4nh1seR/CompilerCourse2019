@@ -2,6 +2,8 @@
 
 #include "Identifier.h"
 
+#include <memory>
+
 namespace SyntaxTree {
 
     class IType : public ISyntaxTreeNode {

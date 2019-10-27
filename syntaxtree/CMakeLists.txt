@@ -3,4 +3,4 @@ project(syntax_tree)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(syntax_tree STATIC Expressions.cpp Expressions.h SyntaxTreeNode.h Statements.h Statements.cpp Identifier.h Types.h)
+add_library(syntax_tree STATIC Expressions.cpp Expressions.h SyntaxTreeNode.h Statements.h Statements.cpp Identifier.h Types.h Declarations.h Declarations.cpp MainClass.h MainClass.cpp Goal.h Goal.cpp)

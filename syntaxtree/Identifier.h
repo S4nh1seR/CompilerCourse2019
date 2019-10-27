@@ -2,6 +2,8 @@
 
 #include "SyntaxTreeNode.h"
 
+#include <string>
+
 namespace SyntaxTree {
 
     class Identifier : public ISyntaxTreeNode {

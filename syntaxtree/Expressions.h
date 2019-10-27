@@ -1,10 +1,10 @@
 #pragma once
 
-#include <memory>
-#include <string>
-#include <vector>
-
 #include "Identifier.h"
+
+#include <cassert>
+#include <memory>
+#include <vector>
 
 namespace SyntaxTree {
 
@@ -88,7 +88,7 @@ namespace SyntaxTree {
 
         const IExpression* GetObjectOperand() const { return objectOperand.get(); }
         const Identifier* GetMethodIdentifier() const { return methodIdentifier.get(); }
-        const IExpression* GetArgument(int index) const { return methodArguments[index].get(); }
+        const IExpression* GetArgument(int index) const;
         void GetAllArguments(std::vector<const IExpression*>& _methodArguments);
     private:
         std::unique_ptr<IExpression> objectOperand;

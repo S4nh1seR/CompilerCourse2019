@@ -28,6 +28,11 @@ namespace SyntaxTree {
         }
     }
 
+    const IExpression* MethodCallExpression::GetArgument(int index) const {
+        assert(index >= 0 && index < methodArguments.size());
+        return methodArguments[index].get();
+    }
+
     void MethodCallExpression::GetAllArguments(std::vector<const IExpression*>& _methodArguments) {
         _methodArguments.clear();
         for (int i = 0; i < methodArguments.size(); ++i) {
