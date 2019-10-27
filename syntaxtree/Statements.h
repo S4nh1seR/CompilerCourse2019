@@ -8,7 +8,15 @@ namespace SyntaxTree {
     };
 
     class CompoundStatement : public IStatement {
-        // TODO
+    public:
+        CompoundStatement(const std::vector<const IStatement*>& _internalStatements);
+
+        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+
+        void GetAllStatements(std::vector<const IStatement*>& _internalStatements);
+
+    private:
+        std::vector<std::unique_ptr<IStatement>> internalStatements;
     };
 
     class ConditionalStatement : public IStatement {

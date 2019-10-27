@@ -24,4 +24,17 @@ namespace SyntaxTree {
         arrayIndex(std::make_unique<IExpression>(_arrayIndex)),
         rightOperand(std::make_unique<IExpression>(_rightOperand))
         {}
+
+    CompoundStatement::CompoundStatement(const std::vector<const IStatement*>& _internalStatements) {
+        for (auto _internalStatement : _internalStatements) {
+            internalStatements.emplace_back(_internalStatement);
+        }
+    }
+
+    void CompoundStatement::GetAllStatements(std::vector<const IStatement*>& _internalStatements) {
+        _internalStatements.clear();
+        for (int i = 0; i < internalStatements.size(); ++i) {
+            _internalStatements.push_back(internalStatements[i].get());
+        }
+    }
 }

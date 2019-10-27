@@ -82,7 +82,7 @@ namespace SyntaxTree {
     public:
         MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier);
         MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier,
-            std::vector<const IExpression*> _methodArguments);
+            const std::vector<const IExpression*>& _methodArguments);
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
