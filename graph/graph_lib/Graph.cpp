@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace GraphProcessing {
+namespace SyntaxTree {
 
     //-------------------GraphEdge------------------------------
 

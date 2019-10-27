@@ -1,9 +1,11 @@
+#pragma once
+
 #include <fstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-namespace GraphProcessing {
+namespace SyntaxTree {
 
     struct GraphEdge {
         GraphEdge(const std::wstring& _edgeName, const std::wstring& _fromVertexName, const std::wstring& _toVertexName);
