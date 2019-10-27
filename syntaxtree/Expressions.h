@@ -2,8 +2,9 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
-#include "SyntaxTreeNode.h"
+#include "Identifier.h"
 
 namespace SyntaxTree {
 
@@ -21,6 +22,18 @@ namespace SyntaxTree {
         BOT_And,
 
         BOT_Less
+    };
+
+    class IdentifierExpression : public IExpression {
+    public:
+        IdentifierExpression(const Identifier* _identifier): identifier(std::make_unique<Identifier>(_identifier)) {}
+
+        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+
+        const Identifier* GetIdentifier() const { return identifier.get(); }
+
+    private:
+        std::unique_ptr<Identifier> identifier;
     };
 
     class BinaryOperationExpression : public IExpression {
@@ -66,7 +79,21 @@ namespace SyntaxTree {
     };
 
     class MethodCallExpression : public IExpression {
-        // TODO
+    public:
+        MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier);
+        MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier,
+            std::vector<const IExpression*> _methodArguments);
+
+        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+
+        const IExpression* GetObjectOperand() const { return objectOperand.get(); }
+        const Identifier* GetMethodIdentifier() const { return methodIdentifier.get(); }
+        const IExpression* GetArgument(int index) const { return methodArguments[index].get(); }
+        void GetAllArguments(std::vector<const IExpression*>& _methodArguments);
+    private:
+        std::unique_ptr<IExpression> objectOperand;
+        std::unique_ptr<Identifier> methodIdentifier;
+        std::vector<std::unique_ptr<IExpression>> methodArguments;
     };
 
     class BooleanLiteralExpression : public IExpression {
@@ -91,17 +118,6 @@ namespace SyntaxTree {
         const int literalValue;
     };
 
-    class IdentifierExpression : public IExpression {
-    public:
-        IdentifierExpression(const std::wstring& _identifier): identifier(_identifier) {}
-
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
-
-        const std::wstring& GetIdentifier() const { return identifier; }
-
-    private:
-        const std::wstring identifier;
-    };
 
     class ThisExpression : public IExpression {
     public:
@@ -112,14 +128,14 @@ namespace SyntaxTree {
 
     class NewExpression : public IExpression {
     public:
-        NewExpression(const IExpression* _identifierOperand): identifierOperand(std::make_unique<IdentifierExpression>(_identifierOperand)) {}
+        NewExpression(const IExpression* _identifierOperand): identifierOperand(std::make_unique<Identifier>(_identifierOperand)) {}
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
-        const IExpression* GetIdentifierOperand() const { return identifierOperand.get(); }
+        const Identifier* GetIdentifierOperand() const { return identifierOperand.get(); }
 
     private:
-        std::unique_ptr<IdentifierExpression> identifierOperand;
+        std::unique_ptr<Identifier> identifierOperand;
     };
 
     class NewArrayExpression : public IExpression {

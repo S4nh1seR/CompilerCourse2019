@@ -14,13 +14,13 @@ namespace SyntaxTree {
         internalStatement(std::make_unique<IStatement>(_internalStatement))
         {}
 
-    AssignmentStatement::AssignmentStatement(const IdentifierExpression* _leftOperand, const IExpression* _rightOperand)
-    :   leftOperand(std::make_unique<IdentifierExpression>(_leftOperand)),
+    AssignmentStatement::AssignmentStatement(const Identifier* _leftOperand, const IExpression* _rightOperand)
+    :   leftOperand(std::make_unique<Identifier>(_leftOperand)),
         rightOperand(std::make_unique<IExpression>(_rightOperand))
         {}
 
-    ArrayAssignmentStatement::ArrayAssignmentStatement(const IdentifierExpression* _arrayIdentifier, const IExpression* _arrayIndex, const IExpression* _rightOperand)
-    :   arrayIdentifier(std::make_unique<IdentifierExpression>(_arrayIdentifier)),
+    ArrayAssignmentStatement::ArrayAssignmentStatement(const Identifier* _arrayIdentifier, const IExpression* _arrayIndex, const IExpression* _rightOperand)
+    :   arrayIdentifier(std::make_unique<Identifier>(_arrayIdentifier)),
         arrayIndex(std::make_unique<IExpression>(_arrayIndex)),
         rightOperand(std::make_unique<IExpression>(_rightOperand))
         {}

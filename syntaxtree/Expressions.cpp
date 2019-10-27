@@ -13,4 +13,25 @@ namespace SyntaxTree {
         indexOperand(std::make_unique<IExpression>(_indexOperand))
         {}
 
+    MethodCallExpression::MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier)
+    :   objectOperand(std::make_unique<IExpression>(_objectOperand)),
+        methodIdentifier(std::make_unique<Identifier>(_methodIdentifier))
+        {}
+
+    MethodCallExpression::MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier,
+        std::vector<const IExpression*> _methodArguments)
+    :   objectOperand(std::make_unique<IExpression>(_objectOperand)),
+        methodIdentifier(std::make_unique<Identifier>(_methodIdentifier))
+    {
+        for (auto _methodArgument : _methodArguments) {
+            methodArguments.emplace_back(_methodArgument);
+        }
+    }
+
+    void MethodCallExpression::GetAllArguments(std::vector<const IExpression*>& _methodArguments) {
+        _methodArguments.clear();
+        for (int i = 0; i < methodArguments.size(); ++i) {
+            _methodArguments.push_back(methodArguments[i].get());
+        }
+    }
 }
