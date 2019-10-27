@@ -53,28 +53,28 @@ namespace SyntaxTree {
     };
 
     class AssignmentStatement : public IStatement {
-        AssignmentStatement(const IdentifierExpression* _leftOperand, const IExpression* _rightOperand);
+        AssignmentStatement(const Identifier* _leftOperand, const IExpression* _rightOperand);
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
-        const IdentifierExpression* GetLeftOperand() const { return leftOperand.get(); }
+        const Identifier* GetLeftOperand() const { return leftOperand.get(); }
         const IExpression* GetRightOperand() const { return rightOperand.get(); }
 
     private:
-        std::unique_ptr<IdentifierExpression> leftOperand;
+        std::unique_ptr<Identifier> leftOperand;
         std::unique_ptr<IExpression> rightOperand;
     };
 
     class ArrayAssignmentStatement : public IStatement {
-        ArrayAssignmentStatement(const IdentifierExpression* _arrayIdentifier, const IExpression* _arrayIndex, const IExpression* _rightOperand);
+        ArrayAssignmentStatement(const Identifier* _arrayIdentifier, const IExpression* _arrayIndex, const IExpression* _rightOperand);
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
-        const IdentifierExpression* GetArrayIdentifier() const { return arrayIdentifier.get(); }
+        const Identifier* GetArrayIdentifier() const { return arrayIdentifier.get(); }
         const IExpression* GetArrayIndex() const { return arrayIndex.get(); }
         const IExpression* GetRightOperand() const { return rightOperand.get(); }
     private:
-        std::unique_ptr<IdentifierExpression> arrayIdentifier;
+        std::unique_ptr<Identifier> arrayIdentifier;
         std::unique_ptr<IExpression> arrayIndex;
         std::unique_ptr<IExpression> rightOperand;
     };
