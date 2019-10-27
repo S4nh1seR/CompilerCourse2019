@@ -2,7 +2,7 @@
 
 #include "Identifier.h"
 
-namespace SyntaxTree{
+namespace SyntaxTree {
 
     class IType : public ISyntaxTreeNode {
     };
