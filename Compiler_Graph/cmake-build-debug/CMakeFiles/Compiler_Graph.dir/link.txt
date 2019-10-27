@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/Compiler_Graph.dir/main.cpp.o  -o Compiler_Graph graph_lib/libgraph_lib.a 
