@@ -62,6 +62,7 @@ namespace SyntaxTree {
     };
 
     class AssignmentStatement : public IStatement {
+    public:
         AssignmentStatement(const Identifier* _leftOperand, const IExpression* _rightOperand);
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
@@ -75,6 +76,7 @@ namespace SyntaxTree {
     };
 
     class ArrayAssignmentStatement : public IStatement {
+    public:
         ArrayAssignmentStatement(const Identifier* _arrayIdentifier, const IExpression* _arrayIndex, const IExpression* _rightOperand);
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
