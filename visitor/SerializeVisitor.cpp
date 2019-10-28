@@ -14,62 +14,130 @@ namespace SyntaxTree {
         return toReturn;
     }
 
+    void SerializeVisitor::RoundLaunch(
+            std::shared_ptr<SyntaxTree::DirectedGraph> &_graph_ptr,
+            const SyntaxTree::ISyntaxTreeNode *_root_syntax_tree_ptr)
+    {
+        graph_ptr = _graph_ptr;
+        ptrs_queue.clear();
+        name_mapping.clear();
+        parent_mapping.clear();
+
+        ptrs_queue.push_back(_root_syntax_tree_ptr);
+        while(!ptrs_queue.empty()) {
+            std::vector<const ISyntaxTreeNode*> current_ptrs_queue;
+            current_ptrs_queue.swap(ptrs_queue);
+
+            for(auto syntaxTreeNode : current_ptrs_queue) {
+                syntaxTreeNode->AcceptVisitor(this);
+            }
+        }
+    }
+
+    void SerializeVisitor::addNoRootNodeToGraph(
+            const SyntaxTree::ISyntaxTreeNode *node,
+            const std::wstring &nodeGraphName)
+    {
+        // extract the parent of the node
+        auto parentItem = parent_mapping.find(node);
+        assert(parentItem != parent_mapping.end());
+        auto parent = parentItem->second;
+
+        // extract the parent name
+        auto parentNameItem = name_mapping.find(parent);
+        assert(parentNameItem != name_mapping.end());
+        std::wstring parentName = parentNameItem->second;
+
+        // add the node to the hashtable
+        name_mapping.insert(std::make_pair(node, nodeGraphName));
+
+        // make iT vertex and edge connecting iT and it's parent
+        graph_ptr->AddVertex(nodeGraphName);
+        graph_ptr->AddEdge(parentName, nodeGraphName);
+    }
+
+    void SerializeVisitor::bindChildrenNode(
+            const SyntaxTree::ISyntaxTreeNode *childrenNode,
+            const SyntaxTree::ISyntaxTreeNode *node,
+            bool addToQueue)
+    {
+        assert(parent_mapping.find(childrenNode) == parent_mapping.end());
+        parent_mapping.insert(std::make_pair(childrenNode, node));
+        if(addToQueue) {
+            ptrs_queue.push_back(childrenNode);
+        }
+    }
+
     void SerializeVisitor::VisitNode(const IdentifierType* identifierType)
     {
-        // extract the identifierType Node name
-        auto noConstIdentifierType = const_cast<IdentifierType*>(identifierType);
-        auto identifierTypeMapItem = ptrs_mapping.find(static_cast<ISyntaxTreeNode*>(noConstIdentifierType));
-        assert(identifierTypeMapItem != ptrs_mapping.end());
-        std::wstring identifierTypeName = identifierTypeMapItem->second;
+        // make identifierType name and add it to the graph with this name
+        std::wstring iT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.identifierTypeNode);
+        addNoRootNodeToGraph(identifierType, iT_Name);
 
-        // get identifier sub Node and associate it with an IdentifierName
-        std::wstring identifierName = makeUniqueNameAndUpdate(nodesNameUniqueMaker.identifierNode);
-        auto identifier = const_cast<Identifier*>(identifierType->GetIdentifier());
-
-        // insert the IdentifierName into the hash table
-        auto resultInsert = ptrs_mapping.insert(std::make_pair(identifier, identifierName));
-        assert(resultInsert.second);
-
-        // make new vertex and new edge in the graph
-        graph_ptr->AddVertex(identifierName);
-        graph_ptr->AddEdge(identifierTypeName, identifierName);
-
-        // recursion descent to the identifier
-        identifier->AcceptVisitor(this);
+        // bind identifierType children to it's parent and add them to in-process queue
+        bindChildrenNode(identifierType->GetIdentifier(), identifierType, true);
     }
 
     void SerializeVisitor::VisitNode(const IntArrayType* intArrayType)
     {
-        // just check that the intArrayType is presented in the hash table
-        auto noConstIntArrayType = const_cast<IntArrayType*>(intArrayType);
-        auto intArrayTypeMapItem = ptrs_mapping.find(static_cast<ISyntaxTreeNode*>(noConstIntArrayType));
-        assert(intArrayTypeMapItem != ptrs_mapping.end());
+        // make intArrayType name and add it to the graph with this name
+        std::wstring iAT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intArrayTypeNode);
+        addNoRootNodeToGraph(intArrayType, iAT_Name);
     }
 
     void SerializeVisitor::VisitNode(const BooleanType* booleanType)
     {
-        // just check that the booleanType is presented in the hash table
-        auto noConstBooleanType = const_cast<BooleanType*>( booleanType);
-        auto booleanTypeMapItem = ptrs_mapping.find(static_cast<ISyntaxTreeNode*>(noConstBooleanType));
-        assert(booleanTypeMapItem != ptrs_mapping.end());
+        // make booleanType name and add it to the graph with this name
+        std::wstring bT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.booleanTypeNode);
+        addNoRootNodeToGraph(booleanType, bT_Name);
     }
 
     void SerializeVisitor::VisitNode(const IntType* intType)
     {
-        // just check that the intType is presented in the hash table
-        auto noConstIntType = const_cast<IntType*>( intType);
-        auto intTypeMapItem = ptrs_mapping.find(static_cast<ISyntaxTreeNode*>(noConstIntType));
-        assert(intTypeMapItem != ptrs_mapping.end());
+        // make intType name and add it to the graph with this name
+        std::wstring iT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intTypeNode);
+        addNoRootNodeToGraph(intType, iT_Name);
     }
 
     void SerializeVisitor::VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement)
     {
-        // extract the identifierType Node name
-        auto noConstArrayAssignmentType = const_cast<ArrayAssignmentStatement*>(arrayAssignmentStatement);
-        auto arrayAssignmentTypeMapItem = ptrs_mapping.find(static_cast<ISyntaxTreeNode*>(noConstArrayAssignmentType));
-        assert(arrayAssignmentTypeMapItem != ptrs_mapping.end());
-        std::wstring arrayAssignmentTypeName = arrayAssignmentTypeMapItem->second;
+        // make arrayAssignmentStatement name and add it to the graph with this name
+        std::wstring aAS_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.arrayAssignmentStatementNode);
+        addNoRootNodeToGraph(arrayAssignmentStatement, aAS_Name);
 
+        // bind aAS children to aAS and add them to in-process queue
+        bindChildrenNode(arrayAssignmentStatement->GetArrayIdentifier(), arrayAssignmentStatement, true);
+        bindChildrenNode(arrayAssignmentStatement->GetArrayIndex(), arrayAssignmentStatement, true);
+        bindChildrenNode(arrayAssignmentStatement->GetRightOperand(), arrayAssignmentStatement, true);
+    }
+
+    void SerializeVisitor::VisitNode(const AssignmentStatement* assignmentStatement)
+    {
+        std::wstring aS_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.assignmentStatementNode);
+        addNoRootNodeToGraph(assignmentStatement, aS_Name);
+        bindChildrenNode(assignmentStatement->GetLeftOperand(), assignmentStatement, true);
+        bindChildrenNode(assignmentStatement->GetRightOperand(), assignmentStatement, true);
+    }
+
+    void SerializeVisitor::VisitNode(const CompoundStatement* compoundStatement)
+    {
+        std::wstring cmpS_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.compoundStatementNode);
+        addNoRootNodeToGraph(compoundStatement, cmpS_Name);
         throw NotImplementedException();
+    }
+    void SerializeVisitor::VisitNode(const ConditionalStatement* conditionalStatement)
+    {
+        std::wstring cdS_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.conditionalStatementNode);
+        addNoRootNodeToGraph(conditionalStatement, cdS_Name);
+    }
+    void SerializeVisitor::VisitNode(const LoopStatement* loopStatement)
+    {
+        std::wstring lS_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.loopStatementNode);
+        addNoRootNodeToGraph(loopStatement, lS_Name);
+    }
+    void SerializeVisitor::VisitNode(const PrintStatement* printStatement)
+    {
+        std::wstring pS_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.printStatementNode);
+        addNoRootNodeToGraph(printStatement, pS_Name);
     }
 }

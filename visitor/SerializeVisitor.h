@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <SyntaxTreeNode.h>
 #include <exception>
+#include <vector>
 
 namespace SyntaxTree  {
 
@@ -18,7 +19,9 @@ namespace SyntaxTree  {
 
     class SerializeVisitor: public IVisitor {
     public:
-        explicit SerializeVisitor(std::shared_ptr<DirectedGraph>& _graph_ptr) : graph_ptr(_graph_ptr) {}
+        SerializeVisitor() = default;
+
+        void RoundLaunch(std::shared_ptr<DirectedGraph>& _graph_ptr, const ISyntaxTreeNode* _root_syntax_tree_ptr);
 
         void VisitNode(const Identifier* identifier) override;
 
@@ -52,6 +55,11 @@ namespace SyntaxTree  {
 
         void VisitNode(const Goal* goal) override ;
         void VisitNode(const MainClass* mainClass) override ;
+
+    private:
+
+        void addNoRootNodeToGraph(const ISyntaxTreeNode* node, const std::wstring& nodeGraphName);
+        void bindChildrenNode(const ISyntaxTreeNode* childrenNode, const ISyntaxTreeNode* node, bool addToQueue);
 
     private:
 
@@ -101,8 +109,11 @@ namespace SyntaxTree  {
         std::wstring makeUniqueNameAndUpdate(CNodePrefixNumber& nodePrefixNumber);
 
     private:
-        std::shared_ptr<DirectedGraph> graph_ptr;
-        std::unordered_map<ISyntaxTreeNode*, std::wstring> ptrs_mapping;
+
+        std::shared_ptr<DirectedGraph> graph_ptr {nullptr};
+        std::vector<const ISyntaxTreeNode*> ptrs_queue;
+        std::unordered_map<const ISyntaxTreeNode*, const ISyntaxTreeNode*> parent_mapping;
+        std::unordered_map<const ISyntaxTreeNode*, const std::wstring> name_mapping;
 
     };
 }
