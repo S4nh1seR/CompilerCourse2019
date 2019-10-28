@@ -15,7 +15,7 @@ namespace SyntaxTree {
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IStatement* GetStatement(int index) const;
-        void GetAllStatements(std::vector<const IStatement*>& _internalStatements);
+        void GetAllStatements(std::vector<const IStatement*>& _internalStatements) const;
     private:
         std::vector<std::unique_ptr<IStatement>> internalStatements;
     };
