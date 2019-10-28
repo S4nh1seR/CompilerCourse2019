@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Identifier.h>
+
 namespace SyntaxTree {
     // identifier
     class Identifier;
@@ -41,7 +43,7 @@ namespace SyntaxTree {
     public:
         IVisitor() = default;
 
-        virtual void VisitNode(const IdentifierType* identifierType) = 0;
+        virtual void VisitNode(const Identifier* identifier) = 0;
 
         virtual void VisitNode(const IdentifierExpression* identifierExpression) = 0;
         virtual void VisitNode(const BinaryOperationExpression* binaryOperationExpression) = 0;
@@ -66,6 +68,7 @@ namespace SyntaxTree {
         virtual void VisitNode(const IntType* intType) = 0;
         virtual void VisitNode(const BooleanType* booleanType) = 0;
         virtual void VisitNode(const IntArrayType* intArrayType) = 0;
+        virtual void VisitNode(const IdentifierType* identifierType) = 0;
 
         virtual void VisitNode(const ClassDeclaration* classDeclaration) = 0;
         virtual void VisitNode(const VariableDeclaration* variableDeclaration) = 0;

@@ -8,4 +8,4 @@ include_directories(${graph_dir} ${syntaxtree_dir})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(visitor Visitor.h)
+add_library(visitor Visitor.h SerializeVisitor.h SerializeVisitor.cpp)
