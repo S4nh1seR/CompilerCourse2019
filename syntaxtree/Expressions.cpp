@@ -33,7 +33,7 @@ namespace SyntaxTree {
         return methodArguments[index].get();
     }
 
-    void MethodCallExpression::GetAllArguments(std::vector<const IExpression*>& _methodArguments) {
+    void MethodCallExpression::GetAllArguments(std::vector<const IExpression*>& _methodArguments) const {
         _methodArguments.clear();
         for (int i = 0; i < methodArguments.size(); ++i) {
             _methodArguments.push_back(methodArguments[i].get());

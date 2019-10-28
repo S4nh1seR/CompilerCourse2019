@@ -89,7 +89,7 @@ namespace SyntaxTree {
         const IExpression* GetObjectOperand() const { return objectOperand.get(); }
         const Identifier* GetMethodIdentifier() const { return methodIdentifier.get(); }
         const IExpression* GetArgument(int index) const;
-        void GetAllArguments(std::vector<const IExpression*>& _methodArguments);
+        void GetAllArguments(std::vector<const IExpression*>& _methodArguments) const;
     private:
         std::unique_ptr<const IExpression> objectOperand;
         std::unique_ptr<const Identifier> methodIdentifier;
