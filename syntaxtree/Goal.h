@@ -13,7 +13,7 @@ namespace SyntaxTree {
         const ClassDeclaration* GetClassDeclaration(int index) const;
         void GetClassDeclarations(std::vector<const ClassDeclaration*>& _classDeclarations) const;
     private:
-        std::unique_ptr<MainClass> mainClass;
-        std::vector<std::unique_ptr<ClassDeclaration>> classDeclarations;
+        std::unique_ptr<const MainClass> mainClass;
+        std::vector<std::unique_ptr<const ClassDeclaration>> classDeclarations;
     };
 }

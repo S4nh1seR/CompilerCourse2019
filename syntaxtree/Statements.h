@@ -17,7 +17,7 @@ namespace SyntaxTree {
         const IStatement* GetStatement(int index) const;
         void GetAllStatements(std::vector<const IStatement*>& _internalStatements);
     private:
-        std::vector<std::unique_ptr<IStatement>> internalStatements;
+        std::vector<std::unique_ptr<const IStatement>> internalStatements;
     };
 
     class ConditionalStatement : public IStatement {
@@ -31,9 +31,9 @@ namespace SyntaxTree {
         const IStatement* GetNegativeStatement() const { return negativeStatement.get(); }
 
     private:
-        std::unique_ptr<IExpression> conditionExpression;
-        std::unique_ptr<IStatement> positiveStatement;
-        std::unique_ptr<IStatement> negativeStatement;
+        std::unique_ptr<const IExpression> conditionExpression;
+        std::unique_ptr<const IStatement> positiveStatement;
+        std::unique_ptr<const IStatement> negativeStatement;
     };
 
     class LoopStatement : public IStatement {
@@ -46,19 +46,19 @@ namespace SyntaxTree {
         const IStatement* GetInternalStatement() const { return internalStatement.get(); }
 
     private:
-        std::unique_ptr<IExpression> conditionExpression;
-        std::unique_ptr<IStatement> internalStatement;
+        std::unique_ptr<const IExpression> conditionExpression;
+        std::unique_ptr<const IStatement> internalStatement;
     };
 
     class PrintStatement : public IStatement {
     public:
-        PrintStatement(const IExpression* _printOperand): printOperand(std::make_unique<IExpression>(_printOperand)) {}
+        PrintStatement(const IExpression* _printOperand): printOperand(_printOperand) {}
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetPrintOperand() const { return printOperand.get(); }
     private:
-        std::unique_ptr<IExpression> printOperand;
+        std::unique_ptr<const IExpression> printOperand;
     };
 
     class AssignmentStatement : public IStatement {
@@ -70,8 +70,8 @@ namespace SyntaxTree {
         const IExpression* GetRightOperand() const { return rightOperand.get(); }
 
     private:
-        std::unique_ptr<Identifier> leftOperand;
-        std::unique_ptr<IExpression> rightOperand;
+        std::unique_ptr<const Identifier> leftOperand;
+        std::unique_ptr<const IExpression> rightOperand;
     };
 
     class ArrayAssignmentStatement : public IStatement {
@@ -83,8 +83,8 @@ namespace SyntaxTree {
         const IExpression* GetArrayIndex() const { return arrayIndex.get(); }
         const IExpression* GetRightOperand() const { return rightOperand.get(); }
     private:
-        std::unique_ptr<Identifier> arrayIdentifier;
-        std::unique_ptr<IExpression> arrayIndex;
-        std::unique_ptr<IExpression> rightOperand;
+        std::unique_ptr<const Identifier> arrayIdentifier;
+        std::unique_ptr<const IExpression> arrayIndex;
+        std::unique_ptr<const IExpression> rightOperand;
     };
 }

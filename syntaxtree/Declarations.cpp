@@ -3,8 +3,8 @@
 namespace SyntaxTree {
 
     VariableDeclaration::VariableDeclaration(const IType* _declarationType, const Identifier* _declarationIdentifier)
-    :   declarationType(std::make_unique<IType>(_declarationType)),
-        declarationIdentifier(std::make_unique<Identifier>(_declarationIdentifier))
+    :   declarationType(_declarationType),
+        declarationIdentifier(_declarationIdentifier)
         {}
 
     MethodDeclaration::MethodDeclaration(const IType* _returnType, const Identifier* _classIdentifier,
@@ -13,9 +13,9 @@ namespace SyntaxTree {
         const std::vector<const VariableDeclaration*>& _variableDeclarations,
         const std::vector<const IStatement*>& _statements)
 
-    :   returnType(std::make_unique<IType>(_returnType)),
-        classIdentifier(std::make_unique<Identifier>(_classIdentifier)),
-        returnExpression(std::make_unique<IExpression>(_returnExpression))
+    :   returnType(_returnType),
+        classIdentifier(_classIdentifier),
+        returnExpression(_returnExpression)
     {
         assert(_argumentTypes.size() == _argumentIdentifiers.size());
         for (int i = 0; i < _argumentTypes.size(); ++i) {
@@ -84,8 +84,8 @@ namespace SyntaxTree {
         const std::vector<const VariableDeclaration*>& _variableDeclarations,
         const std::vector<const MethodDeclaration*>& _methodDeclarations)
 
-    :   classIdentifier(std::make_unique<Identifier>(_classIdentifier)),
-        baseClassIdentifier(std::make_unique<Identifier>(_baseClassIdentifier))
+    :   classIdentifier(_classIdentifier),
+        baseClassIdentifier(_baseClassIdentifier)
     {
         for (auto _variableDeclaration : _variableDeclarations) {
             variableDeclarations.emplace_back(_variableDeclaration);

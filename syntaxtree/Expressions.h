@@ -26,14 +26,14 @@ namespace SyntaxTree {
 
     class IdentifierExpression : public IExpression {
     public:
-        IdentifierExpression(const Identifier* _identifier): identifier(std::make_unique<Identifier>(_identifier)) {}
+        IdentifierExpression(const Identifier* _identifier): identifier(_identifier) {}
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Identifier* GetIdentifier() const { return identifier.get(); }
 
     private:
-        std::unique_ptr<Identifier> identifier;
+        std::unique_ptr<const Identifier> identifier;
     };
 
     class BinaryOperationExpression : public IExpression {
@@ -49,8 +49,8 @@ namespace SyntaxTree {
     private:
         TBinaryOperationType boType;
 
-        std::unique_ptr<IExpression> leftOperand;
-        std::unique_ptr<IExpression> rightOperand;
+        std::unique_ptr<const IExpression> leftOperand;
+        std::unique_ptr<const IExpression> rightOperand;
     };
 
     class SquareBracketExpression : public IExpression {
@@ -63,19 +63,19 @@ namespace SyntaxTree {
         const IExpression* GetIndexOperand() const { return indexOperand.get(); }
 
     private:
-        std::unique_ptr<IExpression> arrayOperand;
-        std::unique_ptr<IExpression> indexOperand;
+        std::unique_ptr<const IExpression> arrayOperand;
+        std::unique_ptr<const IExpression> indexOperand;
     };
 
     class LengthExpression : public IExpression {
     public:
-        LengthExpression(const IExpression* _lengthOperand): lengthOperand(std::make_unique<IExpression>(_lengthOperand)) {};
+        LengthExpression(const IExpression* _lengthOperand): lengthOperand(_lengthOperand) {};
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetLengthOperand() const { return lengthOperand.get(); }
     private:
-        std::unique_ptr<IExpression> lengthOperand;
+        std::unique_ptr<const IExpression> lengthOperand;
     };
 
     class MethodCallExpression : public IExpression {
@@ -91,9 +91,9 @@ namespace SyntaxTree {
         const IExpression* GetArgument(int index) const;
         void GetAllArguments(std::vector<const IExpression*>& _methodArguments);
     private:
-        std::unique_ptr<IExpression> objectOperand;
-        std::unique_ptr<Identifier> methodIdentifier;
-        std::vector<std::unique_ptr<IExpression>> methodArguments;
+        std::unique_ptr<const IExpression> objectOperand;
+        std::unique_ptr<const Identifier> methodIdentifier;
+        std::vector<std::unique_ptr<const IExpression>> methodArguments;
     };
 
     class BooleanLiteralExpression : public IExpression {
@@ -128,47 +128,47 @@ namespace SyntaxTree {
 
     class NewExpression : public IExpression {
     public:
-        NewExpression(const IExpression* _identifierOperand): identifierOperand(std::make_unique<Identifier>(_identifierOperand)) {}
+        NewExpression(const IExpression* _identifierOperand): identifierOperand(_identifierOperand) {}
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Identifier* GetIdentifierOperand() const { return identifierOperand.get(); }
 
     private:
-        std::unique_ptr<Identifier> identifierOperand;
+        std::unique_ptr<const Identifier> identifierOperand;
     };
 
     class NewArrayExpression : public IExpression {
     public:
-        NewArrayExpression(const IExpression* _sizeOperand): sizeOperand(std::make_unique<IExpression>(_sizeOperand)) {}
+        NewArrayExpression(const IExpression* _sizeOperand): sizeOperand(_sizeOperand) {}
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetSizeOperand() const { return sizeOperand.get(); }
 
     private:
-        std::unique_ptr<IExpression> sizeOperand;
+        std::unique_ptr<const IExpression> sizeOperand;
     };
 
     class OppositeExpression : public IExpression {
     public:
-        OppositeExpression(const IExpression* _sourceExpression): sourceExpression(std::make_unique<IExpression>(_sourceExpression)) {}
+        OppositeExpression(const IExpression* _sourceExpression): sourceExpression(_sourceExpression) {}
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetSourceExpression() const { return sourceExpression.get(); }
     private:
-        std::unique_ptr<IExpression> sourceExpression;
+        std::unique_ptr<const IExpression> sourceExpression;
     };
 
     class ParenthesesExpression : public IExpression {
     public:
-        ParenthesesExpression(const IExpression* _internalExpression): internalExpression(std::make_unique<IExpression>(_internalExpression)) {}
+        ParenthesesExpression(const IExpression* _internalExpression): internalExpression(_internalExpression) {}
 
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetInternalExpression() const { return internalExpression.get(); }
     private:
-        std::unique_ptr<IExpression> internalExpression;
+        std::unique_ptr<const IExpression> internalExpression;
     };
 }
