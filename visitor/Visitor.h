@@ -66,7 +66,6 @@ namespace SyntaxTree {
         virtual void VisitNode(const IntType* intType) = 0;
         virtual void VisitNode(const BooleanType* booleanType) = 0;
         virtual void VisitNode(const IntArrayType* intArrayType) = 0;
-        virtual void VisitNode(const IdentifierType* identifierType) = 0;
 
         virtual void VisitNode(const ClassDeclaration* classDeclaration) = 0;
         virtual void VisitNode(const VariableDeclaration* variableDeclaration) = 0;
