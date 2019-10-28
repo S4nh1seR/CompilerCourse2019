@@ -32,12 +32,13 @@ namespace SyntaxTree {
 
     class IdentifierType : public IType {
     public:
-        IdentifierType(const Identifier* _identifier): identifier(std::make_unique<Identifier>(_identifier)) {}
+        IdentifierType(const Identifier* _identifier): identifier(_identifier) {}
+
         virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Identifier* GetIdentifier() const { return identifier.get(); }
     private:
-        std::unique_ptr<Identifier> identifier;
+        std::unique_ptr<const Identifier> identifier;
     };
 
 }

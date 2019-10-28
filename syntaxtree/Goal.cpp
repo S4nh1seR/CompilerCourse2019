@@ -3,7 +3,7 @@
 namespace SyntaxTree {
 
     Goal::Goal(const MainClass* _mainClass, const std::vector<const ClassDeclaration*>& _classDeclarations)
-    :   mainClass(std::make_unique<MainClass>(_mainClass))
+    :   mainClass(_mainClass)
     {
         for (auto _classDeclaration : _classDeclarations) {
             classDeclarations.emplace_back(_classDeclaration);

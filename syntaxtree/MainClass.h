@@ -15,9 +15,9 @@ namespace SyntaxTree {
         const Identifier* GetStringArgIdentifier() const { return stringArgIdentifier.get(); }
         const IStatement* GetInternalStatement() const { return internalStatement.get(); }
     private:
-        std::unique_ptr<Identifier> mainClassIdentifier;
-        std::unique_ptr<Identifier> stringArgIdentifier;
-        std::unique_ptr<IStatement> internalStatement;
+        std::unique_ptr<const Identifier> mainClassIdentifier;
+        std::unique_ptr<const Identifier> stringArgIdentifier;
+        std::unique_ptr<const IStatement> internalStatement;
     };
 
 }

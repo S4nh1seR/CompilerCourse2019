@@ -3,7 +3,6 @@
 #include "Statements.h"
 #include "Types.h"
 
-
 namespace SyntaxTree {
 
     class Declaration : public ISyntaxTreeNode {
@@ -19,8 +18,8 @@ namespace SyntaxTree {
         const IType* GetDeclarationType() const { return declarationType.get(); }
         const Identifier* GetDeclarationIdentifier() const { return declarationIdentifier.get(); }
     private:
-        std::unique_ptr<IType> declarationType;
-        std::unique_ptr<Identifier> declarationIdentifier;
+        std::unique_ptr<const IType> declarationType;
+        std::unique_ptr<const Identifier> declarationIdentifier;
     };
 
     class MethodDeclaration : public Declaration {
@@ -48,15 +47,15 @@ namespace SyntaxTree {
         void GetStatements(std::vector<const IStatement*>& _statements) const;
 
     private:
-        std::unique_ptr<IType> returnType;
-        std::unique_ptr<Identifier> classIdentifier;
-        std::unique_ptr<IExpression> returnExpression;
+        std::unique_ptr<const IType> returnType;
+        std::unique_ptr<const Identifier> classIdentifier;
+        std::unique_ptr<const IExpression> returnExpression;
 
-        std::vector<std::unique_ptr<IType>> argumentTypes;
-        std::vector<std::unique_ptr<Identifier>> argumentIdentifiers;
+        std::vector<std::unique_ptr<const IType>> argumentTypes;
+        std::vector<std::unique_ptr<const Identifier>> argumentIdentifiers;
 
-        std::vector<std::unique_ptr<VariableDeclaration>> variableDeclarations;
-        std::vector<std::unique_ptr<IStatement>> statements;
+        std::vector<std::unique_ptr<const VariableDeclaration>> variableDeclarations;
+        std::vector<std::unique_ptr<const IStatement>> statements;
     };
 
     class ClassDeclaration : public Declaration {
@@ -77,10 +76,10 @@ namespace SyntaxTree {
         void GetMethodDeclarations(std::vector<const MethodDeclaration*>& _methodDeclarations) const;
 
     private:
-        std::unique_ptr<Identifier> classIdentifier;
-        std::unique_ptr<Identifier> baseClassIdentifier;
+        std::unique_ptr<const Identifier> classIdentifier;
+        std::unique_ptr<const Identifier> baseClassIdentifier;
 
-        std::vector<std::unique_ptr<VariableDeclaration>> variableDeclarations;
-        std::vector<std::unique_ptr<MethodDeclaration>> methodDeclarations;
+        std::vector<std::unique_ptr<const VariableDeclaration>> variableDeclarations;
+        std::vector<std::unique_ptr<const MethodDeclaration>> methodDeclarations;
     };
 }
