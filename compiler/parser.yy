@@ -1,10 +1,12 @@
 %language "c++"
 %defines
-%define api.value.type variant
 %define parser_class_name {MC_Parser}
+%define api.value.type variant
+%define parse.assert
 %parse-param { MyScanner* scanner }
 %locations
 %code requires {
+#include <visitor/SerializeVisitor.h>
 #include <syntaxtree/Declarations.h>
 #include <syntaxtree/Expressions.h>
 #include <syntaxtree/Goal.h>
@@ -23,8 +25,6 @@ class MyScanner;
 #undef yylex
 #define yylex scanner->yylex
 }
-%define api.value.type variant
-%define parse.assert
 
 %token LBRACE
 %token T_EOF 0
