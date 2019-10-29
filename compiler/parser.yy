@@ -6,14 +6,14 @@
 %parse-param { MyScanner* scanner }
 %locations
 %code requires {
-#include <visitor/SerializeVisitor.h>
-#include <syntaxtree/Declarations.h>
-#include <syntaxtree/Expressions.h>
-#include <syntaxtree/Goal.h>
-#include <syntaxtree/Identifier.h>
-#include <syntaxtree/MainClass.h>
-#include <syntaxtree/Statements.h>
-#include <syntaxtree/Types.h>
+#include <SerializeVisitor.h>
+#include <Declarations.h>
+#include <Expressions.h>
+#include <Goal.h>
+#include <Identifier.h>
+#include <MainClass.h>
+#include <Statements.h>
+#include <Types.h>
 using namespace SyntaxTree;
 
 #include <string>
@@ -91,8 +91,21 @@ class MyScanner;
 %token <std::string> TEXT;
 %token <int> NUMBER;
 
+%start program
+
 %%
 
+program:
+token_list T_EOF
+;
+token_list:
+token
+| token_list token
+;
+token:
+T_ID
+| T_NUM
+;
 
 
 %%

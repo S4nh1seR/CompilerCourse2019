@@ -8,7 +8,7 @@
 #include "mc_parser.tab.hh"
 #include "location.hh"
 
-#include "syntaxtree/Goal.h"
+#include <Goal.h>
 
 using Tokens = yy::MC_Parser::token_type;
 

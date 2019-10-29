@@ -2,6 +2,8 @@
 
 #include "Identifier.h"
 
+#include <Visitor.h>
+
 #include <memory>
 
 namespace SyntaxTree {
@@ -13,28 +15,28 @@ namespace SyntaxTree {
     public:
         IntType() = default;
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
     };
 
     class  BooleanType : public IType {
     public:
         BooleanType() = default;
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
     };
 
     class IntArrayType: public  IType {
     public:
         IntArrayType() = default;
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
     };
 
     class IdentifierType : public IType {
     public:
         IdentifierType(const Identifier* _identifier): identifier(_identifier) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Identifier* GetIdentifier() const { return identifier.get(); }
     private:

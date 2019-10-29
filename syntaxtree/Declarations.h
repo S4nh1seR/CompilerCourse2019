@@ -3,6 +3,8 @@
 #include "Statements.h"
 #include "Types.h"
 
+#include <Visitor.h>
+
 namespace SyntaxTree {
 
     class Declaration : public ISyntaxTreeNode {
@@ -13,7 +15,7 @@ namespace SyntaxTree {
     public:
         VariableDeclaration(const IType* _declarationType, const Identifier* _declarationIdentifier);
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IType* GetDeclarationType() const { return declarationType.get(); }
         const Identifier* GetDeclarationIdentifier() const { return declarationIdentifier.get(); }
@@ -30,7 +32,7 @@ namespace SyntaxTree {
             const std::vector<const VariableDeclaration*>& _variableDeclarations,
             const std::vector<const IStatement*>& _statements);
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IType* GetReturnType() const { return returnType.get(); }
         const Identifier* GetClassIdentifier() const { return classIdentifier.get(); }
@@ -64,7 +66,7 @@ namespace SyntaxTree {
             const std::vector<const VariableDeclaration*>& _variableDeclarations,
             const std::vector<const MethodDeclaration*>& _methodDeclarations);
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Identifier* GetClassIdentifier() const { return classIdentifier.get(); }
         const Identifier* GetBaseClassIdentifier() const { return baseClassIdentifier.get(); }
