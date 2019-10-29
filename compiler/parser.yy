@@ -1,11 +1,22 @@
 %language "c++"
 %defines
+%define api.value.type variant
 %define parser_class_name {MC_Parser}
-%parse-param { MyScanner *scanner }
+%parse-param { MyScanner* scanner }
 %locations
 %code requires {
-class MyScanner;
+#include <syntaxtree/Declarations.h>
+#include <syntaxtree/Expressions.h>
+#include <syntaxtree/Goal.h>
+#include <syntaxtree/Identifier.h>
+#include <syntaxtree/MainClass.h>
+#include <syntaxtree/Statements.h>
+#include <syntaxtree/Types.h>
+using namespace SyntaxTree;
+
 #include <string>
+
+class MyScanner;
 }
 %code {
 #include "Scanner.h"
@@ -63,26 +74,26 @@ class MyScanner;
 %token T_T
 %token T_Unknown
 
-%type <std::string> item;
+%type <Goal*> Goal
+%type <MainClass*> MainClass
+%type <ClassDeclaration*> ClassDeclaration
+%type <std::vector<std::unique_ptr<const ClassDeclaration>>> ClassDeclarations
+%type <MethodDeclaration*> MethodDeclaration
+%type <VariableDeclaration*> VariableDeclaration
+%type <std::vector<std::unique_ptr<const VariableDeclaration>>> VariableDeclarations
+%type <IStatement*> Statement
+%type <std::vector<std::unique_ptr<const IStatement>>*> Statements
+%type <IExpression*> Expression
+%type <std::vector<std::unique_ptr<const IExpression>>*> Expressions
+%type <Identifier*> Identifier
+%type <IType*> Type
 
 %token <std::string> TEXT;
 %token <int> NUMBER;
 
-%start program
-
 %%
 
-program:
-  token_list T_EOF
-;
-token_list:
-  token
-  | token_list token
-;
-token:
-  T_ID 
-  | T_NUM
-;
+
 
 %%
 
