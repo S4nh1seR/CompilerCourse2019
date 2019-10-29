@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Declarations.h"
 #include "MainClass.h"
 
