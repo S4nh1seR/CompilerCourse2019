@@ -22,8 +22,9 @@ add_executable(my_wc
 target_include_directories(my_wc
     PRIVATE
         .
+        ..
         ${CMAKE_CURRENT_BINARY_DIR})
 set_property(TARGET my_wc
-             PROPERTY CXX_STANDARD 14)
+             PROPERTY CXX_STANDARD 17)
 
 
