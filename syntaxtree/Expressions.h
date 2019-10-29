@@ -2,6 +2,8 @@
 
 #include "Identifier.h"
 
+#include <Visitor.h>
+
 #include <cassert>
 #include <memory>
 #include <vector>
@@ -28,7 +30,7 @@ namespace SyntaxTree {
     public:
         IdentifierExpression(const Identifier* _identifier): identifier(_identifier) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Identifier* GetIdentifier() const { return identifier.get(); }
 
@@ -40,7 +42,7 @@ namespace SyntaxTree {
     public:
         BinaryOperationExpression(TBinaryOperationType _boType, const IExpression* _leftOperand, const IExpression* _rightOperand);
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         TBinaryOperationType GetOperationType() const { return boType; }
         const IExpression* GetLeftOperand() const { return leftOperand.get(); }
@@ -57,7 +59,7 @@ namespace SyntaxTree {
     public:
         SquareBracketExpression(const IExpression* _arrayOperator, const IExpression* _indexOperand);
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetArrayOperand() const { return arrayOperand.get(); }
         const IExpression* GetIndexOperand() const { return indexOperand.get(); }
@@ -71,7 +73,7 @@ namespace SyntaxTree {
     public:
         LengthExpression(const IExpression* _lengthOperand): lengthOperand(_lengthOperand) {};
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetLengthOperand() const { return lengthOperand.get(); }
     private:
@@ -84,7 +86,7 @@ namespace SyntaxTree {
         MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier,
             const std::vector<const IExpression*>& _methodArguments);
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetObjectOperand() const { return objectOperand.get(); }
         const Identifier* GetMethodIdentifier() const { return methodIdentifier.get(); }
@@ -100,7 +102,7 @@ namespace SyntaxTree {
     public:
         BooleanLiteralExpression(const bool _literalValue): literalValue(_literalValue) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         bool GetLiteralValue() const { return literalValue; }
     private:
@@ -111,7 +113,7 @@ namespace SyntaxTree {
     public:
         IntegerLiteralExpression(const int _literalValue): literalValue(_literalValue) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         int GetLiteralValue() const { return literalValue; }
     private:
@@ -123,14 +125,14 @@ namespace SyntaxTree {
     public:
         ThisExpression() = default;
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
     };
 
     class NewExpression : public IExpression {
     public:
-        NewExpression(const IExpression* _identifierOperand): identifierOperand(_identifierOperand) {}
+        NewExpression(const Identifier* _identifierOperand): identifierOperand(_identifierOperand) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Identifier* GetIdentifierOperand() const { return identifierOperand.get(); }
 
@@ -142,7 +144,7 @@ namespace SyntaxTree {
     public:
         NewArrayExpression(const IExpression* _sizeOperand): sizeOperand(_sizeOperand) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetSizeOperand() const { return sizeOperand.get(); }
 
@@ -154,7 +156,7 @@ namespace SyntaxTree {
     public:
         OppositeExpression(const IExpression* _sourceExpression): sourceExpression(_sourceExpression) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetSourceExpression() const { return sourceExpression.get(); }
     private:
@@ -165,7 +167,7 @@ namespace SyntaxTree {
     public:
         ParenthesesExpression(const IExpression* _internalExpression): internalExpression(_internalExpression) {}
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IExpression* GetInternalExpression() const { return internalExpression.get(); }
     private:

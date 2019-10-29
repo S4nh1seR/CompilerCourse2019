@@ -4,7 +4,7 @@ project(visitor)
 
 set(graph_dir "../graph/graph_lib")
 set(syntaxtree_dir "../syntaxtree")
-include_directories(${graph_dir} ${syntaxtree_dir})
+include_directories(. ${graph_dir} ${syntaxtree_dir})
 
 set(CMAKE_CXX_STANDARD 17)
 

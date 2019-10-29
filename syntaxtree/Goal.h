@@ -3,13 +3,15 @@
 #include "Declarations.h"
 #include "MainClass.h"
 
+#include <Visitor.h>
+
 namespace SyntaxTree {
 
     class Goal : public ISyntaxTreeNode {
     public:
         Goal(const MainClass* _mainClass, const std::vector<const ClassDeclaration*>& _classDeclarations);
 
-        virtual void AcceptVisitor(const IVisitor* visitor) const override { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const MainClass* GetMainClass() const { return mainClass.get(); }
         const ClassDeclaration* GetClassDeclaration(int index) const;

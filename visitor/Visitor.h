@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Identifier.h>
-
 namespace SyntaxTree {
     // identifier
     class Identifier;
@@ -39,7 +37,7 @@ namespace SyntaxTree {
     // mainClass
     class MainClass;
 
-    class IVisitor{
+    class IVisitor {
     public:
         IVisitor() = default;
 
