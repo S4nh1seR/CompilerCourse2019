@@ -3,43 +3,49 @@
 
 namespace SyntaxTree {
 
-    ConditionalStatement::ConditionalStatement(const IExpression* _conditionExpression, const IStatement* _positiveStatement, const IStatement* _negativeStatement)
-    :   conditionExpression(_conditionExpression),
-        positiveStatement(_positiveStatement),
-        negativeStatement(_negativeStatement)
+    ConditionalStatement::ConditionalStatement(std::unique_ptr<const IExpression>&& _conditionExpression,
+        std::unique_ptr<const IStatement>&& _positiveStatement, std::unique_ptr<const IStatement>&& _negativeStatement)
+
+    :   conditionExpression(std::move(_conditionExpression)),
+        positiveStatement(std::move(_positiveStatement)),
+        negativeStatement(std::move(_negativeStatement))
         {}
 
-    LoopStatement::LoopStatement(const IExpression* _conditionExpression, const IStatement* _internalStatement)
-    :   conditionExpression(_conditionExpression),
-        internalStatement(_internalStatement)
+    LoopStatement::LoopStatement(std::unique_ptr<const IExpression>&& _conditionExpression,
+        std::unique_ptr<const IStatement>&& _internalStatement)
+
+    :   conditionExpression(std::move(_conditionExpression)),
+        internalStatement(std::move(_internalStatement))
         {}
 
-    AssignmentStatement::AssignmentStatement(const Identifier* _leftOperand, const IExpression* _rightOperand)
-    :   leftOperand(_leftOperand),
-        rightOperand(_rightOperand)
+    AssignmentStatement::AssignmentStatement(std::unique_ptr<const Identifier>&& _leftOperand,
+    std::unique_ptr<const IExpression>&& _rightOperand)
+
+    :   leftOperand(std::move(_leftOperand)),
+        rightOperand(std::move(_rightOperand))
         {}
 
-    ArrayAssignmentStatement::ArrayAssignmentStatement(const Identifier* _arrayIdentifier, const IExpression* _arrayIndex, const IExpression* _rightOperand)
-    :   arrayIdentifier(_arrayIdentifier),
-        arrayIndex(_arrayIndex),
-        rightOperand(_rightOperand)
+    ArrayAssignmentStatement::ArrayAssignmentStatement(std::unique_ptr<const Identifier>&& _arrayIdentifier,
+        std::unique_ptr<const IExpression>&& _arrayIndex, std::unique_ptr<const IExpression>&& _rightOperand)
+
+    :   arrayIdentifier(std::move(_arrayIdentifier)),
+        arrayIndex(std::move(_arrayIndex)),
+        rightOperand(std::move(_rightOperand))
         {}
 
-    CompoundStatement::CompoundStatement(const std::vector<const IStatement*>& _internalStatements) {
-        for (auto _internalStatement : _internalStatements) {
-            internalStatements.emplace_back(_internalStatement);
-        }
-    }
+    CompoundStatement::CompoundStatement(std::unique_ptr<std::vector<std::unique_ptr<const IStatement>>>&& _internalStatements)
+    :   internalStatements(std::move(_internalStatements))
+        {}
 
     const IStatement* CompoundStatement::GetStatement(int index) const {
-        assert(index >= 0 && index < internalStatements.size());
-        return internalStatements[index].get();
+        assert(index >= 0 && index < internalStatements->size());
+        return (*internalStatements)[index].get();
     }
 
     void CompoundStatement::GetAllStatements(std::vector<const IStatement*>& _internalStatements) const {
         _internalStatements.clear();
-        for (int i = 0; i < internalStatements.size(); ++i) {
-            _internalStatements.push_back(internalStatements[i].get());
+        for (int i = 0; i < internalStatements->size(); ++i) {
+            _internalStatements.push_back((*internalStatements)[i].get());
         }
     }
 }

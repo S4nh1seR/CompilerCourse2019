@@ -28,7 +28,7 @@ namespace SyntaxTree {
 
     class IdentifierExpression : public IExpression {
     public:
-        IdentifierExpression(const Identifier* _identifier): identifier(_identifier) {}
+        explicit IdentifierExpression(std::unique_ptr<const Identifier>&& _identifier): identifier(std::move(_identifier)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -40,7 +40,8 @@ namespace SyntaxTree {
 
     class BinaryOperationExpression : public IExpression {
     public:
-        BinaryOperationExpression(TBinaryOperationType _boType, const IExpression* _leftOperand, const IExpression* _rightOperand);
+        BinaryOperationExpression(TBinaryOperationType _boType, std::unique_ptr<const IExpression>&& _leftOperand,
+            std::unique_ptr<const IExpression>&& _rightOperand);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -57,7 +58,7 @@ namespace SyntaxTree {
 
     class SquareBracketExpression : public IExpression {
     public:
-        SquareBracketExpression(const IExpression* _arrayOperator, const IExpression* _indexOperand);
+        SquareBracketExpression(std::unique_ptr<const IExpression>&& _arrayOperator, std::unique_ptr<const IExpression>&& _indexOperand);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -71,7 +72,7 @@ namespace SyntaxTree {
 
     class LengthExpression : public IExpression {
     public:
-        LengthExpression(const IExpression* _lengthOperand): lengthOperand(_lengthOperand) {};
+        explicit LengthExpression(std::unique_ptr<const IExpression>&& _lengthOperand): lengthOperand(std::move(_lengthOperand)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -82,9 +83,12 @@ namespace SyntaxTree {
 
     class MethodCallExpression : public IExpression {
     public:
-        MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier);
-        MethodCallExpression(const IExpression* _objectOperand, const Identifier* _methodIdentifier,
-            const std::vector<const IExpression*>& _methodArguments);
+        MethodCallExpression(std::unique_ptr<const IExpression>&& _objectOperand,
+            std::unique_ptr<const Identifier>&& _methodIdentifier);
+
+        MethodCallExpression(std::unique_ptr<const IExpression>&& _objectOperand,
+            std::unique_ptr<const Identifier>&& _methodIdentifier,
+            std::unique_ptr<std::vector<std::unique_ptr<const IExpression>>>&& _methodArguments);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -92,15 +96,16 @@ namespace SyntaxTree {
         const Identifier* GetMethodIdentifier() const { return methodIdentifier.get(); }
         const IExpression* GetArgument(int index) const;
         void GetAllArguments(std::vector<const IExpression*>& _methodArguments) const;
+
     private:
         std::unique_ptr<const IExpression> objectOperand;
         std::unique_ptr<const Identifier> methodIdentifier;
-        std::vector<std::unique_ptr<const IExpression>> methodArguments;
+        std::unique_ptr<const std::vector<std::unique_ptr<const IExpression>>> methodArguments;
     };
 
     class BooleanLiteralExpression : public IExpression {
     public:
-        BooleanLiteralExpression(const bool _literalValue): literalValue(_literalValue) {}
+        explicit BooleanLiteralExpression(const bool _literalValue): literalValue(_literalValue) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -111,7 +116,7 @@ namespace SyntaxTree {
 
     class IntegerLiteralExpression : public IExpression {
     public:
-        IntegerLiteralExpression(const int _literalValue): literalValue(_literalValue) {}
+        explicit IntegerLiteralExpression(const int _literalValue): literalValue(_literalValue) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -130,7 +135,7 @@ namespace SyntaxTree {
 
     class NewExpression : public IExpression {
     public:
-        NewExpression(const Identifier* _identifierOperand): identifierOperand(_identifierOperand) {}
+        explicit NewExpression(std::unique_ptr<const Identifier>&& _identifierOperand): identifierOperand(std::move(_identifierOperand)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -142,7 +147,7 @@ namespace SyntaxTree {
 
     class NewArrayExpression : public IExpression {
     public:
-        NewArrayExpression(const IExpression* _sizeOperand): sizeOperand(_sizeOperand) {}
+        explicit NewArrayExpression(std::unique_ptr<const IExpression>&& _sizeOperand): sizeOperand(std::move(_sizeOperand)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -154,7 +159,7 @@ namespace SyntaxTree {
 
     class OppositeExpression : public IExpression {
     public:
-        OppositeExpression(const IExpression* _sourceExpression): sourceExpression(_sourceExpression) {}
+        explicit OppositeExpression(std::unique_ptr<const IExpression>&& _sourceExpression): sourceExpression(std::move(_sourceExpression)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -165,7 +170,7 @@ namespace SyntaxTree {
 
     class ParenthesesExpression : public IExpression {
     public:
-        ParenthesesExpression(const IExpression* _internalExpression): internalExpression(_internalExpression) {}
+        explicit ParenthesesExpression(std::unique_ptr<const IExpression>&& _internalExpression): internalExpression(std::move(_internalExpression)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 

@@ -90,18 +90,11 @@ namespace SyntaxTree {
         addNoRootNodeToGraph(intArrayType, iAT_Name);
     }
 
-    void SerializeVisitor::VisitNode(const BooleanType* booleanType)
+    void SerializeVisitor::VisitNode(const SimpleType* simpleType)
     {
-        // make booleanType name and add it to the graph with this name
-        std::wstring bT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.booleanTypeNode);
-        addNoRootNodeToGraph(booleanType, bT_Name);
-    }
-
-    void SerializeVisitor::VisitNode(const IntType* intType)
-    {
-        // make intType name and add it to the graph with this name
-        std::wstring iT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intTypeNode);
-        addNoRootNodeToGraph(intType, iT_Name);
+        // make simpleType name and add it to the graph with this name
+        std::wstring sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.simpleTypeNode);
+        addNoRootNodeToGraph(simpleType, sT_Name);
     }
 
     void SerializeVisitor::VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement)

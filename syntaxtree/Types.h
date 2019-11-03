@@ -11,18 +11,20 @@ namespace SyntaxTree {
     class IType : public ISyntaxTreeNode {
     };
 
-    class IntType : public IType {
-    public:
-        IntType() = default;
-
-        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
+    enum TType {
+        T_Bool,
+        T_Int
     };
 
-    class  BooleanType : public IType {
+    class SimpleType : public IType {
     public:
-        BooleanType() = default;
+        explicit SimpleType(TType _type): type(_type) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
+
+        TType GetType() const { return type; }
+    private:
+        TType type;
     };
 
     class IntArrayType: public  IType {

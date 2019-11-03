@@ -13,7 +13,7 @@ namespace SyntaxTree {
 
     class VariableDeclaration : public Declaration {
     public:
-        VariableDeclaration(const IType* _declarationType, const Identifier* _declarationIdentifier);
+        VariableDeclaration(std::unique_ptr<const IType>&& _declarationType, std::unique_ptr<const Identifier>&& _declarationIdentifier);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -26,11 +26,12 @@ namespace SyntaxTree {
 
     class MethodDeclaration : public Declaration {
     public:
-        MethodDeclaration(const IType* _returnType, const Identifier* _classIdentifier,
-            const IExpression* _returnExpression, const std::vector<const IType*>& _argumentTypes,
-            const std::vector<const Identifier*>& _argumentIdentifiers,
-            const std::vector<const VariableDeclaration*>& _variableDeclarations,
-            const std::vector<const IStatement*>& _statements);
+        MethodDeclaration(std::unique_ptr<const IType>&& _returnType, std::unique_ptr<const Identifier>&& _classIdentifier,
+            std::unique_ptr<const IExpression>&& _returnExpression,
+            std::unique_ptr<std::vector<std::unique_ptr<const IType>>>&& _argumentTypes,
+            std::unique_ptr<std::vector<std::unique_ptr<const Identifier>>>&& _argumentIdentifiers,
+            std::unique_ptr<std::vector<std::unique_ptr<const VariableDeclaration>>>&& _variableDeclarations,
+            std::unique_ptr<std::vector<std::unique_ptr<const IStatement>>>&& _statements);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -53,18 +54,19 @@ namespace SyntaxTree {
         std::unique_ptr<const Identifier> classIdentifier;
         std::unique_ptr<const IExpression> returnExpression;
 
-        std::vector<std::unique_ptr<const IType>> argumentTypes;
-        std::vector<std::unique_ptr<const Identifier>> argumentIdentifiers;
+        std::unique_ptr<const std::vector<std::unique_ptr<const IType>>> argumentTypes;
+        std::unique_ptr<const std::vector<std::unique_ptr<const Identifier>>> argumentIdentifiers;
 
-        std::vector<std::unique_ptr<const VariableDeclaration>> variableDeclarations;
-        std::vector<std::unique_ptr<const IStatement>> statements;
+        std::unique_ptr<const std::vector<std::unique_ptr<const VariableDeclaration>>> variableDeclarations;
+        std::unique_ptr<const std::vector<std::unique_ptr<const IStatement>>> statements;
     };
 
     class ClassDeclaration : public Declaration {
     public:
-        ClassDeclaration(const Identifier* _classIdentifier, const Identifier* _baseClassIdentifier,
-            const std::vector<const VariableDeclaration*>& _variableDeclarations,
-            const std::vector<const MethodDeclaration*>& _methodDeclarations);
+        ClassDeclaration(std::unique_ptr<const Identifier>&& _classIdentifier,
+            std::unique_ptr<const Identifier>&& _baseClassIdentifier,
+            std::unique_ptr<std::vector<std::unique_ptr<const VariableDeclaration>>>&& _variableDeclarations,
+            std::unique_ptr<std::vector<std::unique_ptr<const MethodDeclaration>>>&& _methodDeclarations);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -81,7 +83,7 @@ namespace SyntaxTree {
         std::unique_ptr<const Identifier> classIdentifier;
         std::unique_ptr<const Identifier> baseClassIdentifier;
 
-        std::vector<std::unique_ptr<const VariableDeclaration>> variableDeclarations;
-        std::vector<std::unique_ptr<const MethodDeclaration>> methodDeclarations;
+        std::unique_ptr<const std::vector<std::unique_ptr<const VariableDeclaration>>> variableDeclarations;
+        std::unique_ptr<const std::vector<std::unique_ptr<const MethodDeclaration>>> methodDeclarations;
     };
 }

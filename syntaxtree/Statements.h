@@ -12,19 +12,20 @@ namespace SyntaxTree {
 
     class CompoundStatement : public IStatement {
     public:
-        CompoundStatement(const std::vector<const IStatement*>& _internalStatements);
+        explicit CompoundStatement(std::unique_ptr<std::vector<std::unique_ptr<const IStatement>>>&& _internalStatements);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IStatement* GetStatement(int index) const;
         void GetAllStatements(std::vector<const IStatement*>& _internalStatements) const;
     private:
-        std::vector<std::unique_ptr<const IStatement>> internalStatements;
+        std::unique_ptr<const std::vector<std::unique_ptr<const IStatement>>> internalStatements;
     };
 
     class ConditionalStatement : public IStatement {
     public:
-        ConditionalStatement(const IExpression* _conditionExpression, const IStatement* _positiveStatement, const IStatement* _negativeStatement);
+        ConditionalStatement(std::unique_ptr<const IExpression>&& _conditionExpression,
+            std::unique_ptr<const IStatement>&& _positiveStatement, std::unique_ptr<const IStatement>&& _negativeStatement);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -40,7 +41,8 @@ namespace SyntaxTree {
 
     class LoopStatement : public IStatement {
     public:
-        LoopStatement(const IExpression* _conditionExpression, const IStatement* _internalStatement);
+        LoopStatement(std::unique_ptr<const IExpression>&& _conditionExpression,
+            std::unique_ptr<const IStatement>&& _internalStatement);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -54,7 +56,7 @@ namespace SyntaxTree {
 
     class PrintStatement : public IStatement {
     public:
-        PrintStatement(const IExpression* _printOperand): printOperand(_printOperand) {}
+        explicit PrintStatement(std::unique_ptr<const IExpression>&& _printOperand): printOperand(std::move(_printOperand)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -65,7 +67,7 @@ namespace SyntaxTree {
 
     class AssignmentStatement : public IStatement {
     public:
-        AssignmentStatement(const Identifier* _leftOperand, const IExpression* _rightOperand);
+        AssignmentStatement(std::unique_ptr<const Identifier>&& _leftOperand, std::unique_ptr<const IExpression>&& _rightOperand);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -79,7 +81,8 @@ namespace SyntaxTree {
 
     class ArrayAssignmentStatement : public IStatement {
     public:
-        ArrayAssignmentStatement(const Identifier* _arrayIdentifier, const IExpression* _arrayIndex, const IExpression* _rightOperand);
+        ArrayAssignmentStatement(std::unique_ptr<const Identifier>&& _arrayIdentifier, std::unique_ptr<const IExpression>&& _arrayIndex,
+            std::unique_ptr<const IExpression>&& _rightOperand);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
