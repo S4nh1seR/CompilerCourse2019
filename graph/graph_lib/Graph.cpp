@@ -73,7 +73,7 @@ namespace SyntaxTree {
 
     //-------------------GraphSerializer----------------------------
 
-    void GraphSerializer::GraphSerialize(const DirectedGraph& graph, std::wofstream& out) {
+    void GraphSerializer::GraphSerialize(const DirectedGraph& graph, std::wostream& out) {
         out << L"digraph " << graph.GetName() << L" {" << L'\n';
 
         std::vector<std::wstring> _vertices;
@@ -87,13 +87,13 @@ namespace SyntaxTree {
         out << L'}' << L'\n';
     }
 
-    void GraphSerializer::serializeVertices(const std::vector<std::wstring>& _vertices, std::wofstream& out) {
+    void GraphSerializer::serializeVertices(const std::vector<std::wstring>& _vertices, std::wostream& out) {
         for (const std::wstring& currVertex : _vertices) {
             out << L'\t' << currVertex << L';' << L'\n';
         }
     }
 
-    void GraphSerializer::serializeEdges(const std::vector<GraphEdge*>& _edges, std::wofstream& out) {
+    void GraphSerializer::serializeEdges(const std::vector<GraphEdge*>& _edges, std::wostream& out) {
         for (const GraphEdge* currEdge : _edges) {
             out << L'\t' << currEdge->fromVertexName;
             out << L" -> ";

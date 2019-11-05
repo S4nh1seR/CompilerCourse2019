@@ -12,8 +12,9 @@ namespace SyntaxTree {
     };
 
     enum TType {
-        T_Bool,
-        T_Int
+        T_Boolean,
+        T_Int,
+        T_IntArray
     };
 
     class SimpleType : public IType {
@@ -27,16 +28,9 @@ namespace SyntaxTree {
         TType type;
     };
 
-    class IntArrayType: public  IType {
-    public:
-        IntArrayType() = default;
-
-        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
-    };
-
     class IdentifierType : public IType {
     public:
-        IdentifierType(const Identifier* _identifier): identifier(_identifier) {}
+        IdentifierType(std::unique_ptr<const Identifier>&& _identifier): identifier(std::move(_identifier)) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 

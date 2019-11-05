@@ -25,7 +25,6 @@ namespace SyntaxTree {
     class ArrayAssignmentStatement;
     // types
     class SimpleType;
-    class IntArrayType;
     class IdentifierType;
     // declarations
     class ClassDeclaration;
@@ -63,7 +62,6 @@ namespace SyntaxTree {
         virtual void VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement) = 0;
 
         virtual void VisitNode(const SimpleType* simpleType) = 0;
-        virtual void VisitNode(const IntArrayType* intArrayType) = 0;
         virtual void VisitNode(const IdentifierType* identifierType) = 0;
 
         virtual void VisitNode(const ClassDeclaration* classDeclaration) = 0;

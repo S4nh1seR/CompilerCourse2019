@@ -42,10 +42,10 @@ namespace SyntaxTree {
 
     class GraphSerializer {
     public:
-        static void GraphSerialize(const DirectedGraph& graph, std::wofstream& out);
+        static void GraphSerialize(const DirectedGraph& graph, std::wostream& out);
 
     private:
-        static void serializeVertices(const std::vector<std::wstring>& _vertices, std::wofstream& out);
-        static void serializeEdges(const std::vector<GraphEdge*>& _edges, std::wofstream& out);
+        static void serializeVertices(const std::vector<std::wstring>& _vertices, std::wostream& out);
+        static void serializeEdges(const std::vector<GraphEdge*>& _edges, std::wostream& out);
     };
 }

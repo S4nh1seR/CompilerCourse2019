@@ -1,32 +1,38 @@
-project(simple_wc_example CXX)
+project(compiler CXX)
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 
-BISON_TARGET(mc_parser
+BISON_TARGET(parser
              parser.yy
-             ${CMAKE_CURRENT_BINARY_DIR}/mc_parser.tab.cc)
-FLEX_TARGET(mc_lexer
+             ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cc)
+FLEX_TARGET(lexer
             scanner.ll
-            ${CMAKE_CURRENT_BINARY_DIR}/mc_lexer.yy.cc)
-ADD_FLEX_BISON_DEPENDENCY(mc_lexer mc_parser)
+            ${CMAKE_CURRENT_BINARY_DIR}/lexer.yy.cc)
+ADD_FLEX_BISON_DEPENDENCY(lexer parser)
 
-add_executable(my_wc
-    main_parser.cpp
+set(SYNTAX_TREE_SRCS ../syntaxtree/Expressions.cpp ../syntaxtree/Statements.cpp ../syntaxtree/Declarations.cpp ../syntaxtree/Goal.cpp ../syntaxtree/MainClass.cpp)
+set(VISITOR_SRCS ../visitor/SerializeVisitor.cpp)
+set(GRAPH_SRCS ../graph/graph_lib/Graph.cpp)
 
-    ${FLEX_mc_lexer_OUTPUTS}
-    ${BISON_mc_parser_OUTPUTS}
+add_executable(compiler
+    main.cpp
+    ${SYNTAX_TREE_SRCS}
+    ${VISITOR_SRCS}
+    ${GRAPH_SRCS}
+    ${FLEX_lexer_OUTPUTS}
+    ${BISON_parser_OUTPUTS}
 )
-target_include_directories(my_wc
+target_include_directories(compiler
     PRIVATE
         .
         ../graph/graph_lib
-        ../syntaxtree
         ../visitor
+        ../syntaxtree
         ${CMAKE_CURRENT_BINARY_DIR})
-set_property(TARGET my_wc
+set_property(TARGET compiler
              PROPERTY CXX_STANDARD 17)
 
 

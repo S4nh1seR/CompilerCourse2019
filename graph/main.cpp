@@ -5,7 +5,7 @@ int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Not enough arguments" << std::endl;
     } else {
-        GraphProcessing::DirectedGraph myGraph(L"test_graph");
+        SyntaxTree::DirectedGraph myGraph(L"test_graph");
 
         myGraph.AddVertex(L"a");
         myGraph.AddVertex(L"b");
@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 
         std::string serializationPath = argv[1];
         std::wofstream serializationFile(serializationPath);
-        GraphProcessing::GraphSerializer::GraphSerialize(myGraph, serializationFile);
+        SyntaxTree::GraphSerializer::GraphSerialize(myGraph, serializationFile);
     }
     return 0;
 }

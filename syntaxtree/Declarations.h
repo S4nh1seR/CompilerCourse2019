@@ -7,6 +7,22 @@
 
 namespace SyntaxTree {
 
+    class Arguments {
+    public:
+        Arguments() = default;
+        Arguments(Arguments&&) = default;
+
+        void AddArgument(std::unique_ptr<const IType>&& argumentType, std::unique_ptr<const Identifier>&& argumentIdentifier) {
+            argumentsTypes->push_back(std::move(argumentType));
+            argumentsIdentifiers->push_back(std::move(argumentIdentifier));
+        }
+        std::unique_ptr<std::vector<std::unique_ptr<const IType>>>&& MoveTypes() { return std::move(argumentsTypes); }
+        std::unique_ptr<std::vector<std::unique_ptr<const Identifier>>>&& MoveIdentifiers() { return std::move(argumentsIdentifiers); }
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<const IType>>> argumentsTypes;
+        std::unique_ptr<std::vector<std::unique_ptr<const Identifier>>> argumentsIdentifiers;
+    };
+
     class Declaration : public ISyntaxTreeNode {
 
     };

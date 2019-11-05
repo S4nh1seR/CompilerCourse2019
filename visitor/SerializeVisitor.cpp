@@ -83,17 +83,18 @@ namespace SyntaxTree {
         bindChildrenNode(identifierType->GetIdentifier(), identifierType, true);
     }
 
-    void SerializeVisitor::VisitNode(const IntArrayType* intArrayType)
-    {
-        // make intArrayType name and add it to the graph with this name
-        std::wstring iAT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intArrayTypeNode);
-        addNoRootNodeToGraph(intArrayType, iAT_Name);
-    }
-
     void SerializeVisitor::VisitNode(const SimpleType* simpleType)
     {
         // make simpleType name and add it to the graph with this name
-        std::wstring sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.simpleTypeNode);
+        auto type = simpleType->GetType();
+        std::wstring sT_Name;
+        if (type == SyntaxTree::T_Int) {
+            sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intTypeNode);
+        } else if (type == SyntaxTree::T_Boolean) {
+            sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.booleanTypeNode);
+        } else if (type == SyntaxTree::T_IntArray) {
+            sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intArrayTypeNode);
+        }
         addNoRootNodeToGraph(simpleType, sT_Name);
     }
 
@@ -154,6 +155,29 @@ namespace SyntaxTree {
         std::wstring iE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.identifierExpressionNode);
         addNoRootNodeToGraph(identifierExpression, iE_Name);
         bindChildrenNode(identifierExpression->GetIdentifier(), identifierExpression, true);
+    }
+
+    void SerializeVisitor::VisitNode(const BinaryOperationExpression* binaryOperationExpression) {
+        auto binaryOperationType = binaryOperationExpression->GetOperationType();
+        std::wstring bOE_Name;
+        if (binaryOperationType == SyntaxTree::BOT_Add) {
+            bOE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.addOperationExpressionNode);
+        } else if (binaryOperationType == SyntaxTree::BOT_Sub) {
+            bOE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.subOperationExpressionNode);
+        } else if (binaryOperationType == SyntaxTree::BOT_Mul) {
+            bOE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.mulOperationExpressionNode);
+        } else if (binaryOperationType == SyntaxTree::BOT_Mod) {
+            bOE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.modOperationExpressionNode);
+        } else if (binaryOperationType == SyntaxTree::BOT_And) {
+            bOE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.andOperationExpressionNode);
+        } else if (binaryOperationType == SyntaxTree::BOT_Or) {
+            bOE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.orOperationExpressionNode);
+        } else if (binaryOperationType == SyntaxTree::BOT_Less) {
+            bOE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.lessOperationExpressionNode);
+        }
+        addNoRootNodeToGraph(binaryOperationExpression, bOE_Name);
+        bindChildrenNode(binaryOperationExpression->GetLeftOperand(), binaryOperationExpression, true);
+        bindChildrenNode(binaryOperationExpression->GetRightOperand(), binaryOperationExpression, true);
     }
 
     void SerializeVisitor::VisitNode(const SquareBracketExpression* squareBracketExpression)
@@ -225,13 +249,13 @@ namespace SyntaxTree {
         addNoRootNodeToGraph(newArrayExpression, nAE_Name);
         bindChildrenNode(newArrayExpression->GetSizeOperand() ,newArrayExpression, true);
     }
-
     void SerializeVisitor::VisitNode(const OppositeExpression* oppositeExpression)
     {
         std::wstring oE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.oppositeExpressionNode);
         addNoRootNodeToGraph(oppositeExpression, oE_Name);
         bindChildrenNode(oppositeExpression->GetSourceExpression(), oppositeExpression, true);
     }
+
     void SerializeVisitor::VisitNode(const ParenthesesExpression* parenthesesExpression)
     {
         std::wstring pE_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.parenthesesExpressionNode);
@@ -306,7 +330,6 @@ namespace SyntaxTree {
         }
         bindChildrenNode(methodDeclaration->GetReturnExpression(), methodDeclaration, true);
     }
-
     void SerializeVisitor::VisitNode(const Goal* goal)
     {
         // create goal name and add goal to the hashtable
@@ -325,6 +348,7 @@ namespace SyntaxTree {
             bindChildrenNode(class_decl, goal, true);
         }
     }
+
     void SerializeVisitor::VisitNode(const MainClass* mainClass)
     {
         std::wstring mC_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.mainClassNode);

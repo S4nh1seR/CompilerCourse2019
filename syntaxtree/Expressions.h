@@ -17,7 +17,6 @@ namespace SyntaxTree {
         BOT_Add,
         BOT_Sub,
         BOT_Mul,
-        BOT_Div,
         BOT_Mod,
 
         BOT_Or,

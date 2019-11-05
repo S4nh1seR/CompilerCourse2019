@@ -26,6 +26,7 @@ namespace SyntaxTree  {
         void VisitNode(const Identifier* identifier) override;
 
         void VisitNode(const IdentifierExpression* identifierExpression) override;
+        void VisitNode(const BinaryOperationExpression* binaryOperationExpression) override;
         void VisitNode(const SquareBracketExpression* squareBracketExpression) override;
         void VisitNode(const LengthExpression* lengthExpression) override;
         void VisitNode(const MethodCallExpression* methodCallExpression) override;
@@ -45,7 +46,6 @@ namespace SyntaxTree  {
         void VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement) override;
 
         void VisitNode(const SimpleType* booleanType) override;
-        void VisitNode(const IntArrayType* intArrayType) override;
         void VisitNode(const IdentifierType* identifierType) override;
 
         void VisitNode(const ClassDeclaration* classDeclaration) override;
@@ -74,6 +74,15 @@ namespace SyntaxTree  {
             CNodePrefixNumber identifierNode {L"Identifier"};
 
             CNodePrefixNumber identifierExpressionNode {L"IdentifierExpression"};
+
+            CNodePrefixNumber addOperationExpressionNode {L"AddOperationExpression"};
+            CNodePrefixNumber subOperationExpressionNode {L"SubOperationExpression"};
+            CNodePrefixNumber mulOperationExpressionNode {L"MulOperationExpression"};
+            CNodePrefixNumber modOperationExpressionNode {L"ModOperationExpression"};
+            CNodePrefixNumber orOperationExpressionNode {L"OrOperationExpression"};
+            CNodePrefixNumber andOperationExpressionNode {L"AndOperationExpression"};
+            CNodePrefixNumber lessOperationExpressionNode {L"LessOperationExpression"};
+
             CNodePrefixNumber squareBracketExpressionNode {L"SquareBracketExpression"};
             CNodePrefixNumber lengthExpressionNode {L"LengthExpression"};
             CNodePrefixNumber methodCallExpressionNode {L"MethodCallExpression"};
@@ -92,7 +101,8 @@ namespace SyntaxTree  {
             CNodePrefixNumber assignmentStatementNode {L"AssignmentStatement"};
             CNodePrefixNumber arrayAssignmentStatementNode {L"ArrayAssignmentStatement"};
 
-            CNodePrefixNumber simpleTypeNode {L"SimpleType"};
+            CNodePrefixNumber intTypeNode {L"IntType"};
+            CNodePrefixNumber booleanTypeNode {L"BooleanType"};
             CNodePrefixNumber intArrayTypeNode {L"IntArrayType"};
             CNodePrefixNumber identifierTypeNode {L"IdentifierType"};
 

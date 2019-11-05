@@ -9,8 +9,8 @@ namespace SyntaxTree {
 
     class Goal : public ISyntaxTreeNode {
     public:
-        Goal(std::unique_ptr<const MainClass>&& _mainClass,
-            std::unique_ptr<std::vector<std::unique_ptr<const ClassDeclaration>>>&& _classDeclarations);
+        Goal(std::unique_ptr<MainClass const>&& _mainClass,
+            std::unique_ptr<std::vector<std::unique_ptr<ClassDeclaration const>>>&& _classDeclarations);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
