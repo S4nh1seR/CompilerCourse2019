@@ -1,3 +1,4 @@
+%require "3.4"
 %language "c++"
 %defines
 %define api.parser.class { Parser }
