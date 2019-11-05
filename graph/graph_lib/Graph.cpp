@@ -98,7 +98,11 @@ namespace SyntaxTree {
             out << L'\t' << currEdge->fromVertexName;
             out << L" -> ";
             out << currEdge->toVertexName;
-            out << L" [label=" << currEdge->edgeName << L"]; " << L'\n';
+            std::wstring edgeName = currEdge->edgeName;
+            if (!edgeName.empty()) {
+                out << L" [label=" << edgeName << L"]";
+            }
+            out << L";\n";
         }
     }
 }
