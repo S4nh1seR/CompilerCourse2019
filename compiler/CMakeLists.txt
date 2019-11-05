@@ -7,7 +7,7 @@ find_package(FLEX REQUIRED)
 
 BISON_TARGET(parser
              parser.yy
-             ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cc)
+             ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cc VERBOSE)
 FLEX_TARGET(lexer
             scanner.ll
             ${CMAKE_CURRENT_BINARY_DIR}/lexer.yy.cc)
