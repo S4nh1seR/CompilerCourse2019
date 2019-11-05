@@ -14,7 +14,7 @@ namespace SyntaxTree {
     std::wstring SerializeVisitor::makeUniqueNameAndUpdate(
             SyntaxTree::SerializeVisitor::CNodePrefixNumber &nodePrefixNumber)
     {
-        std::wstring toReturn = nodePrefixNumber.prefix + L"_replica" + std::to_wstring(nodePrefixNumber.number);
+        std::wstring toReturn = nodePrefixNumber.prefix + L"_" + std::to_wstring(nodePrefixNumber.number);
         ++nodePrefixNumber.number;
         return toReturn;
     }

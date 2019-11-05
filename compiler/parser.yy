@@ -74,7 +74,7 @@ class Scanner;
 %token T_BOOLEAN
 %token T_INT
 %token <int> T_NUM
-%token <std::string> T_ID
+%token <std::unique_ptr<const Identifier>> T_ID
 %token T_COMMENT
 %token T_SPACE
 %token T_N
@@ -104,7 +104,6 @@ class Scanner;
 %type <std::unique_ptr<const IExpression>> expression
 %type <std::unique_ptr<std::vector<std::unique_ptr<const IExpression>>>> expressions
 %type <std::unique_ptr<const IType>> type
-%type <std::unique_ptr<const Identifier>> identifier
 
 %%
 
@@ -116,7 +115,7 @@ goal:
 ;
 
 main_class:
-    T_CLASS identifier T_LBRACE T_PUBLIC T_STATIC T_VOID T_MAIN T_LPARENTH T_STRING T_LBRACKET T_RBRACKET identifier T_RPARENTH T_LBRACE statement T_RBRACE T_RBRACE {
+    T_CLASS T_ID T_LBRACE T_PUBLIC T_STATIC T_VOID T_MAIN T_LPARENTH T_STRING T_LBRACKET T_RBRACKET T_ID T_RPARENTH T_LBRACE statement T_RBRACE T_RBRACE {
         $$ = std::make_unique<const MainClass>($2, $12, $15);
     }
 ;
@@ -133,10 +132,10 @@ class_declarations:
 ;
 
 class_declaration:
-    T_CLASS identifier T_LBRACE variable_declarations method_declarations T_RBRACE {
+    T_CLASS T_ID T_LBRACE variable_declarations method_declarations T_RBRACE {
         $$ = std::make_unique<const ClassDeclaration>($2, nullptr, $4, $5);
     }
-    | T_CLASS identifier T_EXTENDS identifier T_LBRACE variable_declarations method_declarations T_RBRACE {
+    | T_CLASS T_ID T_EXTENDS T_ID T_LBRACE variable_declarations method_declarations T_RBRACE {
         $$ = std::make_unique<const ClassDeclaration>($2, $4, $6, $7);
     }
 ;
@@ -153,11 +152,11 @@ method_declarations:
 ;
 
 method_declaration:
-    T_PUBLIC type identifier T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
+    T_PUBLIC type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
         auto&& v = $5;
         $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, v->MoveTypes(), v->MoveIdentifiers(), $8, $9);
     }
-    | T_PRIVATE type identifier T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
+    | T_PRIVATE type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
         auto&& v = $5;
         $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, v->MoveTypes(), v->MoveIdentifiers(), $8, $9);
     }
@@ -167,11 +166,11 @@ arguments:
     %empty {
         $$ = std::make_unique<Arguments>();
     }
-    | type identifier {
+    | type T_ID {
         $$ = std::make_unique<Arguments>();
         $$->AddArgument($1, $2);
     }
-    | arguments T_COMMA type identifier {
+    | arguments T_COMMA type T_ID {
         auto&& v = $1;
         v->AddArgument($3, $4);
         $$ = std::move(v);
@@ -190,7 +189,7 @@ variable_declarations:
 ;
 
 variable_declaration:
-    type identifier T_SEMI {
+    type T_ID T_SEMI {
         $$ = std::make_unique<const VariableDeclaration>($1, $2);
     }
 ;
@@ -199,9 +198,9 @@ statements:
     %empty {
         $$ = std::make_unique<std::vector<std::unique_ptr<const IStatement>>>();
     }
-    | statements statement {
-        auto&& v = $1;
-        v->push_back($2);
+    | statement statements {
+        auto&& v = $2;
+        v->push_back($1);
         $$ = std::move(v);
     }
 ;
@@ -219,10 +218,10 @@ statement:
     | T_SOUT T_LPARENTH expression T_RPARENTH T_SEMI {
         $$ = std::make_unique<const PrintStatement>($3);
     }
-    | identifier T_EQ expression T_SEMI {
+    | T_ID T_EQ expression T_SEMI {
         $$ = std::make_unique<const AssignmentStatement>($1, $3);
     }
-    | identifier T_LBRACKET expression T_RBRACKET T_EQ expression T_SEMI {
+    | T_ID T_LBRACKET expression T_RBRACKET T_EQ expression T_SEMI {
         $$ = std::make_unique<const ArrayAssignmentStatement>($1, $3, $6);
     }
 ;
@@ -270,7 +269,7 @@ expression:
     | expression T_DOT T_LENGTH {
         $$ = std::make_unique<const LengthExpression>($1);
     }
-    | expression T_DOT identifier T_LPARENTH expressions T_RPARENTH {
+    | expression T_DOT T_ID T_LPARENTH expressions T_RPARENTH {
         $$ = std::make_unique<const MethodCallExpression>($1, $3, $5);
     }
     | T_NUM {
@@ -282,7 +281,7 @@ expression:
     | T_FALSE {
         $$ = std::make_unique<const BooleanLiteralExpression>(false);
     }
-    | identifier {
+    | T_ID {
         $$ = std::make_unique<const IdentifierExpression>($1);
     }
     | T_THIS {
@@ -291,7 +290,7 @@ expression:
     | T_NEW T_INT T_LBRACKET expression T_RBRACKET {
         $$ = std::make_unique<const NewArrayExpression>($4);
     }
-    | T_NEW identifier T_LPARENTH T_RPARENTH {
+    | T_NEW T_ID T_LPARENTH T_RPARENTH {
         $$ = std::make_unique<const NewExpression>($2);
     }
     | T_ANTI expression {
@@ -312,15 +311,8 @@ type:
     | T_INT {
         $$ = std::make_unique<const SimpleType>(T_Int);
     }
-    | identifier {
+    | T_ID {
         $$ = std::make_unique<const IdentifierType>($1);
-    }
-;
-
-identifier:
-    T_ID {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        $$ = std::make_unique<const Identifier>(converter.from_bytes($1));
     }
 ;
 

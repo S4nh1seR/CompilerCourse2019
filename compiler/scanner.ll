@@ -2,6 +2,7 @@
     #include "Scanner.h"
     #include "common.h"
     #include "parser.tab.hh"
+    #include <Identifier.h>
     #include <iostream>
     #include <string>
     #include <stdio.h>
@@ -138,13 +139,15 @@ T_SPACE		(" "|"\v"|"\r")+
 {T_EQ} 		{ std::string symbol = "EQ"; std::string data = "-1"; print_data(1, symbol, data, loc); return Process(Tokens::T_EQ); }
 {T_AND} 	{ std::string symbol = "AND"; std::string data = "-1"; print_data(1, symbol, data, loc); return Process(Tokens::T_AND); }
 {T_LESS} 	{ std::string symbol = "LESS"; std::string data = "-1"; print_data(1, symbol, data, loc); return Process(Tokens::T_LESS); }
+{T_ANTI} 	{ std::string symbol = "ANTI"; std::string data = "-1"; print_data(1, symbol, data, loc); return Process(Tokens::T_ANTI); }
 
 {T_ID} {
     std::string symbol = "ID";
     std::string data = YYText();
     print_data(1, symbol, data, loc);
 
-    yylval->emplace<std::string>(data);
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    yylval->emplace<std::unique_ptr<const Identifier>>(std::make_unique<const Identifier>(converter.from_bytes(data)));
     return Process(Tokens::T_ID);
 }
 {T_NUM} {

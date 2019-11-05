@@ -71,44 +71,44 @@ namespace SyntaxTree  {
         };
 
         struct CNodesNameUniqueMaker{
-            CNodePrefixNumber identifierNode {L"Identifier"};
+            CNodePrefixNumber identifierNode {L"Id"};
 
-            CNodePrefixNumber identifierExpressionNode {L"IdentifierExpression"};
+            CNodePrefixNumber identifierExpressionNode {L"IdExp"};
 
-            CNodePrefixNumber addOperationExpressionNode {L"AddOperationExpression"};
-            CNodePrefixNumber subOperationExpressionNode {L"SubOperationExpression"};
-            CNodePrefixNumber mulOperationExpressionNode {L"MulOperationExpression"};
-            CNodePrefixNumber modOperationExpressionNode {L"ModOperationExpression"};
-            CNodePrefixNumber orOperationExpressionNode {L"OrOperationExpression"};
-            CNodePrefixNumber andOperationExpressionNode {L"AndOperationExpression"};
-            CNodePrefixNumber lessOperationExpressionNode {L"LessOperationExpression"};
+            CNodePrefixNumber addOperationExpressionNode {L"AddOpExp"};
+            CNodePrefixNumber subOperationExpressionNode {L"SubOpExp"};
+            CNodePrefixNumber mulOperationExpressionNode {L"MulOpExp"};
+            CNodePrefixNumber modOperationExpressionNode {L"ModOpExp"};
+            CNodePrefixNumber orOperationExpressionNode {L"OrOpExp"};
+            CNodePrefixNumber andOperationExpressionNode {L"AndOpExp"};
+            CNodePrefixNumber lessOperationExpressionNode {L"LessOpExp"};
 
-            CNodePrefixNumber squareBracketExpressionNode {L"SquareBracketExpression"};
-            CNodePrefixNumber lengthExpressionNode {L"LengthExpression"};
-            CNodePrefixNumber methodCallExpressionNode {L"MethodCallExpression"};
-            CNodePrefixNumber booleanLiteralExpressionNode {L"BooleanLiteralExpression"};
-            CNodePrefixNumber integerLiteralExpressionNode {L"IntegerLiteralExpression"};
-            CNodePrefixNumber thisExpressionNode {L"ThisExpression"};
-            CNodePrefixNumber newExpressionNode {L"NewExpression"};
-            CNodePrefixNumber newArrayExpressionNode {L"NewArrayExpression"};
-            CNodePrefixNumber oppositeExpressionNode {L"OppositeExpression"};
-            CNodePrefixNumber parenthesesExpressionNode {L"ParenthesesExpression"};
+            CNodePrefixNumber squareBracketExpressionNode {L"SquareBracketExp"};
+            CNodePrefixNumber lengthExpressionNode {L"LengthExp"};
+            CNodePrefixNumber methodCallExpressionNode {L"MethodCallExp"};
+            CNodePrefixNumber booleanLiteralExpressionNode {L"BooleanLiteralExp"};
+            CNodePrefixNumber integerLiteralExpressionNode {L"IntegerLiteralExp"};
+            CNodePrefixNumber thisExpressionNode {L"ThisExp"};
+            CNodePrefixNumber newExpressionNode {L"NewExp"};
+            CNodePrefixNumber newArrayExpressionNode {L"NewArrayExp"};
+            CNodePrefixNumber oppositeExpressionNode {L"OppositeExp"};
+            CNodePrefixNumber parenthesesExpressionNode {L"ParenthesesExp"};
 
-            CNodePrefixNumber compoundStatementNode {L"CompoundStatement"};
-            CNodePrefixNumber conditionalStatementNode {L"ConditionalStatement"};
-            CNodePrefixNumber loopStatementNode {L"LoopStatement"};
-            CNodePrefixNumber printStatementNode {L"PrintStatement"};
-            CNodePrefixNumber assignmentStatementNode {L"AssignmentStatement"};
-            CNodePrefixNumber arrayAssignmentStatementNode {L"ArrayAssignmentStatement"};
+            CNodePrefixNumber compoundStatementNode {L"CompoundStm"};
+            CNodePrefixNumber conditionalStatementNode {L"ConditionalStm"};
+            CNodePrefixNumber loopStatementNode {L"LoopStm"};
+            CNodePrefixNumber printStatementNode {L"PrintStm"};
+            CNodePrefixNumber assignmentStatementNode {L"AssignmentStm"};
+            CNodePrefixNumber arrayAssignmentStatementNode {L"ArrayAssignmentStm"};
 
             CNodePrefixNumber intTypeNode {L"IntType"};
             CNodePrefixNumber booleanTypeNode {L"BooleanType"};
             CNodePrefixNumber intArrayTypeNode {L"IntArrayType"};
             CNodePrefixNumber identifierTypeNode {L"IdentifierType"};
 
-            CNodePrefixNumber classDeclarationNode {L"ClassDeclaration"};
-            CNodePrefixNumber variableDeclarationNode {L"VariableDeclaration"};
-            CNodePrefixNumber methodDeclarationNode {L"MethodDeclaration"};
+            CNodePrefixNumber classDeclarationNode {L"ClassDecl"};
+            CNodePrefixNumber variableDeclarationNode {L"VariableDecl"};
+            CNodePrefixNumber methodDeclarationNode {L"MethodDecl"};
 
             CNodePrefixNumber goalNode {L"Goal"};
             CNodePrefixNumber mainClassNode {L"MainClass"};
