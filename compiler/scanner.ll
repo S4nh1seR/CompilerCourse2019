@@ -2,9 +2,7 @@
     #include "Scanner.h"
     #include "common.h"
     #include "parser.tab.hh"
-    #include <codecvt>
     #include <iostream>
-    #include <locale>
     #include <string>
     #include <stdio.h>
 
@@ -37,7 +35,6 @@
 	}
     }
 
- 
 %}
 %option noyywrap
 %option yylineno
@@ -94,6 +91,13 @@ T_SPACE		(" "|"\v"|"\r")+
 
 %%
 
+%{
+    yylval = lval;
+%}
+
+{T_N} 	{ Process(Tokens::T_N); }
+{T_T}	{ Process(Tokens::T_T); }
+
 {T_LBRACKET}    { std::string symbol = "LBRACKET"; std::string data = "-1"; print_data(1, symbol, data, loc); return Process(Tokens::T_LBRACKET); }
 {T_RBRACKET}    { std::string symbol = "RBRACKET"; std::string data = "-1"; print_data(1, symbol, data, loc); return Process(Tokens::T_RBRACKET); }
 {T_OR}          { std::string symbol = "OR"; std::string data = "-1"; print_data(1, symbol, data, loc); return Process(Tokens::T_OR); }
@@ -140,8 +144,7 @@ T_SPACE		(" "|"\v"|"\r")+
     std::string data = YYText();
     print_data(1, symbol, data, loc);
 
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    yylval->emplace<std::wstring>(converter.from_bytes(YYText()));
+    yylval->emplace<std::string>(data);
     return Process(Tokens::T_ID);
 }
 {T_NUM} {
@@ -149,14 +152,12 @@ T_SPACE		(" "|"\v"|"\r")+
     std::string data = YYText();
     print_data(1, symbol, data, loc);
 
-    yylval->emplace<int>(std::stoi(YYText()));
+    yylval->emplace<int>(std::stoi(data));
     return Process(Tokens::T_NUM);
 }
 
 {T_COMMENT}	{ Process(Tokens::T_COMMENT); }
 {T_SPACE}   { Process(Tokens::T_SPACE); }
-{T_N} 	{ Process(Tokens::T_N); }
-{T_T}	{ Process(Tokens::T_T); }
 
 . { printf("unknown"); return Process(Tokens::T_Unknown); }
 %%

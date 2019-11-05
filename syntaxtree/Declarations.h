@@ -9,7 +9,11 @@ namespace SyntaxTree {
 
     class Arguments {
     public:
-        Arguments() = default;
+        Arguments()
+            : argumentsTypes(std::make_unique<std::vector<std::unique_ptr<const IType>>>())
+            , argumentsIdentifiers(std::make_unique<std::vector<std::unique_ptr<const Identifier>>>())
+        {
+        }
         Arguments(Arguments&&) = default;
 
         void AddArgument(std::unique_ptr<const IType>&& argumentType, std::unique_ptr<const Identifier>&& argumentIdentifier) {

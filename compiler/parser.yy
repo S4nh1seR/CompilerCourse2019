@@ -3,11 +3,12 @@
 %define api.parser.class { Parser }
 %define api.value.type variant
 %define api.value.automove true
-%define parse.assert
+%define parse.assert true
 %define parse.error verbose
 %parse-param { std::unique_ptr<const Goal>& syntaxTreeRoot }
 %parse-param { std::unique_ptr<Scanner>& scanner }
 %locations
+
 %code requires {
 #include <SerializeVisitor.h>
 #include <Declarations.h>
@@ -21,9 +22,12 @@ using namespace SyntaxTree;
 
 #include <string>
 #include <vector>
+#include <codecvt>
+#include <locale>
 
 class Scanner;
 }
+
 %code {
 #include "Scanner.h"
 #undef yylex
@@ -70,7 +74,7 @@ class Scanner;
 %token T_BOOLEAN
 %token T_INT
 %token <int> T_NUM
-%token <std::wstring> T_ID
+%token <std::string> T_ID
 %token T_COMMENT
 %token T_SPACE
 %token T_N
@@ -315,14 +319,14 @@ type:
 
 identifier:
     T_ID {
-        $$ = std::make_unique<const Identifier>($1);
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        $$ = std::make_unique<const Identifier>(converter.from_bytes($1));
     }
 ;
 
 %%
 
-void yy::Parser::error (const location_type& loc, const std::string& msg)
- {
-  std::cout << "error " << msg << std::endl;
+void yy::Parser::error (const location_type& loc, const std::string& msg) {
+    std::cout << "error " << msg << std::endl;
 } 
 
