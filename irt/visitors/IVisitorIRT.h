@@ -1,30 +1,29 @@
 #pragma once
 
 // ToDo Include IExp IStm
+namespace IrtTree {
 
-
-namespace IRT {
     // expressions
-    class ConstExp;
+    	class ConstExp;
 	class NameExp;
 	class TempExp;
 	class BinaryExp;
 	class MemoryExp;
-	class CallExp
-	class ESeqExp
+	class CallExp;
+	class ESeqExp;
     // statements
-    class MoveStm;
-    class ExpStm;
-    class JumpStm;
-    class CJumpStm;
-    class SeqStm;
-    class LabelStm;
+    	class MoveStm;
+    	class ExpStm;
+    	class JumpStm;
+    	class CJumpStm;
+    	class SeqStm;
+    	class LabelStm;
 
-	class IVisitorIRT {
+	class IVisitor {
     public:
 			IVisitor() = default;
 
-            virtual void Visit( const ConstExp* n ) = 0;
+            		virtual void Visit( const ConstExp* n ) = 0;
 			virtual void Visit( const NameExp* n ) = 0;
 			virtual void Visit( const TempExp* n ) = 0;
 			virtual void Visit( const BinaryExp* n ) = 0;
@@ -40,4 +39,4 @@ namespace IRT {
 			virtual void Visit( const LabelStm* n ) = 0;
 
     };
-}
+};

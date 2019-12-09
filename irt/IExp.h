@@ -1,6 +1,7 @@
 #pragma once
 
 //#include <Visitor.h> toDo: Подключить visitor
+#include <IVisitorIRT.h>
 
 namespace IrtTree {
 

@@ -5,19 +5,19 @@
 #include "IExp.h"
 #include "IStm.h"
 
+namespace IrtTree {
 
 class ExpList
 {
-
  public:
     ExpList() = default;
 
-    explicit ExpList(std::unique_ptr<IExp>& expression)
+    explicit ExpList(const IExp* expression)
     {
         Add( expression );
     }
 
-    void Add(std::unique_ptr<IExp>& expression)
+    void Add(const IExp* expression)
     {
         expressions.emplace_back(expression);
     }
@@ -29,4 +29,6 @@ class ExpList
 
  private:
     std::vector<std::unique_ptr<const IExp>> expressions;
+};
+
 };
