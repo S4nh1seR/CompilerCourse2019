@@ -87,7 +87,7 @@ namespace SyntaxTree {
 
         MethodCallExpression(std::unique_ptr<const IExpression>&& _objectOperand,
             std::unique_ptr<const Identifier>&& _methodIdentifier,
-            std::unique_ptr<std::vector<std::unique_ptr<const IExpression>>>&& _methodArguments);
+            std::vector<std::unique_ptr<const IExpression>>&& _methodArguments);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -99,7 +99,7 @@ namespace SyntaxTree {
     private:
         std::unique_ptr<const IExpression> objectOperand;
         std::unique_ptr<const Identifier> methodIdentifier;
-        std::unique_ptr<const std::vector<std::unique_ptr<const IExpression>>> methodArguments;
+        const std::vector<std::unique_ptr<const IExpression>> methodArguments;
     };
 
     class BooleanLiteralExpression : public IExpression {

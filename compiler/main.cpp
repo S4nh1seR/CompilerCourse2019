@@ -3,6 +3,7 @@
 #include <Goal.h>
 #include <Graph.h>
 #include <SerializeVisitor.h>
+#include <BuildSymbolTableVisitor.h>
 #include <iostream>
 
 void serializeGraph(std::istream& in, std::wostream& out = std::wcout) {
@@ -16,6 +17,12 @@ void serializeGraph(std::istream& in, std::wostream& out = std::wcout) {
     auto graph = std::make_shared<SyntaxTree::DirectedGraph>(L"SyntaxTreeGraph");
     visitor.RoundLaunch(graph, syntaxTreeRoot.release());
     SyntaxTree::GraphSerializer::GraphSerialize(*graph, out);
+
+    /* Построение symbol_table */
+    BuildSymbolTableVisitor symbolTableBuilder;
+    auto symbolTable = std::make_shared<SyntaxTree::SymbolTable>();
+    symbolTableBuilder.RoundLaunch(symbolTable, syntaxTreeRoot.release());
+
 }
 
 int main(int argc, char** argv) {

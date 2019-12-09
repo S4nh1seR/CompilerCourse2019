@@ -26,7 +26,7 @@ namespace SyntaxTree {
 
     MethodCallExpression::MethodCallExpression(std::unique_ptr<const IExpression>&& _objectOperand,
         std::unique_ptr<const Identifier>&& _methodIdentifier,
-        std::unique_ptr<std::vector<std::unique_ptr<const IExpression>>>&& _methodArguments)
+        std::vector<std::unique_ptr<const IExpression>>&& _methodArguments)
 
     :   objectOperand(std::move(_objectOperand)),
         methodIdentifier(std::move(_methodIdentifier)),
@@ -34,14 +34,14 @@ namespace SyntaxTree {
         {}
 
     const IExpression* MethodCallExpression::GetArgument(int index) const {
-        assert(index >= 0 && index < methodArguments->size());
-        return (*methodArguments)[index].get();
+        assert(index >= 0 && index < methodArguments.size());
+        return methodArguments[index].get();
     }
 
     void MethodCallExpression::GetAllArguments(std::vector<const IExpression*>& _methodArguments) const {
         _methodArguments.clear();
-        for (int i = 0; i < methodArguments->size(); ++i) {
-            _methodArguments.push_back((*methodArguments)[i].get());
+        for (int i = 0; i < methodArguments.size(); ++i) {
+            _methodArguments.push_back(methodArguments[i].get());
         }
     }
 }

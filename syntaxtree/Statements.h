@@ -12,14 +12,14 @@ namespace SyntaxTree {
 
     class CompoundStatement : public IStatement {
     public:
-        explicit CompoundStatement(std::unique_ptr<std::vector<std::unique_ptr<const IStatement>>>&& _internalStatements);
+        explicit CompoundStatement(std::vector<std::unique_ptr<const IStatement>>&& _internalStatements);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const IStatement* GetStatement(int index) const;
         void GetAllStatements(std::vector<const IStatement*>& _internalStatements) const;
     private:
-        std::unique_ptr<const std::vector<std::unique_ptr<const IStatement>>> internalStatements;
+        const std::vector<std::unique_ptr<const IStatement>> internalStatements;
     };
 
     class ConditionalStatement : public IStatement {

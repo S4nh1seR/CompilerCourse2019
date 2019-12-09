@@ -4,8 +4,9 @@ project(visitor)
 
 set(graph_dir "../graph/graph_lib")
 set(syntaxtree_dir "../syntaxtree")
-include_directories(. ${graph_dir} ${syntaxtree_dir})
+set(symbol_table_dir "../symbol_table")
+include_directories(. ${graph_dir} ${syntaxtree_dir} ${symbol_table_dir})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(visitor Visitor.h SerializeVisitor.h SerializeVisitor.cpp)
+add_library(visitor SerializeVisitor.cpp BuildSymbolTableVisitor.cpp)

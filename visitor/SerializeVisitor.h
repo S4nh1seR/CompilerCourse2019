@@ -45,8 +45,7 @@ namespace SyntaxTree  {
         void VisitNode(const AssignmentStatement* assignmentStatement) override;
         void VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement) override;
 
-        void VisitNode(const SimpleType* booleanType) override;
-        void VisitNode(const IdentifierType* identifierType) override;
+        void VisitNode(const Type* type) override;
 
         void VisitNode(const ClassDeclaration* classDeclaration) override;
         void VisitNode(const VariableDeclaration* variableDeclaration) override;

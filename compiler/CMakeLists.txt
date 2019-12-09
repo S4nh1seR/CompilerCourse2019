@@ -14,14 +14,16 @@ FLEX_TARGET(lexer
 ADD_FLEX_BISON_DEPENDENCY(lexer parser)
 
 set(SYNTAX_TREE_SRCS ../syntaxtree/Expressions.cpp ../syntaxtree/Statements.cpp ../syntaxtree/Declarations.cpp ../syntaxtree/Goal.cpp ../syntaxtree/MainClass.cpp)
-set(VISITOR_SRCS ../visitor/SerializeVisitor.cpp)
+set(VISITOR_SRCS ../visitor/SerializeVisitor.cpp ../visitor/BuildSymbolTableVisitor.cpp)
 set(GRAPH_SRCS ../graph/graph_lib/Graph.cpp)
+set(SYMBOL_TABLE_SRCS ../symbol_table/MethodInfo.cpp ../symbol_table/ClassInfo.cpp ../symbol_table/SymbolTable.cpp)
 
 add_executable(compiler
     main.cpp
     ${SYNTAX_TREE_SRCS}
     ${VISITOR_SRCS}
     ${GRAPH_SRCS}
+    ${SYMBOL_TABLE_SRCS}
     ${FLEX_lexer_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )
@@ -31,6 +33,7 @@ target_include_directories(compiler
         ../graph/graph_lib
         ../visitor
         ../syntaxtree
+        ../symbol_table
         ${CMAKE_CURRENT_BINARY_DIR})
 set_property(TARGET compiler
              PROPERTY CXX_STANDARD 17)

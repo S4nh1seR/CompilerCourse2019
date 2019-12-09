@@ -4,38 +4,31 @@
 
 #include <Visitor.h>
 
+#include <cassert>
 #include <memory>
 
 namespace SyntaxTree {
 
-    class IType : public ISyntaxTreeNode {
-    };
-
     enum TType {
         T_Boolean,
         T_Int,
-        T_IntArray
+        T_IntArray,
+        T_ClassType
     };
 
-    class SimpleType : public IType {
+    class Type : public ISyntaxTreeNode {
     public:
-        explicit SimpleType(TType _type): type(_type) {}
+        Type(TType _type): type(_type) { assert(IsSimpleType()); }
+        Type(std::unique_ptr<const Identifier>&& _identifier): type(T_ClassType), identifier(std::move(_identifier)) { assert(identifier != 0); }
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
+
 
         TType GetType() const { return type; }
+        const Identifier* GetIdentifier() const { return identifier.get(); }
+        bool IsSimpleType() const { return type != T_ClassType; }
     private:
         TType type;
-    };
-
-    class IdentifierType : public IType {
-    public:
-        IdentifierType(std::unique_ptr<const Identifier>&& _identifier): identifier(std::move(_identifier)) {}
-
-        virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
-
-        const Identifier* GetIdentifier() const { return identifier.get(); }
-    private:
         std::unique_ptr<const Identifier> identifier;
     };
 

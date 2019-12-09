@@ -94,17 +94,17 @@ class Scanner;
 %type <std::unique_ptr<const Goal>> goal
 %type <std::unique_ptr<const MainClass>> main_class
 %type <std::unique_ptr<const ClassDeclaration>> class_declaration
-%type <std::unique_ptr<std::vector<std::unique_ptr<const ClassDeclaration>>>> class_declarations
+%type <std::vector<std::unique_ptr<const ClassDeclaration>>> class_declarations
 %type <std::unique_ptr<const MethodDeclaration>> method_declaration
-%type <std::unique_ptr<std::vector<std::unique_ptr<const MethodDeclaration>>>> method_declarations
-%type <std::unique_ptr<Arguments>> arguments
+%type <std::vector<std::unique_ptr<const MethodDeclaration>>> method_declarations
+%type <std::vector<std::unique_ptr<const Argument>>> arguments
 %type <std::unique_ptr<const VariableDeclaration>> variable_declaration
-%type <std::unique_ptr<std::vector<std::unique_ptr<const VariableDeclaration>>>> variable_declarations
+%type <std::vector<std::unique_ptr<const VariableDeclaration>>> variable_declarations
 %type <std::unique_ptr<const IStatement>> statement
-%type <std::unique_ptr<std::vector<std::unique_ptr<const IStatement>>>> statements
+%type <std::vector<std::unique_ptr<const IStatement>>> statements
 %type <std::unique_ptr<const IExpression>> expression
-%type <std::unique_ptr<std::vector<std::unique_ptr<const IExpression>>>> expressions
-%type <std::unique_ptr<const IType>> type
+%type <std::vector<std::unique_ptr<const IExpression>>> expressions
+%type <std::unique_ptr<const Type>> type
 
 %%
 
@@ -123,11 +123,11 @@ main_class:
 
 class_declarations:
     %empty {
-        $$ = std::make_unique<std::vector<std::unique_ptr<const ClassDeclaration>>>();
+        $$ = std::move(std::vector<std::unique_ptr<const ClassDeclaration>>());
     }
     | class_declarations class_declaration {
         auto&& v = $1;
-        v->push_back($2);
+        v.push_back($2);
         $$ = std::move(v);
     }
 ;
@@ -143,48 +143,46 @@ class_declaration:
 
 method_declarations:
     %empty {
-        $$ = std::make_unique<std::vector<std::unique_ptr<const MethodDeclaration>>>();
+        $$ = std::move(std::vector<std::unique_ptr<const MethodDeclaration>>());
     }
     | method_declarations method_declaration {
         auto&& v = $1;
-        v->push_back($2);
+        v.push_back($2);
         $$ = std::move(v);
     }
 ;
 
 method_declaration:
     T_PUBLIC type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
-        auto&& v = $5;
-        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, v->MoveTypes(), v->MoveIdentifiers(), $8, $9);
+        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9);
     }
     | T_PRIVATE type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
-        auto&& v = $5;
-        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, v->MoveTypes(), v->MoveIdentifiers(), $8, $9);
+        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9);
     }
 ;
 
 arguments:
     %empty {
-        $$ = std::make_unique<Arguments>();
+        $$ = std::move(std::vector<std::unique_ptr<const Argument>>());
     }
     | type T_ID {
-        $$ = std::make_unique<Arguments>();
-        $$->AddArgument($1, $2);
+        $$ = std::vector<std::unique_ptr<const Argument>>();
+        $$.push_back(std::make_unique<Argument>($1, $2));
     }
     | arguments T_COMMA type T_ID {
         auto&& v = $1;
-        v->AddArgument($3, $4);
+        v.push_back(std::make_unique<Argument>($3, $4));
         $$ = std::move(v);
     }
 ;
 
 variable_declarations:
     %empty {
-        $$ = std::make_unique<std::vector<std::unique_ptr<const VariableDeclaration>>>();
+        $$ = std::move(std::vector<std::unique_ptr<const VariableDeclaration>>());
     }
     | variable_declarations variable_declaration {
         auto&& v = $1;
-        v->push_back($2);
+        v.push_back($2);
         $$ = std::move(v);
     }
 ;
@@ -197,11 +195,11 @@ variable_declaration:
 
 statements:
     %empty {
-        $$ = std::make_unique<std::vector<std::unique_ptr<const IStatement>>>();
+        $$ = std::move(std::vector<std::unique_ptr<const IStatement>>());
     }
     | statement statements {
         auto&& v = $2;
-        v->push_back($1);
+        v.push_back($1);
         $$ = std::move(v);
     }
 ;
@@ -229,15 +227,15 @@ statement:
 
 expressions:
     %empty {
-        $$ = std::make_unique<std::vector<std::unique_ptr<const IExpression>>>();
+        $$ = std::move(std::vector<std::unique_ptr<const IExpression>>());
     }
     | expression {
-        $$ = std::make_unique<std::vector<std::unique_ptr<const IExpression>>>();
-        $$->push_back($1);
+        $$ = std::move(std::vector<std::unique_ptr<const IExpression>>());
+        $$.push_back($1);
     }
     | expressions T_COMMA expression {
         auto&& v = $1;
-        v->push_back($3);
+        v.push_back($3);
         $$ = std::move(v);
     }
 ;
@@ -304,16 +302,16 @@ expression:
 
 type:
     T_INT T_LBRACKET T_RBRACKET {
-        $$ = std::make_unique<const SimpleType>(T_IntArray);
+        $$ = std::make_unique<const Type>(T_IntArray);
     }
     | T_BOOLEAN {
-        $$ = std::make_unique<const SimpleType>(T_Boolean);
+        $$ = std::make_unique<const Type>(T_Boolean);
     }
     | T_INT {
-        $$ = std::make_unique<const SimpleType>(T_Int);
+        $$ = std::make_unique<const Type>(T_Int);
     }
     | T_ID {
-        $$ = std::make_unique<const IdentifierType>($1);
+        $$ = std::make_unique<const Type>($1);
     }
 ;
 

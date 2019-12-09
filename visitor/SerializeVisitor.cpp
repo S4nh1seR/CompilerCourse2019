@@ -73,29 +73,23 @@ namespace SyntaxTree {
         }
     }
 
-    void SerializeVisitor::VisitNode(const IdentifierType* identifierType)
+    void SerializeVisitor::VisitNode(const Type* _type)
     {
-        // make identifierType name and add it to the graph with this name
-        std::wstring iT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.identifierTypeNode);
-        addNoRootNodeToGraph(identifierType, iT_Name);
-
-        // bind identifierType children to it's parent and add them to in-process queue
-        bindChildrenNode(identifierType->GetIdentifier(), identifierType, true);
-    }
-
-    void SerializeVisitor::VisitNode(const SimpleType* simpleType)
-    {
-        // make simpleType name and add it to the graph with this name
-        auto type = simpleType->GetType();
-        std::wstring sT_Name;
+        auto type = _type->GetType();
+        std::wstring T_Name;
         if (type == SyntaxTree::T_Int) {
-            sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intTypeNode);
+            T_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intTypeNode);
         } else if (type == SyntaxTree::T_Boolean) {
-            sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.booleanTypeNode);
+            T_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.booleanTypeNode);
         } else if (type == SyntaxTree::T_IntArray) {
-            sT_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intArrayTypeNode);
+            T_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.intArrayTypeNode);
+        } else if (type == SyntaxTree::T_ClassType) {
+            T_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.identifierTypeNode);
         }
-        addNoRootNodeToGraph(simpleType, sT_Name);
+        addNoRootNodeToGraph(_type, T_Name);
+        if (!_type->IsSimpleType()) {
+            bindChildrenNode(_type->GetIdentifier(), _type, true);
+        }
     }
 
     void SerializeVisitor::VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement)
@@ -305,8 +299,8 @@ namespace SyntaxTree {
         std::wstring mD_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.methodDeclarationNode);
         addNoRootNodeToGraph(methodDeclaration, mD_Name);
         bindChildrenNode(methodDeclaration->GetReturnType(), methodDeclaration, true);
-        bindChildrenNode(methodDeclaration->GetClassIdentifier(), methodDeclaration, true);
-        std::vector<const IType*> argument_types;
+        bindChildrenNode(methodDeclaration->GetMethodIdentifier(), methodDeclaration, true);
+        std::vector<const Type*> argument_types;
         std::vector<const Identifier*> argument_identifiers;
         methodDeclaration->GetArgumentTypes(argument_types);
         methodDeclaration->GetArgumentIdentifiers(argument_identifiers);

@@ -33,19 +33,19 @@ namespace SyntaxTree {
         rightOperand(std::move(_rightOperand))
         {}
 
-    CompoundStatement::CompoundStatement(std::unique_ptr<std::vector<std::unique_ptr<const IStatement>>>&& _internalStatements)
+    CompoundStatement::CompoundStatement(std::vector<std::unique_ptr<const IStatement>>&& _internalStatements)
     :   internalStatements(std::move(_internalStatements))
         {}
 
     const IStatement* CompoundStatement::GetStatement(int index) const {
-        assert(index >= 0 && index < internalStatements->size());
-        return (*internalStatements)[index].get();
+        assert(index >= 0 && index < internalStatements.size());
+        return internalStatements[index].get();
     }
 
     void CompoundStatement::GetAllStatements(std::vector<const IStatement*>& _internalStatements) const {
         _internalStatements.clear();
-        for (int i = 0; i < internalStatements->size(); ++i) {
-            _internalStatements.push_back((*internalStatements)[i].get());
+        for (int i = 0; i < internalStatements.size(); ++i) {
+            _internalStatements.push_back(internalStatements[i].get());
         }
     }
 }
