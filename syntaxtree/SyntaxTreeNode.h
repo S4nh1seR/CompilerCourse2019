@@ -10,6 +10,7 @@ namespace SyntaxTree {
     public:
         virtual ~ISyntaxTreeNode() = default;
         virtual void AcceptVisitor(IVisitor* visitor) const = 0;
+	int line{0};
     };
 
 }

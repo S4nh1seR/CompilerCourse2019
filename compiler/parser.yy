@@ -92,7 +92,7 @@ class Scanner;
 %left T_LBRACKET T_DOT T_LPARENTH
 
 %type <std::unique_ptr<const Goal>> goal
-%type <std::unique_ptr<const MainClass>> main_class
+%type <std::unique_ptr<MainClass>> main_class
 %type <std::unique_ptr<const ClassDeclaration>> class_declaration
 %type <std::vector<std::unique_ptr<const ClassDeclaration>>> class_declarations
 %type <std::unique_ptr<const MethodDeclaration>> method_declaration
@@ -110,14 +110,17 @@ class Scanner;
 
 goal:
     main_class class_declarations T_EOF {
-        syntaxTreeRoot = std::make_unique<const Goal>($1, $2);
+        syntaxTreeRoot = std::make_unique<const Goal>($1, $2, @1.begin.line);
         $$ = nullptr;
     }
 ;
 
 main_class:
     T_CLASS T_ID T_LBRACE T_PUBLIC T_STATIC T_VOID T_MAIN T_LPARENTH T_STRING T_LBRACKET T_RBRACKET T_ID T_RPARENTH T_LBRACE statement T_RBRACE T_RBRACE {
-        $$ = std::make_unique<const MainClass>($2, $12, $15);
+
+	std::cout << @2.begin << "|" << @2.end << std::endl;
+        $$ = std::make_unique<MainClass>($2, $12, $15);
+	$$->line = @1.begin.line;
     }
 ;
 
@@ -248,6 +251,7 @@ expression:
         $$ = std::make_unique<const BinaryOperationExpression>(BOT_Or, $1, $3);
     }
     | expression T_LESS expression {
+	std::cout << @1.begin << "|" << @2.end << std::endl;
         $$ = std::make_unique<const BinaryOperationExpression>(BOT_Less, $1, $3);
     }
     | expression T_PLUS expression {
@@ -318,6 +322,6 @@ type:
 %%
 
 void yy::Parser::error (const location_type& loc, const std::string& msg) {
-    std::cout << "error " << msg << std::endl;
+    std::cout << "error " << msg << " at " << loc.begin << " - " << loc.end << std::endl;
 } 
 
