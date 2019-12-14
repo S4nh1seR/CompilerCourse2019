@@ -4,21 +4,21 @@ namespace SyntaxTree {
 
     Argument::Argument(std::unique_ptr<const Type>&& _argumentType, std::unique_ptr<const Identifier>&& _argumentIdentifier)
     :   argumentType(std::move(_argumentType)),
-        argumentIdentifier(std::move(_argumentIdentifier))
-        {}
+        argumentIdentifier(std::move(_argumentIdentifier), int _line)
+        {line = _line;}
 
     VariableDeclaration::VariableDeclaration(std::unique_ptr<const Type>&& _declarationType,
-        std::unique_ptr<const Identifier>&& _declarationIdentifier)
+        std::unique_ptr<const Identifier>&& _declarationIdentifier, int _line)
 
     :   declarationType(std::move(_declarationType)),
         declarationIdentifier(std::move(_declarationIdentifier))
-        {}
+        {line = _line;}
 
     MethodDeclaration::MethodDeclaration(std::unique_ptr<const Type>&& _returnType,
         std::unique_ptr<const Identifier>&& _methodIdentifier, std::unique_ptr<const IExpression>&& _returnExpression,
         std::vector<std::unique_ptr<const Argument>>&& _arguments,
         std::vector<std::unique_ptr<const VariableDeclaration>>&& _variableDeclarations,
-        std::vector<std::unique_ptr<const IStatement>>&& _statements)
+        std::vector<std::unique_ptr<const IStatement>>&& _statements, int _line)
 
     :   returnType(std::move(_returnType)),
         methodIdentifier(std::move(_methodIdentifier)),
@@ -26,7 +26,7 @@ namespace SyntaxTree {
         arguments(std::move(_arguments)),
         variableDeclarations(std::move(_variableDeclarations)),
         statements(std::move(_statements))
-        {}
+        {line = _line;}
 
 
     const Type* MethodDeclaration::GetArgumentType(int index) const {
@@ -80,12 +80,12 @@ namespace SyntaxTree {
     ClassDeclaration::ClassDeclaration(std::unique_ptr<const Identifier>&& _classIdentifier,
         std::unique_ptr<const Identifier>&& _baseClassIdentifier,
         std::vector<std::unique_ptr<const VariableDeclaration>>&& _variableDeclarations,
-        std::vector<std::unique_ptr<const MethodDeclaration>>&& _methodDeclarations)
+        std::vector<std::unique_ptr<const MethodDeclaration>>&& _methodDeclarations, int _line)
     :   classIdentifier(std::move(_classIdentifier)),
         baseClassIdentifier(std::move(_baseClassIdentifier)),
         variableDeclarations(std::move(_variableDeclarations)),
         methodDeclarations(std::move(_methodDeclarations))
-        {}
+        {line = _line;}
 
 
     const VariableDeclaration* ClassDeclaration::GetVariableDeclaration(int index) const {
