@@ -4,8 +4,8 @@ namespace SyntaxTree {
 
     Argument::Argument(std::unique_ptr<const Type>&& _argumentType, std::unique_ptr<const Identifier>&& _argumentIdentifier)
     :   argumentType(std::move(_argumentType)),
-        argumentIdentifier(std::move(_argumentIdentifier), int _line)
-        {line = _line;}
+        argumentIdentifier(std::move(_argumentIdentifier))
+        {}
 
     VariableDeclaration::VariableDeclaration(std::unique_ptr<const Type>&& _declarationType,
         std::unique_ptr<const Identifier>&& _declarationIdentifier, int _line)

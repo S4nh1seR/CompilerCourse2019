@@ -10,7 +10,7 @@ namespace SyntaxTree {
 
     class Identifier : public ISyntaxTreeNode {
     public:
-        explicit Identifier(const std::wstring& _identifier, int _line): identifier(_identifier) {line = _line;}
+        explicit Identifier(const std::wstring& _identifier): identifier(_identifier) {}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 

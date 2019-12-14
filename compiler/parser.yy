@@ -117,8 +117,6 @@ goal:
 
 main_class:
     T_CLASS T_ID T_LBRACE T_PUBLIC T_STATIC T_VOID T_MAIN T_LPARENTH T_STRING T_LBRACKET T_RBRACKET T_ID T_RPARENTH T_LBRACE statement T_RBRACE T_RBRACE {
-
-	std::cout << @2.begin << "|" << @2.end << std::endl;
         $$ = std::make_unique<MainClass>($2, $12, $15, @1.begin.line);
 	$$->line = @1.begin.line;
     }
@@ -170,11 +168,11 @@ arguments:
     }
     | type T_ID {
         $$ = std::vector<std::unique_ptr<const Argument>>();
-        $$.push_back(std::make_unique<Argument>($1, $2, @1.begin.line));
+        $$.push_back(std::make_unique<Argument>($1, $2));
     }
     | arguments T_COMMA type T_ID {
         auto&& v = $1;
-        v.push_back(std::make_unique<Argument>($3, $4, @1.begin.line));
+        v.push_back(std::make_unique<Argument>($3, $4));
         $$ = std::move(v);
     }
 ;
@@ -251,7 +249,6 @@ expression:
         $$ = std::make_unique<const BinaryOperationExpression>(BOT_Or, $1, $3, @1.begin.line);
     }
     | expression T_LESS expression {
-	std::cout << @1.begin << "|" << @2.end << std::endl;
         $$ = std::make_unique<const BinaryOperationExpression>(BOT_Less, $1, $3, @1.begin.line);
     }
     | expression T_PLUS expression {
@@ -288,7 +285,7 @@ expression:
         $$ = std::make_unique<const IdentifierExpression>($1, @1.begin.line);
     }
     | T_THIS {
-        $$ = std::make_unique<const ThisExpression>(@1.begin.line);
+        $$ = std::make_unique<const ThisExpression>();
     }
     | T_NEW T_INT T_LBRACKET expression T_RBRACKET {
         $$ = std::make_unique<const NewArrayExpression>($4, @1.begin.line);

@@ -56,7 +56,7 @@ namespace SyntaxTree {
 
     class PrintStatement : public IStatement {
     public:
-        explicit PrintStatement(std::unique_ptr<const IExpression>&& _printOperand, int _line): printOperand(std::move(_printOperand)) {line = _line}
+        explicit PrintStatement(std::unique_ptr<const IExpression>&& _printOperand, int _line): printOperand(std::move(_printOperand)) {line = _line;}
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
