@@ -13,7 +13,8 @@ namespace SyntaxTree {
         T_Boolean,
         T_Int,
         T_IntArray,
-        T_ClassType
+        T_ClassType,
+        T_Invalid
     };
 
     class Type : public ISyntaxTreeNode {

@@ -2,7 +2,7 @@
 
 namespace SyntaxTree {
 
-    void SymbolTable::AddClass(const std::wstring& _className, std::unique_ptr<const ClassInfo>&& _classInfo) {
+    void SymbolTable::AddClass(const std::wstring& _className, std::unique_ptr<ClassInfo>&& _classInfo) {
         assert(classes.find(_className) == classes.end());
         classes.emplace(_className, std::move(_classInfo));
     }

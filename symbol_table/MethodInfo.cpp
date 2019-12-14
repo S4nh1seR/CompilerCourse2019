@@ -19,12 +19,10 @@ namespace SyntaxTree {
     }
 
     void MethodInfo::AddArgument(const std::wstring& _argumentName, std::unique_ptr<const VariableInfo>&& _argumentInfo) {
-        assert(arguments.find(_argumentName) == arguments.end());
         arguments.emplace(_argumentName, std::move(_argumentInfo));
     }
 
     void MethodInfo::AddLocalVariable(const std::wstring& _localVariableName, std::unique_ptr<const VariableInfo>&& _localVariableInfo) {
-        assert(localVariables.find(_localVariableName) == localVariables.end());
         localVariables.emplace(_localVariableName, std::move(_localVariableInfo));
     }
 

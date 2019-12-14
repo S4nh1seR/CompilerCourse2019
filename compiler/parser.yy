@@ -199,7 +199,7 @@ statements:
     }
     | statement statements {
         auto&& v = $2;
-        v.push_back($1);
+        v.insert(v.begin(), $1);
         $$ = std::move(v);
     }
 ;

@@ -3,9 +3,11 @@
 #include <SyntaxTreeNode.h>
 #include <SymbolTable.h>
 
+#include <iostream>
 #include <cassert>
 #include <memory>
 #include <vector>
+#include <unordered_set>
 
 #include "Visitor.h"
 
@@ -47,19 +49,22 @@ namespace SyntaxTree {
 
         void VisitNode(const Goal* goal) override;
         void VisitNode(const MainClass* mainClass) override;
+
+        void DumpErrors(std::wostream& os = std::wcerr) const;
+        void GetErrors(std::vector<std::wstring>& _errors) const;
+        int GetErrorsNumber() const { return errors.size(); }
+
     private:
         std::shared_ptr<SymbolTable> symbolTable{nullptr};
 
         std::unique_ptr<ClassInfo> currentClass;
         std::unique_ptr<MethodInfo> currentMethod;
 
-        std::vector<std::wstring> redefinitionErrors;
+        std::vector<std::wstring> errors;
 
         bool checkClassRedefinition(const std::wstring& className);
         bool checkMethodRedefinition(const std::wstring& methodName);
         bool checkMethodVariableRedefinition(const std::wstring& localVariableName);
         bool checkFieldRedefinition(const std::wstring& fieldName);
-
-
     };
 }

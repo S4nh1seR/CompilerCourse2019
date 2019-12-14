@@ -37,6 +37,7 @@ namespace SyntaxTree {
     class IVisitor {
     public:
         IVisitor() = default;
+        virtual ~IVisitor() {}
 
         virtual void VisitNode(const Identifier* identifier) = 0;
 

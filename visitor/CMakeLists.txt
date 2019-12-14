@@ -9,4 +9,4 @@ include_directories(. ${graph_dir} ${syntaxtree_dir} ${symbol_table_dir})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(visitor SerializeVisitor.cpp BuildSymbolTableVisitor.cpp)
+add_library(visitor SerializeVisitor.cpp BuildSymbolTableVisitor.cpp TypeCheckerVisitor.cpp)

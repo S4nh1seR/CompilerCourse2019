@@ -4,7 +4,7 @@
 #include <Graph.h>
 #include <SerializeVisitor.h>
 #include <BuildSymbolTableVisitor.h>
-#include <iostream>
+#include <TypeCheckerVisitor.h>
 
 void serializeGraph(std::istream& in, std::wostream& out = std::wcout) {
     auto lexer = std::make_unique<Scanner>();
@@ -15,13 +15,23 @@ void serializeGraph(std::istream& in, std::wostream& out = std::wcout) {
 
     SerializeVisitor visitor;
     auto graph = std::make_shared<SyntaxTree::DirectedGraph>(L"SyntaxTreeGraph");
-    visitor.RoundLaunch(graph, syntaxTreeRoot.release());
+    visitor.RoundLaunch(graph, syntaxTreeRoot.get());
     SyntaxTree::GraphSerializer::GraphSerialize(*graph, out);
 
     /* Построение symbol_table */
     BuildSymbolTableVisitor symbolTableBuilder;
     auto symbolTable = std::make_shared<SyntaxTree::SymbolTable>();
-    symbolTableBuilder.RoundLaunch(symbolTable, syntaxTreeRoot.release());
+    symbolTableBuilder.RoundLaunch(symbolTable, syntaxTreeRoot.get());
+    if (symbolTableBuilder.GetErrorsNumber() != 0) {
+        symbolTableBuilder.DumpErrors();
+    }
+
+    /* Проверка типов */
+    TypeCheckerVisitor typeChecker;
+    typeChecker.RoundLaunch(symbolTable, syntaxTreeRoot.get());
+    if (typeChecker.GetErrorsNumber() != 0) {
+        typeChecker.DumpErrors();
+    }
 
 }
 

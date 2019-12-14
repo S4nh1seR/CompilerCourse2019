@@ -16,6 +16,7 @@ namespace SyntaxTree {
         const Type* GetReturnType() const { return returnType; }
 
         const VariableInfo* GetArgumentByName(const std::wstring& _argumentName) const;
+        int GetArgumentsQuantity() const { return arguments.size(); }
         const VariableInfo* const GetLocalVariableByName(const std::wstring& _localVariableName) const;
         const VariableInfo* GetVariableByName(const std::wstring& _variableName) const;
     private:

@@ -14,7 +14,7 @@ FLEX_TARGET(lexer
 ADD_FLEX_BISON_DEPENDENCY(lexer parser)
 
 set(SYNTAX_TREE_SRCS ../syntaxtree/Expressions.cpp ../syntaxtree/Statements.cpp ../syntaxtree/Declarations.cpp ../syntaxtree/Goal.cpp ../syntaxtree/MainClass.cpp)
-set(VISITOR_SRCS ../visitor/SerializeVisitor.cpp ../visitor/BuildSymbolTableVisitor.cpp)
+set(VISITOR_SRCS ../visitor/SerializeVisitor.cpp ../visitor/BuildSymbolTableVisitor.cpp ../visitor/TypeCheckerVisitor.cpp)
 set(GRAPH_SRCS ../graph/graph_lib/Graph.cpp)
 set(SYMBOL_TABLE_SRCS ../symbol_table/MethodInfo.cpp ../symbol_table/ClassInfo.cpp ../symbol_table/SymbolTable.cpp)
 
