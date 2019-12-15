@@ -100,7 +100,18 @@ namespace SyntaxTree {
     }
 
     void IrTreeBuilder::VisitNode(const Goal* goal) {
+        goal->GetMainClass()->AcceptVisitor(this);
+        auto mainClassWrapper = std::move(currentWrapper);
 
+        std::vector<const ClassDeclaration*> classDeclarations;
+        goal->GetClassDeclarations(classDeclarations);
+        std::vector<std::shared_ptr<const IrTree::IIrtStatement>> classes;
+        for (const auto classDeclaration : classDeclarations) {
+            classDeclaration->AcceptVisitor(this);
+            classes.push_back(currentWrapper->ToStatement());
+        }
+
+        this->goal = std::make_shared<const IrTree::IrtGoal>(mainClassWrapper->ToStatement(), std::move(classes));
     }
 
     void IrTreeBuilder::VisitNode(const MainClass* mainClass) {

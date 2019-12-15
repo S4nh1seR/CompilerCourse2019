@@ -8,7 +8,7 @@ namespace SyntaxTree {
 
     class IrTreeBuilder : public IVisitor {
     public:
-        IrTreeBuilder() = default;
+        IrTreeBuilder(const std::shared_ptr<const SymbolTable>& _symbolTable) : symbolTable(_symbolTable) {}
         virtual ~IrTreeBuilder() {}
 
         virtual void VisitNode(const Identifier* identifier) override;
@@ -42,7 +42,11 @@ namespace SyntaxTree {
         virtual void VisitNode(const Goal* goal) override;
         virtual void VisitNode(const MainClass* mainClass) override;
 
+        std::shared_ptr<const IrTree::IrtGoal> GetGoal() const { return goal; }
+
     private:
+        std::shared_ptr<const IrTree::IrtGoal> goal;
+
         std::shared_ptr<const SymbolTable> symbolTable;
         const ClassInfo* currentClass{nullptr};
         const MethodInfo* currentMethod{nullptr};
