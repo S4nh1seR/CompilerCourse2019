@@ -9,4 +9,10 @@ namespace IrTree {
         virtual ~IIrTreeNode() = default;
         virtual void AcceptVisitor(IIrtVisitor* visitor) const = 0;
     };
+
+    class IIrtExpression : public IIrTreeNode {
+    };
+
+    class IIrtStatement : public IIrTreeNode {
+    };
 }
