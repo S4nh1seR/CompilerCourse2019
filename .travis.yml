@@ -10,6 +10,7 @@ before_install:
 
 script:
         - bash ./tests/build.sh
+        - bash ./tests/test_positive_spls.sh
 
 notifications:
         email: false
