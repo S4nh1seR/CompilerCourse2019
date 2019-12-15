@@ -139,7 +139,7 @@ T_SPACE		(" "|"\v"|"\r")+
     return Process(Tokens::T_NUM);
 }
 
-{T_COMMENT}	{ Process(Tokens::T_COMMENT); }
+{T_COMMENT}	{ Process(Tokens::T_COMMENT); loc->lines(yyleng); loc->step(); }
 {T_SPACE}   { Process(Tokens::T_SPACE); loc->step();}
 
 . { printf("unknown"); return Process(Tokens::T_Unknown); }
