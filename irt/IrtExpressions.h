@@ -9,10 +9,6 @@
 
 namespace IrTree {
 
-    class IIrtExpression : public IIrTreeNode {
-    };
-
-
     typedef SyntaxTree::TBinaryOperationType TBinaryOperationType;
 
     class IrtBinaryOperationExpression : public IIrtExpression {

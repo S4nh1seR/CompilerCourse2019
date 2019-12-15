@@ -1,6 +1,16 @@
 #include "IrTreeBuilder.h"
+#include <Types.h>
+#include <Statements.h>
+#include <Declarations.h>
+#include <Expressions.h>
+#include <Identifier.h>
+#include <MainClass.h>
+#include <Goal.h>
 
 namespace SyntaxTree {
+
+
+
 
     void IrTreeBuilder::VisitNode(const IdentifierExpression* identifierExpression) {
 
