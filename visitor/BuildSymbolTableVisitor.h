@@ -55,8 +55,14 @@ namespace SyntaxTree {
         int GetErrorsNumber() const { return errors.size(); }
 
     private:
+        enum EScopeType {
+            ST_Class,
+            ST_Method
+        };
+
         std::shared_ptr<SymbolTable> symbolTable{nullptr};
 
+        EScopeType currentScope{ST_Class};
         std::unique_ptr<ClassInfo> currentClass;
         std::unique_ptr<MethodInfo> currentMethod;
 

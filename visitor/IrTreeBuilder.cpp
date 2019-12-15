@@ -9,11 +9,11 @@
 
 namespace SyntaxTree {
 
+    void IrTreeBuilder::VisitNode(const Identifier* identifier) {
 
-
+    }
 
     void IrTreeBuilder::VisitNode(const IdentifierExpression* identifierExpression) {
-
     }
 
     void IrTreeBuilder::VisitNode(const BinaryOperationExpression* binaryOperationExpression) {
@@ -47,10 +47,10 @@ namespace SyntaxTree {
     void IrTreeBuilder::VisitNode(const NewExpression* newExpression) {
 
     }
-
     void IrTreeBuilder::VisitNode(const NewArrayExpression* newArrayExpression) {
 
     }
+
     void IrTreeBuilder::VisitNode(const OppositeExpression* oppositeExpression) {
 
     }

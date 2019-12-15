@@ -8,7 +8,8 @@ namespace SyntaxTree {
 
     class MethodInfo {
     public:
-        MethodInfo(const std::wstring& _methodName, const Type* _returnType): methodName(_methodName), returnType(_returnType) {}
+        MethodInfo(const std::wstring& _methodName, const Type* _returnType)
+            : methodName(_methodName), returnType(_returnType), argsIdxCounter(0), varsIdxCounter(0) {}
 
         void AddArgument(const std::wstring& _argumentName, std::unique_ptr<const VariableInfo>&& _argumentInfo);
         void AddLocalVariable(const std::wstring& _localVariableName, std::unique_ptr<const VariableInfo>&& _localVariableInfo);
@@ -22,6 +23,10 @@ namespace SyntaxTree {
         int GetArgumentsQuantity() const { return arguments.size(); }
         const VariableInfo* const GetLocalVariableByName(const std::wstring& _localVariableName) const;
         const VariableInfo* GetVariableByName(const std::wstring& _variableName) const;
+
+        int& GetArgsIdxCounterRef() { return argsIdxCounter; }
+        int& GetVarsIdxCounterRef() { return varsIdxCounter; }
+
     private:
         const std::wstring& methodName;
         const Type* returnType;
@@ -30,6 +35,9 @@ namespace SyntaxTree {
         std::unordered_map<std::wstring, std::unique_ptr<const VariableInfo>> localVariables;
 
         std::vector<std::wstring> sortedArgumentNames;
+
+        int argsIdxCounter;
+        int varsIdxCounter;
     };
 
 

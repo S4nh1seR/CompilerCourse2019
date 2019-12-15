@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Visitor.h"
+#include "IrtWrappers.h"
+#include <SymbolTable.h>
 
 namespace SyntaxTree {
 
@@ -41,6 +43,9 @@ namespace SyntaxTree {
         virtual void VisitNode(const MainClass* mainClass) override;
 
     private:
-
+        std::shared_ptr<const SymbolTable> symbolTable;
+        const ClassInfo* currentClass{nullptr};
+        const MethodInfo* currentMethod{nullptr};
+        std::unique_ptr<const IrTree::ISubtreeWrapper> currentWrapper{nullptr};
     };
 }
