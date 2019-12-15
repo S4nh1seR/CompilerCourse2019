@@ -1,40 +1,40 @@
 #include "IrtExpressions.h"
 
+#include <algorithm>
 #include <cassert>
 
 namespace IrTree {
 
     IrtBinaryOperationExpression::IrtBinaryOperationExpression(TBinaryOperationType _operationType,
-        std::unique_ptr<const IIrtExpression>&& _leftOperand, std::unique_ptr<const IIrtExpression>&& _rightOperand)
+        const std::shared_ptr<const IIrtExpression>& _leftOperand,
+        const std::shared_ptr<const IIrtExpression>& _rightOperand)
 
     :   operationType(_operationType),
-        leftOperand(std::move(_leftOperand)),
-        rightOperand(std::move(_rightOperand))
+        leftOperand(_leftOperand),
+        rightOperand(_rightOperand)
         {}
 
-    IrtESeqExpression::IrtESeqExpression(std::unique_ptr<const IIrtStatement>&& _statement,
-        std::unique_ptr<const IIrtExpression>&& _expression)
+    IrtESeqExpression::IrtESeqExpression(const std::shared_ptr<const IIrtStatement>& _statement,
+        const std::shared_ptr<const IIrtExpression>& _expression)
 
-    :   statement(std::move(_statement)),
-        expression(std::move(_expression))
+    :   statement(_statement),
+        expression(_expression)
         {}
 
-    void IrtExpressionList::GetExpressions(std::vector<const IIrtExpression*>& _expressions) const {
-        _expressions.clear();
-        for (int i = 0; i < expressions.size(); ++i) {
-            _expressions.push_back(expressions[i].get());
-        }
+    void IrtExpressionList::GetExpressions(std::vector<std::shared_ptr<const IIrtExpression>>& _expressions) const {
+        _expressions.resize(expressions.size());
+        std::copy(expressions.begin(), expressions.end(), _expressions.begin());
     }
 
-    const IIrtExpression* IrtExpressionList::GetExpression(int index) const {
+    std::shared_ptr<const IIrtExpression> IrtExpressionList::GetExpression(int index) const {
         assert(index >=0 && index < expressions.size());
-        return expressions[index].get();
+        return expressions[index];
     }
 
-    IrtCallExpression::IrtCallExpression(std::unique_ptr<const IIrtExpression>&& _methodExpression,
-        std::unique_ptr<const IrtExpressionList>&& _argumentExpressionList)
+    IrtCallExpression::IrtCallExpression(const std::shared_ptr<const IIrtExpression>& _methodExpression,
+        const std::shared_ptr<const IrtExpressionList>& _argumentExpressionList)
 
-    :   methodExpression(std::move(_methodExpression)),
-        argumentExpressionList(std::move(_argumentExpressionList))
+    :   methodExpression(_methodExpression),
+        argumentExpressionList(_argumentExpressionList)
         {}
 }

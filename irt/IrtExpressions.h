@@ -14,20 +14,20 @@ namespace IrTree {
     class IrtBinaryOperationExpression : public IIrtExpression {
     public:
         IrtBinaryOperationExpression(TBinaryOperationType _operationType,
-                std::unique_ptr<const IIrtExpression>&& _leftOperand,
-                std::unique_ptr<const IIrtExpression>&& _rightOperand);
+            const std::shared_ptr<const IIrtExpression>& _leftOperand,
+            const std::shared_ptr<const IIrtExpression>& _rightOperand);
 
         TBinaryOperationType GetOperationType() const { return operationType; }
-        const IIrtExpression* GetLeftOperand() const { return leftOperand.get(); }
-        const IIrtExpression* GetRightOperand() const { return rightOperand.get(); }
+        std::shared_ptr<const IIrtExpression> GetLeftOperand() const { return leftOperand; }
+        std::shared_ptr<const IIrtExpression> GetRightOperand() const { return rightOperand; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
 
         TBinaryOperationType operationType;
-        std::unique_ptr<const IIrtExpression> leftOperand;
-        std::unique_ptr<const IIrtExpression> rightOperand;
+        std::shared_ptr<const IIrtExpression> leftOperand;
+        std::shared_ptr<const IIrtExpression> rightOperand;
     };
 
     class IrtConstExpression : public IIrtExpression {
@@ -44,24 +44,24 @@ namespace IrTree {
 
     class IrtNameExpression : public IIrtExpression {
     public:
-        explicit IrtNameExpression(std::unique_ptr<const IrtLabel>&& _label ) : label(std::move(_label)) {}
+        explicit IrtNameExpression(const std::shared_ptr<const IrtLabel>& _label ) : label(_label) {}
 
-        const IrtLabel* GetLabel() const { return label.get(); }
+        std::shared_ptr<const IrtLabel> GetLabel() const { return label; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
     private:
-        std::unique_ptr<const IrtLabel> label;
+        std::shared_ptr<const IrtLabel> label;
     };
 
     class IrtTempExpression : public IIrtExpression {
     public:
-        explicit IrtTempExpression(std::unique_ptr<const IrtTemp>&& tempValue): tempValue(std::move(tempValue)) {}
+        explicit IrtTempExpression(const std::shared_ptr<const IrtTemp>& tempValue): tempValue(tempValue) {}
 
-        const IrtTemp* GetTempValue() const { return tempValue.get(); }
+        std::shared_ptr<const IrtTemp> GetTempValue() const { return tempValue; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
     private:
-        std::unique_ptr<const IrtTemp> tempValue;
+        std::shared_ptr<const IrtTemp> tempValue;
     };
 
 
@@ -69,58 +69,58 @@ namespace IrTree {
 
     class IrtESeqExpression : public IIrtExpression {
     public:
-        IrtESeqExpression(std::unique_ptr<const IIrtStatement>&& _statement, std::unique_ptr<const IIrtExpression>&& _expression);
+        IrtESeqExpression(const std::shared_ptr<const IIrtStatement>& _statement, const std::shared_ptr<const IIrtExpression>& _expression);
 
-        const IIrtStatement* GetStatement() const { return statement.get(); }
-        const IIrtExpression* GetExpression() const { return expression.get(); }
+        std::shared_ptr<const IIrtStatement> GetStatement() const { return statement; }
+        std::shared_ptr<const IIrtExpression> GetExpression() const { return expression; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IIrtStatement> statement;
-        std::unique_ptr<const IIrtExpression> expression;
+        std::shared_ptr<const IIrtStatement> statement;
+        std::shared_ptr<const IIrtExpression> expression;
     };
 
     class IrtMemoryExpression : public IIrtExpression {
     public:
-        explicit IrtMemoryExpression(std::unique_ptr<const IIrtExpression>&& _expression): expression(std::move(_expression)) {}
+        explicit IrtMemoryExpression(const std::shared_ptr<const IIrtExpression>& _expression): expression(_expression) {}
 
-        const IIrtExpression* GetMemoryExpression() const { return expression.get(); }
+        std::shared_ptr<const IIrtExpression> GetMemoryExpression() const { return expression; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IIrtExpression> expression;
+        std::shared_ptr<const IIrtExpression> expression;
     };
 
     class IrtExpressionList : public IIrtExpression {
     public:
-        explicit IrtExpressionList(std::vector<std::unique_ptr<const IIrtExpression>>&& _expressions): expressions(std::move(_expressions)) {}
+        explicit IrtExpressionList(std::vector<std::shared_ptr<const IIrtExpression>>&& _expressions): expressions(std::move(_expressions)) {}
         IrtExpressionList() {}
 
-        void AddExpression(std::unique_ptr<const IIrtExpression>&& expression) { expressions.emplace_back(std::move(expression)); }
-        void GetExpressions(std::vector<const IIrtExpression*>& _expressions) const;
-        const IIrtExpression* GetExpression(int index) const;
+        void AddExpression(const std::shared_ptr<const IIrtExpression>& expression) { expressions.push_back(expression); }
+        void GetExpressions(std::vector<std::shared_ptr<const IIrtExpression>>& _expressions) const;
+        std::shared_ptr<const IIrtExpression> GetExpression(int index) const;
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::vector<std::unique_ptr<const IIrtExpression>> expressions;
+        std::vector<std::shared_ptr<const IIrtExpression>> expressions;
     };
 
     class IrtCallExpression : public IIrtExpression {
     public:
-        IrtCallExpression(std::unique_ptr<const IIrtExpression>&& _methodExpression,
-            std::unique_ptr<const IrtExpressionList>&& _argumentExpressionList);
+        IrtCallExpression(const std::shared_ptr<const IIrtExpression>& _methodExpression,
+            const std::shared_ptr<const IrtExpressionList>& _argumentExpressionList);
 
-        const IIrtExpression* GetMethodExpression() const { return methodExpression.get(); }
-        const IrtExpressionList*  GetArgumentExpressionList() const { return argumentExpressionList.get(); }
+        std::shared_ptr<const IIrtExpression> GetMethodExpression() const { return methodExpression; }
+        std::shared_ptr<const IrtExpressionList>  GetArgumentExpressionList() const { return argumentExpressionList; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IIrtExpression> methodExpression;
-        std::unique_ptr<const IrtExpressionList> argumentExpressionList;
+        std::shared_ptr<const IIrtExpression> methodExpression;
+        std::shared_ptr<const IrtExpressionList> argumentExpressionList;
     };
 
 

@@ -17,13 +17,14 @@ set(SYNTAX_TREE_SRCS ../syntaxtree/Expressions.cpp ../syntaxtree/Statements.cpp 
 set(VISITOR_SRCS ../visitor/SerializeVisitor.cpp ../visitor/BuildSymbolTableVisitor.cpp ../visitor/TypeCheckerVisitor.cpp ../visitor/IrTreeBuilder.cpp ../visitor/IrtWrappers.cpp)
 set(GRAPH_SRCS ../graph/graph_lib/Graph.cpp)
 set(SYMBOL_TABLE_SRCS ../symbol_table/MethodInfo.cpp ../symbol_table/ClassInfo.cpp ../symbol_table/SymbolTable.cpp)
-set(IRT_SRCS ../irt/IrtExpressions.cpp ../irt/IrtStatements.cpp)
+set(IRT_SRCS ../irt/IrtExpressions.cpp ../irt/IrtStatements.cpp ../irt/Label.cpp)
 
 add_executable(compiler
     main.cpp
     ${SYNTAX_TREE_SRCS}
     ${VISITOR_SRCS}
     ${GRAPH_SRCS}
+    ${IRT_SRCS}
     ${SYMBOL_TABLE_SRCS}
     ${FLEX_lexer_OUTPUTS}
     ${BISON_parser_OUTPUTS}
@@ -32,10 +33,10 @@ target_include_directories(compiler
     PRIVATE
         .
         ../graph/graph_lib
-        ../visitor
         ../syntaxtree
         ../symbol_table
         ../irt
+        ../visitor
         ${CMAKE_CURRENT_BINARY_DIR})
 set_property(TARGET compiler
              PROPERTY CXX_STANDARD 17)

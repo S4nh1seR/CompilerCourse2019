@@ -2,27 +2,28 @@
 
 namespace IrTree {
 
-    IrtMoveStatement::IrtMoveStatement(std::unique_ptr<const IIrtExpression>&& _destinationExpression,
-        std::unique_ptr<const IIrtExpression>&& _sourceExpression)
+    IrtMoveStatement::IrtMoveStatement(const std::shared_ptr<const IIrtExpression>& _destinationExpression,
+        const std::shared_ptr<const IIrtExpression>& _sourceExpression)
 
-    :   destinationExpression(std::move(_destinationExpression)),
-        sourceExpression(std::move(_sourceExpression))
+    :   destinationExpression(_destinationExpression),
+        sourceExpression(_sourceExpression)
         {}
 
-    IrtSeqStatement::IrtSeqStatement(std::unique_ptr<const IIrtStatement>&& _leftStatement,
-        std::unique_ptr<const IIrtStatement>&& _rightStatement)
+    IrtSeqStatement::IrtSeqStatement(const std::shared_ptr<const IIrtStatement>& _leftStatement,
+        const std::shared_ptr<const IIrtStatement>& _rightStatement)
 
-    :   leftStatement(std::move(_leftStatement)),
-        rightStatement(std::move(_rightStatement))
+    :   leftStatement(_leftStatement),
+        rightStatement(_rightStatement)
         {}
 
-    IrtCJumpStatement::IrtCJumpStatement(std::unique_ptr<const IIrtExpression>&& _leftExpression,
-        std::unique_ptr<const IIrtExpression>&& _rightExpression, std::unique_ptr<const IrtLabel>&& _positiveLabel,
-        std::unique_ptr<const IrtLabel>&& _negativeLabel)
+    IrtCJumpStatement::IrtCJumpStatement(const std::shared_ptr<const IIrtExpression>& _leftExpression,
+        const std::shared_ptr<const IIrtExpression>& _rightExpression,
+        const std::shared_ptr<const IrtLabel>& _positiveLabel,
+        const std::shared_ptr<const IrtLabel>& _negativeLabel)
 
-    :   leftExpression(std::move(_leftExpression)),
-        rightExpression(std::move(_rightExpression)),
-        positiveLabel(std::move(_positiveLabel)),
-        negativeLabel(std::move(_negativeLabel))
+    :   leftExpression(_leftExpression),
+        rightExpression(_rightExpression),
+        positiveLabel(_positiveLabel),
+        negativeLabel(_negativeLabel)
         {}
 }
