@@ -9,7 +9,8 @@ namespace SyntaxTree {
     class MainClass : public ISyntaxTreeNode {
     public:
         MainClass(std::unique_ptr<const Identifier>&& _mainClassIdentifier,
-            std::unique_ptr<const Identifier>&& _stringArgIdentifier, std::unique_ptr<const IStatement>&& _internalStatement, int _line);
+            std::unique_ptr<const Identifier>&& _stringArgIdentifier, std::unique_ptr<const IStatement>&& _internalStatement,
+            int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 

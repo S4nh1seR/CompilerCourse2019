@@ -10,7 +10,7 @@ namespace SyntaxTree {
     class Goal : public ISyntaxTreeNode {
     public:
         Goal(std::unique_ptr<MainClass const>&& _mainClass,
-            std::vector<std::unique_ptr<ClassDeclaration const>>&& _classDeclarations, int _line);
+            std::vector<std::unique_ptr<ClassDeclaration const>>&& _classDeclarations, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 

@@ -118,7 +118,6 @@ goal:
 main_class:
     T_CLASS T_ID T_LBRACE T_PUBLIC T_STATIC T_VOID T_MAIN T_LPARENTH T_STRING T_LBRACKET T_RBRACKET T_ID T_RPARENTH T_LBRACE statement T_RBRACE T_RBRACE {
         $$ = std::make_unique<MainClass>($2, $12, $15, @1.begin.line);
-	$$->line = @1.begin.line;
     }
 ;
 
@@ -285,7 +284,7 @@ expression:
         $$ = std::make_unique<const IdentifierExpression>($1, @1.begin.line);
     }
     | T_THIS {
-        $$ = std::make_unique<const ThisExpression>();
+        $$ = std::make_unique<const ThisExpression>(@1.begin.line);
     }
     | T_NEW T_INT T_LBRACKET expression T_RBRACKET {
         $$ = std::make_unique<const NewArrayExpression>($4, @1.begin.line);

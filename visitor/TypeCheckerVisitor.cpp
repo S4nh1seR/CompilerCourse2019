@@ -40,12 +40,9 @@ namespace SyntaxTree {
         currentMethod = nullptr;
     }
 
-    bool TypeCheckerVisitor::checkClassExistence(const std::wstring& className) {
+    bool TypeCheckerVisitor::checkClassExistence(const std::wstring& className, int lineNumber, const std::wstring& errorMessage) {
         if (symbolTable->GetClassByName(className) == nullptr) {
-            if (undeclaredNames.find(className) == undeclaredNames.end()) {
-                undeclaredNames.insert(className);
-                typeErrors.push_back(L"Class " + className + L" does not exist");
-            }
+            typeErrors.push_back(errorMessage + L" Line: " + std::to_wstring(lineNumber) + L".");
             return true;
         }
         return false;
@@ -93,7 +90,8 @@ namespace SyntaxTree {
         TType returnType = type->GetType();
         std::wstring returnTypeName = (returnType == T_ClassType) ? type->GetIdentifier()->GetIdentifier() : GetStandardName(returnType);
         if(currentType != returnType || currentTypeName != returnTypeName) {
-            typeErrors.push_back(L"Incompatible types! Return expression type: " + currentTypeName + L", method return type: " + returnTypeName);
+            typeErrors.push_back(L"Incompatible types! Return expression type: " + currentTypeName + L", method return type: " + returnTypeName +
+                                 L" . Line: " + std::to_wstring(type->lineNumber) + L".");
         }
     }
 
@@ -107,7 +105,9 @@ namespace SyntaxTree {
         methodDeclaration->GetArgumentIdentifiers(argumentIdentifiers);
         for (size_t i = 0; i < argumentTypes.size(); ++i) {
             if (argumentTypes[i]->GetType() == T_ClassType) {
-                checkClassExistence(argumentTypes[i]->GetIdentifier()->GetIdentifier());
+                const std::wstring& argClassName = argumentTypes[i]->GetIdentifier()->GetIdentifier();
+                std::wstring wrongArgMessage(L"Custom class type " + argClassName + L" for provided argument does not exist!");
+                checkClassExistence(argClassName, argumentTypes[i]->lineNumber, wrongArgMessage);
             }
         }
 
@@ -122,7 +122,9 @@ namespace SyntaxTree {
 
         const Type* returnType = methodDeclaration->GetReturnType();
         if (!returnType->IsSimpleType()) {
-            checkClassExistence(returnType->GetIdentifier()->GetIdentifier());
+            const std::wstring& returnTypeName = returnType->GetIdentifier()->GetIdentifier();
+            std::wstring wrongReturnTypeMessage(L"Custom return type class " + returnTypeName + L" does not exist!");
+            checkClassExistence(returnTypeName, returnType->lineNumber, wrongReturnTypeMessage);
         }
         checkMethodReturnType(returnType);
 
@@ -137,9 +139,10 @@ namespace SyntaxTree {
         }
     }
 
-    void TypeCheckerVisitor::checkCurrentType(std::wstring expectedTypeName, const std::wstring& errorMessageDescription) {
+    void TypeCheckerVisitor::checkCurrentType(std::wstring expectedTypeName, int lineNumber, const std::wstring& errorMessageDescription) {
         if (currentTypeName != expectedTypeName) {
-            typeErrors.push_back(errorMessageDescription + L" Expected type: " + expectedTypeName + L". Got type: " + currentTypeName + L".");
+            typeErrors.push_back(errorMessageDescription + L" Expected type: " + expectedTypeName + L". Got type: " + currentTypeName
+                                 + L". Line: " + std::to_wstring(lineNumber) + L".");
         }
     }
 
@@ -148,7 +151,7 @@ namespace SyntaxTree {
         condition->AcceptVisitor(this);
 
         std::wstring errorMessageDescription(L"Invalid condition type!");
-        checkCurrentType(GetStandardName(T_Boolean), errorMessageDescription);
+        checkCurrentType(GetStandardName(T_Boolean), condition->lineNumber, errorMessageDescription);
 
         const IStatement* positiveStatement = conditionalStatement->GetPositiveStatement();
         positiveStatement->AcceptVisitor(this);
@@ -161,7 +164,7 @@ namespace SyntaxTree {
         condition->AcceptVisitor(this);
 
         std::wstring errorMessageDescription(L"Invalid loop condition type!");
-        checkCurrentType(GetStandardName(T_Boolean), errorMessageDescription);
+        checkCurrentType(GetStandardName(T_Boolean), condition->lineNumber, errorMessageDescription);
 
         const IStatement* loopBodyStatement = loopStatement->GetInternalStatement();
         loopBodyStatement->AcceptVisitor(this);
@@ -172,12 +175,12 @@ namespace SyntaxTree {
         printOperand->AcceptVisitor(this);
 
         std::wstring errorMessageDescription(L"Invalid print operand type!");
-        checkCurrentType(GetStandardName(T_Int), errorMessageDescription);
+        checkCurrentType(GetStandardName(T_Int), printOperand->lineNumber, errorMessageDescription);
     }
 
     void TypeCheckerVisitor::VisitNode(const AssignmentStatement* assignmentStatement) {
         const Identifier* leftOperand = assignmentStatement->GetLeftOperand();
-        leftOperand->AcceptVisitor(this);
+        leftOperand->AcceptVisitor(this, assignmentStatement->lineNumber);
 
         if (currentType != T_Invalid) {
             std::wstring leftTypeName = currentTypeName;
@@ -185,13 +188,13 @@ namespace SyntaxTree {
             rightOperand->AcceptVisitor(this);
 
             std::wstring errorMessageDescription(L"Incompatible types in assignment!");
-            checkCurrentType(leftTypeName, errorMessageDescription);
+            checkCurrentType(leftTypeName, rightOperand->lineNumber, errorMessageDescription);
         }
     }
 
     void TypeCheckerVisitor::VisitNode(const IdentifierExpression* identifierExpression) {
         const Identifier* identifier = identifierExpression->GetIdentifier();
-        identifier->AcceptVisitor(this);
+        identifier->AcceptVisitor(this, identifierExpression->lineNumber);
     }
 
     const VariableInfo* TypeCheckerVisitor::getVariableInfo(const std::wstring& variableName) {
@@ -203,13 +206,10 @@ namespace SyntaxTree {
         return (methodSearchVariable == nullptr) ? currentClass->GetFieldByName(variableName) : methodSearchVariable;
     }
 
-    void TypeCheckerVisitor::checkVariableExistence(const std::wstring& variableName) {
+    void TypeCheckerVisitor::checkVariableExistence(const std::wstring& variableName, int _lineNumber) {
         const VariableInfo* variableInfo = getVariableInfo(variableName);
         if (variableInfo == nullptr) {
-            if (undeclaredNames.find(variableName) == undeclaredNames.end()) {
-                undeclaredNames.insert(variableName);
-                typeErrors.push_back(L"Variable" + variableName + L" is unavailable!");
-            }
+            typeErrors.push_back(L"Variable " + variableName + L" is unavailable! Line: " + std::to_wstring(_lineNumber) + L".");
             currentType = T_Invalid;
             currentTypeName = L"Invalid";
         } else {
@@ -223,28 +223,30 @@ namespace SyntaxTree {
         }
     }
 
-    void TypeCheckerVisitor::VisitNode(const Identifier* identifier) {
+
+    void TypeCheckerVisitor::VisitNode(const Identifier* identifier, int _lineNumber) {
         const std::wstring& variableName = identifier->GetIdentifier();
-        checkVariableExistence(variableName);
+        checkVariableExistence(variableName, _lineNumber);
     }
 
     void TypeCheckerVisitor::VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement) {
         const Identifier* arrayIdentifier = arrayAssignmentStatement->GetArrayIdentifier();
-        arrayIdentifier->AcceptVisitor(this);
+        arrayIdentifier->AcceptVisitor(this, arrayAssignmentStatement->lineNumber);
 
         if (currentType != T_Invalid) {
+            const IExpression* rightOperand = arrayAssignmentStatement->GetRightOperand();
+
             std::wstring ArrayErrorMessageDescription(L"Not an int array type!");
-            checkCurrentType(GetStandardName(T_IntArray), ArrayErrorMessageDescription);
+            checkCurrentType(GetStandardName(T_IntArray), rightOperand->lineNumber, ArrayErrorMessageDescription);
 
             const IExpression* arrayIndex = arrayAssignmentStatement->GetArrayIndex();
             arrayIndex->AcceptVisitor(this);
             std::wstring IndexErrorMessageDescription(L"Invalid array index type!");
-            checkCurrentType(GetStandardName(T_Int), IndexErrorMessageDescription);
+            checkCurrentType(GetStandardName(T_Int), rightOperand->lineNumber, IndexErrorMessageDescription);
 
-            const IExpression* rightOperand = arrayAssignmentStatement->GetRightOperand();
             rightOperand->AcceptVisitor(this);
             std::wstring AssignmentErrorMessageDescription(L"Invalid type of assigned value!");
-            checkCurrentType(GetStandardName(T_Int), AssignmentErrorMessageDescription);
+            checkCurrentType(GetStandardName(T_Int), rightOperand->lineNumber, AssignmentErrorMessageDescription);
         }
     }
 
@@ -252,12 +254,12 @@ namespace SyntaxTree {
         const IExpression* leftOperand = binaryOperationExpression->GetLeftOperand();
         leftOperand->AcceptVisitor(this);
         std::wstring LeftOperandErrorMessage(L"Invalid left operand type for " + operationName + L"operation");
-        checkCurrentType(GetStandardName(operandsType), LeftOperandErrorMessage);
+        checkCurrentType(GetStandardName(operandsType), leftOperand->lineNumber, LeftOperandErrorMessage);
 
         const IExpression* rightOperand = binaryOperationExpression->GetRightOperand();
         rightOperand->AcceptVisitor(this);
         std::wstring RightOperandErrorMessage(L"Invalid right operand type for " + operationName + L"operation");
-        checkCurrentType(GetStandardName(operandsType), RightOperandErrorMessage);
+        checkCurrentType(GetStandardName(operandsType), rightOperand->lineNumber, RightOperandErrorMessage);
     }
 
     std::wstring GetOperationName(TBinaryOperationType type) {
@@ -303,12 +305,12 @@ namespace SyntaxTree {
         const IExpression* arrayExpression = squareBracketExpression->GetArrayOperand();
         arrayExpression->AcceptVisitor(this);
         std::wstring arrayErrorMessageDescription(L"Trying to index not array type!");
-        checkCurrentType(GetStandardName(T_IntArray), arrayErrorMessageDescription);
+        checkCurrentType(GetStandardName(T_IntArray), arrayExpression->lineNumber, arrayErrorMessageDescription);
 
         const IExpression* indexExpression = squareBracketExpression->GetIndexOperand();
         indexExpression->AcceptVisitor(this);
         std::wstring indexErrorMessageDescription(L"Invalid array index type!");
-        checkCurrentType(GetStandardName(T_Int), indexErrorMessageDescription);
+        checkCurrentType(GetStandardName(T_Int), indexExpression->lineNumber, indexErrorMessageDescription);
 
         currentType = T_Int;
         currentTypeName = GetStandardName(T_Int);
@@ -318,7 +320,7 @@ namespace SyntaxTree {
         const IExpression* lengthOperand = lengthExpression->GetLengthOperand();
         lengthOperand->AcceptVisitor(this);
         std::wstring lengthErrorMessageDescription(L"Trying to get length of not array type!");
-        checkCurrentType(GetStandardName(T_IntArray), lengthErrorMessageDescription);
+        checkCurrentType(GetStandardName(T_IntArray), lengthOperand->lineNumber, lengthErrorMessageDescription);
 
         currentType = T_Int;
         currentTypeName = GetStandardName(T_Int);
@@ -328,7 +330,8 @@ namespace SyntaxTree {
         const IExpression* objectOperand = methodCallExpression->GetObjectOperand();
         objectOperand->AcceptVisitor(this);
         if (currentType == T_ClassType) {
-            if(!checkClassExistence(currentTypeName)) {
+            std::wstring callerErrorMessage(L"Custom caller class type " + currentTypeName + L" does not exist!");
+            if(!checkClassExistence(currentTypeName, objectOperand->lineNumber, callerErrorMessage)) {
                 const ClassInfo* callerClass = symbolTable->GetClassByName(currentTypeName);
                 const std::wstring& methodName = methodCallExpression->GetMethodIdentifier()->GetIdentifier();
                 const MethodInfo* methodInfo = callerClass->GetMethodByName(methodName);
@@ -336,9 +339,17 @@ namespace SyntaxTree {
                     std::vector<const IExpression*> methodArguments;
                     methodCallExpression->GetAllArguments(methodArguments);
                     if (methodInfo->GetArgumentsQuantity() == methodArguments.size()) {
-                        for(const IExpression* argument : methodArguments) {
-                            argument->AcceptVisitor(this);
+
+                        for (size_t i = 0; i < methodArguments.size(); ++i) {
+                            methodArguments[i]->AcceptVisitor(this);
+
+                            const Type* currArgType = methodInfo->GetArgumentByIndex(i)->GetVariableType();
+                            std::wstring argTypeName = currArgType->IsSimpleType() ? GetStandardName(currArgType->GetType())
+                                                                                   : currArgType->GetIdentifier()->GetIdentifier();
+                            std::wstring argWrongTypeError(L"Wrong type of method argument " + std::to_wstring(i) + L"!");
+                            checkCurrentType(argTypeName, methodCallExpression->lineNumber, argWrongTypeError);
                         }
+
                         const Type* returnType = methodInfo->GetReturnType();
                         currentType = returnType->GetType();
                         if (returnType->IsSimpleType()) {
@@ -349,16 +360,19 @@ namespace SyntaxTree {
                         return;
                     } else {
                         std::wstring WrongArgNumberMessageError(L"Wrong number of method arguments! Expected: " +
-                        std::to_wstring(methodInfo->GetArgumentsQuantity()) + L" Got: " + std::to_wstring(methodArguments.size()));
+                        std::to_wstring(methodInfo->GetArgumentsQuantity()) + L", Got: " + std::to_wstring(methodArguments.size())
+                        + L". Line: " + std::to_wstring(methodCallExpression->lineNumber) + L".");
                         typeErrors.push_back(WrongArgNumberMessageError);
                     }
                 } else {
-                    std::wstring wrongMethodErrorMessage(L"Unavailable method " + methodName + L" in class " + currentTypeName);
+                    std::wstring wrongMethodErrorMessage(L"Unavailable method " + methodName + L" in class " + currentTypeName
+                                                         + L". Line: " + std::to_wstring(objectOperand->lineNumber) + L".");
                     typeErrors.push_back(wrongMethodErrorMessage);
                 }
             }
         } else {
-            std::wstring callerErrorMessage(L"Trying to call method from not class type! Got type: " + currentTypeName);
+            std::wstring callerErrorMessage(L"Trying to call method from not class type! Got type: " + currentTypeName
+                                            + L". Line: " + std::to_wstring(objectOperand->lineNumber) + L".");
             typeErrors.push_back(callerErrorMessage);
         }
         currentType = T_Invalid;
@@ -382,7 +396,8 @@ namespace SyntaxTree {
 
     void TypeCheckerVisitor::VisitNode(const NewExpression* newExpression) {
         const std::wstring& className = newExpression->GetIdentifierOperand()->GetIdentifier();
-        checkClassExistence(className);
+        std::wstring wrongNewTypeMessage(L"Custom class type created by new does not exist!");
+        checkClassExistence(className, newExpression->lineNumber, wrongNewTypeMessage);
         currentType = T_ClassType;
         currentTypeName = className;
     }
@@ -391,7 +406,7 @@ namespace SyntaxTree {
         const IExpression* sizeExpression = newArrayExpression->GetSizeOperand();
         sizeExpression->AcceptVisitor(this);
         std::wstring arraySizeErrorMessage(L"Invalid type for array size!");
-        checkCurrentType(GetStandardName(T_Int), arraySizeErrorMessage);
+        checkCurrentType(GetStandardName(T_Int), sizeExpression->lineNumber, arraySizeErrorMessage);
 
         currentType = T_IntArray;
         currentTypeName = GetStandardName(T_IntArray);
@@ -401,7 +416,7 @@ namespace SyntaxTree {
         const IExpression* sourceExpression = oppositeExpression->GetSourceExpression();
         sourceExpression->AcceptVisitor(this);
         std::wstring sourceExpErrorMessage(L"Internal expression should be boolean too!");
-        checkCurrentType(GetStandardName(T_Boolean), sourceExpErrorMessage);
+        checkCurrentType(GetStandardName(T_Boolean), sourceExpression->lineNumber, sourceExpErrorMessage);
     }
 
     void TypeCheckerVisitor::VisitNode(const ParenthesesExpression* parenthesesExpression) {

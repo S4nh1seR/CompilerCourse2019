@@ -70,4 +70,12 @@ namespace SyntaxTree {
         virtual void VisitNode(const Goal* goal) = 0;
         virtual void VisitNode(const MainClass* mainClass) = 0;
     };
+
+    class IIdentifierLogger {
+    public:
+        IIdentifierLogger() = default;
+        virtual ~IIdentifierLogger() {}
+
+        virtual void VisitNode(const Identifier* identifier, int _lineNumber) = 0;
+    };
 }

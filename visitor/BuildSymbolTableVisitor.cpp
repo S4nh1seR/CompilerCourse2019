@@ -31,14 +31,15 @@ namespace SyntaxTree {
 
     void BuildSymbolTableVisitor::VisitNode(const ClassDeclaration* classDeclaration) {
         const std::wstring& className = classDeclaration->GetClassIdentifier()->GetIdentifier();
-        if (!checkClassRedefinition(className)) {
+        if (!checkClassRedefinition(className, classDeclaration->lineNumber)) {
             const ClassInfo* parentInfo = nullptr;
             const Identifier* baseClassIdentifier = classDeclaration->GetBaseClassIdentifier();
             if (baseClassIdentifier != nullptr) {
                 const std::wstring& baseClassName = baseClassIdentifier->GetIdentifier();
                 parentInfo = symbolTable->GetClassByName(baseClassName);
                 if (parentInfo == nullptr) {
-                    errors.push_back(L"Base " + baseClassName + L" for class " + className + L" does not exist!");
+                    errors.push_back(L"Base " + baseClassName + L" for class " + className + L" does not exist!" +
+                                     L" Line: " + std::to_wstring(classDeclaration->lineNumber) + L".");
                 }
             }
             if (parentInfo != nullptr || baseClassIdentifier == nullptr) {
@@ -67,11 +68,11 @@ namespace SyntaxTree {
         std::unique_ptr<VariableInfo> variableInfo = std::make_unique<VariableInfo>(variableType, variableName);
 
         if (currentMethod != nullptr) {
-            if (!checkMethodVariableRedefinition(variableName)) {
+            if (!checkMethodVariableRedefinition(variableName, variableDeclaration->lineNumber)) {
                 currentMethod->AddLocalVariable(variableName, std::move(variableInfo));
             }
         } else {
-            if (!checkFieldRedefinition(variableName)) {
+            if (!checkFieldRedefinition(variableName, variableDeclaration->lineNumber)) {
                 currentClass->AddClassField(variableName, std::move(variableInfo));
             }
         }
@@ -79,7 +80,7 @@ namespace SyntaxTree {
 
     void BuildSymbolTableVisitor::VisitNode(const MethodDeclaration* methodDeclaration) {
         const std::wstring& methodName = methodDeclaration->GetMethodIdentifier()->GetIdentifier();
-        if (!checkMethodRedefinition(methodName)) {
+        if (!checkMethodRedefinition(methodName, methodDeclaration->lineNumber)) {
             const Type* returnType = methodDeclaration->GetReturnType();
             currentMethod = std::make_unique<MethodInfo>(methodName, returnType);
 
@@ -97,7 +98,7 @@ namespace SyntaxTree {
                 const std::wstring& currArgumentName = argumentIdentifiers[i]->GetIdentifier();
                 std::unique_ptr<VariableInfo> currArgumentInfo = std::make_unique<VariableInfo>(argumentTypes[i],
                                                                                                 currArgumentName);
-                if (!checkMethodVariableRedefinition(currArgumentName)) {
+                if (!checkMethodVariableRedefinition(currArgumentName, argumentTypes[i]->lineNumber)) {
                     currentMethod->AddArgument(currArgumentName, std::move(currArgumentInfo));
                 }
             }
@@ -120,40 +121,43 @@ namespace SyntaxTree {
         symbolTable->AddMainClass(std::move(currentClass));
     }
 
-    bool BuildSymbolTableVisitor::checkClassRedefinition(const std::wstring& className) {
+    bool BuildSymbolTableVisitor::checkClassRedefinition(const std::wstring& className, int lineNumber) {
         if (symbolTable->GetClassByName(className) != nullptr || (symbolTable->GetMainClass()->GetClassName() == className)) {
-
-            errors.push_back(L"Class redefinition error: " + className);
+            errors.push_back(L"Class redefinition error: " + className + L". Line: " + std::to_wstring(lineNumber) + L".");
             return true;
         }
         return false;
     }
 
-    bool BuildSymbolTableVisitor::checkMethodRedefinition(const std::wstring& methodName) {
+    bool BuildSymbolTableVisitor::checkMethodRedefinition(const std::wstring& methodName, int lineNumber) {
         if (currentClass->GetMethodByName(methodName) != nullptr) {
-            errors.push_back(L"Method redefinition: " + methodName + L" in class " + currentClass->GetClassName());
+            errors.push_back(L"Method redefinition: " + methodName + L" in class " + currentClass->GetClassName() +
+                            L". Line: " + std::to_wstring(lineNumber) + L".");
             return true;
         }
         return false;
     }
 
-    bool BuildSymbolTableVisitor::checkMethodVariableRedefinition(const std::wstring& variableName) {
+    bool BuildSymbolTableVisitor::checkMethodVariableRedefinition(const std::wstring& variableName, int lineNumber) {
         if (currentMethod->GetArgumentByName(variableName) != nullptr) {
             errors.push_back(L"Method argument redefinition: " + variableName + L" in method " +
-                                                 currentMethod->GetMethodName() + L" in class " + currentClass->GetClassName());
+                             currentMethod->GetMethodName() + L" in class " + currentClass->GetClassName()
+                             + L". Line: " + std::to_wstring(lineNumber) + L".");
             return true;
         }
         if (currentMethod->GetLocalVariableByName(variableName) != nullptr) {
             errors.push_back(L"Method local variable redefinition: " + variableName + L" in method " +
-                                         currentMethod->GetMethodName() + L" in class " + currentClass->GetClassName());
+                             currentMethod->GetMethodName() + L" in class " + currentClass->GetClassName()
+                             + L". Line: " + std::to_wstring(lineNumber) + L".");
             return true;
         }
         return false;
     }
 
-    bool BuildSymbolTableVisitor::checkFieldRedefinition(const std::wstring& fieldName) {
+    bool BuildSymbolTableVisitor::checkFieldRedefinition(const std::wstring& fieldName, int lineNumber) {
         if (currentClass->GetFieldByName(fieldName) != nullptr) {
-            errors.push_back(L"Field redefinition: " + fieldName + L" in class " + currentClass->GetClassName());
+            errors.push_back(L"Field redefinition: " + fieldName + L" in class " + currentClass->GetClassName()
+                            + L". Line: " + std::to_wstring(lineNumber) + L".");
             return true;
         }
         return false;

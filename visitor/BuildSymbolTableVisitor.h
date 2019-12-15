@@ -62,9 +62,9 @@ namespace SyntaxTree {
 
         std::vector<std::wstring> errors;
 
-        bool checkClassRedefinition(const std::wstring& className);
-        bool checkMethodRedefinition(const std::wstring& methodName);
-        bool checkMethodVariableRedefinition(const std::wstring& localVariableName);
-        bool checkFieldRedefinition(const std::wstring& fieldName);
+        bool checkClassRedefinition(const std::wstring& className, int lineNumber);
+        bool checkMethodRedefinition(const std::wstring& methodName, int lineNumber);
+        bool checkMethodVariableRedefinition(const std::wstring& localVariableName, int lineNumber);
+        bool checkFieldRedefinition(const std::wstring& fieldName, int lineNumber);
     };
 }
