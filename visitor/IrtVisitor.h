@@ -2,6 +2,8 @@
 
 namespace IrTree {
 
+    class IrtGoal;
+
     class IrtBinaryOperationExpression;
     class IrtConstExpression;
     class IrtESeqExpression;
@@ -24,6 +26,8 @@ namespace IrTree {
     class IIrtVisitor {
     public:
         virtual ~IIrtVisitor() {}
+
+        virtual void VisitNode(const IrtGoal* identifier) = 0;
 
         virtual void VisitNode(const IrtBinaryOperationExpression* identifier) = 0;
         virtual void VisitNode(const IrtConstExpression* identifier) = 0;

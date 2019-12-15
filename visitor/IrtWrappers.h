@@ -6,24 +6,25 @@
 #include <cassert>
 
 namespace IrTree {
+
     class ISubtreeWrapper {
     public:
         virtual ~ISubtreeWrapper() {};
 
-        virtual std::shared_ptr<const IIrtExpression> ToExpression() = 0;
-        virtual std::shared_ptr<const IIrtStatement> ToStatement() = 0;
+        virtual std::shared_ptr<const IIrtExpression> ToExpression() const { assert(false); };
+        virtual std::shared_ptr<const IIrtStatement> ToStatement() const { assert(false); };
         virtual std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) = 0;
+            const std::shared_ptr<const IrtLabel>& negativeLabel) const { assert(false); };
     };
 
     class ExpressionWrapper : public ISubtreeWrapper {
     public:
         explicit ExpressionWrapper(const std::shared_ptr<const IIrtExpression>& _expression): expression(_expression) {}
 
-        std::shared_ptr<const IIrtExpression> ToExpression() override { return expression; }
-        std::shared_ptr<const IIrtStatement> ToStatement() override;
+        std::shared_ptr<const IIrtExpression> ToExpression() const override { return expression; }
+        std::shared_ptr<const IIrtStatement> ToStatement() const override;
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) override;
+            const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
         std::shared_ptr<const IIrtExpression> expression;
@@ -33,10 +34,7 @@ namespace IrTree {
     public:
         explicit StatementWrapper(const std::shared_ptr<const IIrtStatement>& _statement): statement(_statement) {}
 
-        std::shared_ptr<const IIrtExpression> ToExpression() override { assert(false); }
-        std::shared_ptr<const IIrtStatement> ToStatement() override { return statement; }
-        std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) override { assert(false); }
+        std::shared_ptr<const IIrtStatement> ToStatement() const override { return statement; }
 
     private:
         std::shared_ptr<const IIrtStatement> statement;
@@ -46,10 +44,9 @@ namespace IrTree {
     public:
         virtual ~ConditionalWrapper() {};
 
-        std::shared_ptr<const IIrtExpression> ToExpression() override;
-        std::shared_ptr<const IIrtStatement> ToStatement() override { assert(false); }
+        std::shared_ptr<const IIrtExpression> ToExpression() const override;
         virtual std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) override = 0;
+            const std::shared_ptr<const IrtLabel>& negativeLabel) const override = 0;
     };
 
 
@@ -60,7 +57,7 @@ namespace IrTree {
             const std::shared_ptr<const IIrtExpression>& _rightOperand);
 
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) override;
+            const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
         std::shared_ptr<const IIrtExpression> leftOperand;
@@ -73,7 +70,7 @@ namespace IrTree {
             const std::shared_ptr<ISubtreeWrapper>& _rightOperand);
 
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) override;
+            const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
         std::shared_ptr<ISubtreeWrapper> leftOperand;
@@ -86,7 +83,7 @@ namespace IrTree {
             const std::shared_ptr<ISubtreeWrapper>& _rightOperand);
 
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) override;
+            const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
         std::shared_ptr<ISubtreeWrapper> leftOperand;
@@ -98,7 +95,7 @@ namespace IrTree {
         explicit OppositeConditionalWrapper(const std::shared_ptr<ISubtreeWrapper>& _wrapper) : internalWrapper(_wrapper) {}
 
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
-            const std::shared_ptr<const IrtLabel>& negativeLabel) override;
+            const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
         std::shared_ptr<ISubtreeWrapper> internalWrapper;

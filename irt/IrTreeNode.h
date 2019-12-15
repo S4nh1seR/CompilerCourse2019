@@ -21,16 +21,18 @@ namespace IrTree {
 
     class IrtGoal : public IIrtStatement {
     public:
-        IrtGoal(const std::shared_ptr<IIrtStatement>& _mainClass, std::vector<std::shared_ptr<IIrtStatement>>&& _classes)
+        IrtGoal(const std::shared_ptr<const IIrtStatement>& _mainClass, std::vector<std::shared_ptr<const IIrtStatement>>&& _classes)
             : mainClass(_mainClass), classes(std::move(_classes))
         {
         }
 
-        std::shared_ptr<IIrtStatement> GetMainClass() const { return mainClass; }
-        const std::vector<std::shared_ptr<IIrtStatement>>& GetClasses() const { return classes; }
+        void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
+
+        std::shared_ptr<const IIrtStatement> GetMainClass() const { return mainClass; }
+        const std::vector<std::shared_ptr<const IIrtStatement>>& GetClasses() const { return classes; }
 
     private:
-        std::shared_ptr<IIrtStatement> mainClass;
-        std::vector<std::shared_ptr<IIrtStatement>> classes;
+        std::shared_ptr<const IIrtStatement> mainClass;
+        std::vector<std::shared_ptr<const IIrtStatement>> classes;
     };
 }
