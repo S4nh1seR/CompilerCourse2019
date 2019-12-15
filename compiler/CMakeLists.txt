@@ -13,7 +13,7 @@ FLEX_TARGET(lexer
             ${CMAKE_CURRENT_BINARY_DIR}/lexer.yy.cc)
 ADD_FLEX_BISON_DEPENDENCY(lexer parser)
 
-set(SYNTAX_TREE_SRCS ../syntaxtree/Expressions.cpp ../syntaxtree/Statements.cpp ../syntaxtree/Declarations.cpp ../syntaxtree/Goal.cpp ../syntaxtree/MainClass.cpp)
+set(SYNTAX_TREE_SRCS ../syntaxtree/Expressions.cpp ../syntaxtree/Statements.cpp ../syntaxtree/Declarations.cpp ../syntaxtree/Goal.cpp ../syntaxtree/MainClass.cpp ../syntaxtree/Identifier.cpp)
 set(VISITOR_SRCS ../visitor/SerializeVisitor.cpp ../visitor/BuildSymbolTableVisitor.cpp ../visitor/TypeCheckerVisitor.cpp)
 set(GRAPH_SRCS ../graph/graph_lib/Graph.cpp)
 set(SYMBOL_TABLE_SRCS ../symbol_table/MethodInfo.cpp ../symbol_table/ClassInfo.cpp ../symbol_table/SymbolTable.cpp)

@@ -14,6 +14,8 @@ namespace SyntaxTree {
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
+        void AcceptVisitor(IVisitor* visitor, int _lineNumber) const;
+
         const std::wstring& GetIdentifier() const { return identifier; }
 
     private:

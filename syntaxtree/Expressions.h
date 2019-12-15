@@ -27,7 +27,7 @@ namespace SyntaxTree {
 
     class IdentifierExpression : public IExpression {
     public:
-        explicit IdentifierExpression(std::unique_ptr<const Identifier>&& _identifier): identifier(std::move(_identifier)) {}
+        explicit IdentifierExpression(std::unique_ptr<const Identifier>&& _identifier, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -40,7 +40,7 @@ namespace SyntaxTree {
     class BinaryOperationExpression : public IExpression {
     public:
         BinaryOperationExpression(TBinaryOperationType _boType, std::unique_ptr<const IExpression>&& _leftOperand,
-            std::unique_ptr<const IExpression>&& _rightOperand);
+            std::unique_ptr<const IExpression>&& _rightOperand, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -57,7 +57,8 @@ namespace SyntaxTree {
 
     class SquareBracketExpression : public IExpression {
     public:
-        SquareBracketExpression(std::unique_ptr<const IExpression>&& _arrayOperator, std::unique_ptr<const IExpression>&& _indexOperand);
+        SquareBracketExpression(std::unique_ptr<const IExpression>&& _arrayOperator, std::unique_ptr<const IExpression>&& _indexOperand,
+            int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -71,7 +72,7 @@ namespace SyntaxTree {
 
     class LengthExpression : public IExpression {
     public:
-        explicit LengthExpression(std::unique_ptr<const IExpression>&& _lengthOperand): lengthOperand(std::move(_lengthOperand)) {}
+        explicit LengthExpression(std::unique_ptr<const IExpression>&& _lengthOperand, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -83,11 +84,11 @@ namespace SyntaxTree {
     class MethodCallExpression : public IExpression {
     public:
         MethodCallExpression(std::unique_ptr<const IExpression>&& _objectOperand,
-            std::unique_ptr<const Identifier>&& _methodIdentifier);
+            std::unique_ptr<const Identifier>&& _methodIdentifier, int _lineNumber = InvalidLineNumber);
 
         MethodCallExpression(std::unique_ptr<const IExpression>&& _objectOperand,
             std::unique_ptr<const Identifier>&& _methodIdentifier,
-            std::vector<std::unique_ptr<const IExpression>>&& _methodArguments);
+            std::vector<std::unique_ptr<const IExpression>>&& _methodArguments, int _line);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -104,7 +105,7 @@ namespace SyntaxTree {
 
     class BooleanLiteralExpression : public IExpression {
     public:
-        explicit BooleanLiteralExpression(const bool _literalValue): literalValue(_literalValue) {}
+        explicit BooleanLiteralExpression(const bool _literalValue, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -115,7 +116,7 @@ namespace SyntaxTree {
 
     class IntegerLiteralExpression : public IExpression {
     public:
-        explicit IntegerLiteralExpression(const int _literalValue): literalValue(_literalValue) {}
+        explicit IntegerLiteralExpression(const int _literalValue, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -127,14 +128,14 @@ namespace SyntaxTree {
 
     class ThisExpression : public IExpression {
     public:
-        ThisExpression() = default;
+        ThisExpression(int _lineNumber = InvalidLineNumber) { lineNumber = _lineNumber; }
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
     };
 
     class NewExpression : public IExpression {
     public:
-        explicit NewExpression(std::unique_ptr<const Identifier>&& _identifierOperand): identifierOperand(std::move(_identifierOperand)) {}
+        explicit NewExpression(std::unique_ptr<const Identifier>&& _identifierOperand, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -146,7 +147,7 @@ namespace SyntaxTree {
 
     class NewArrayExpression : public IExpression {
     public:
-        explicit NewArrayExpression(std::unique_ptr<const IExpression>&& _sizeOperand): sizeOperand(std::move(_sizeOperand)) {}
+        explicit NewArrayExpression(std::unique_ptr<const IExpression>&& _sizeOperand, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -158,7 +159,7 @@ namespace SyntaxTree {
 
     class OppositeExpression : public IExpression {
     public:
-        explicit OppositeExpression(std::unique_ptr<const IExpression>&& _sourceExpression): sourceExpression(std::move(_sourceExpression)) {}
+        explicit OppositeExpression(std::unique_ptr<const IExpression>&& _sourceExpression, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -169,7 +170,7 @@ namespace SyntaxTree {
 
     class ParenthesesExpression : public IExpression {
     public:
-        explicit ParenthesesExpression(std::unique_ptr<const IExpression>&& _internalExpression): internalExpression(std::move(_internalExpression)) {}
+        explicit ParenthesesExpression(std::unique_ptr<const IExpression>&& _internalExpression, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 

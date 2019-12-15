@@ -92,7 +92,7 @@ class Scanner;
 %left T_LBRACKET T_DOT T_LPARENTH
 
 %type <std::unique_ptr<const Goal>> goal
-%type <std::unique_ptr<const MainClass>> main_class
+%type <std::unique_ptr<MainClass>> main_class
 %type <std::unique_ptr<const ClassDeclaration>> class_declaration
 %type <std::vector<std::unique_ptr<const ClassDeclaration>>> class_declarations
 %type <std::unique_ptr<const MethodDeclaration>> method_declaration
@@ -110,14 +110,14 @@ class Scanner;
 
 goal:
     main_class class_declarations T_EOF {
-        syntaxTreeRoot = std::make_unique<const Goal>($1, $2);
+        syntaxTreeRoot = std::make_unique<const Goal>($1, $2, @1.begin.line);
         $$ = nullptr;
     }
 ;
 
 main_class:
     T_CLASS T_ID T_LBRACE T_PUBLIC T_STATIC T_VOID T_MAIN T_LPARENTH T_STRING T_LBRACKET T_RBRACKET T_ID T_RPARENTH T_LBRACE statement T_RBRACE T_RBRACE {
-        $$ = std::make_unique<const MainClass>($2, $12, $15);
+        $$ = std::make_unique<MainClass>($2, $12, $15, @1.begin.line);
     }
 ;
 
@@ -134,10 +134,10 @@ class_declarations:
 
 class_declaration:
     T_CLASS T_ID T_LBRACE variable_declarations method_declarations T_RBRACE {
-        $$ = std::make_unique<const ClassDeclaration>($2, nullptr, $4, $5);
+        $$ = std::make_unique<const ClassDeclaration>($2, nullptr, $4, $5, @1.begin.line);
     }
     | T_CLASS T_ID T_EXTENDS T_ID T_LBRACE variable_declarations method_declarations T_RBRACE {
-        $$ = std::make_unique<const ClassDeclaration>($2, $4, $6, $7);
+        $$ = std::make_unique<const ClassDeclaration>($2, $4, $6, $7, @1.begin.line);
     }
 ;
 
@@ -154,10 +154,10 @@ method_declarations:
 
 method_declaration:
     T_PUBLIC type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
-        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9);
+        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9, @1.begin.line);
     }
     | T_PRIVATE type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
-        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9);
+        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9, @1.begin.line);
     }
 ;
 
@@ -189,7 +189,7 @@ variable_declarations:
 
 variable_declaration:
     type T_ID T_SEMI {
-        $$ = std::make_unique<const VariableDeclaration>($1, $2);
+        $$ = std::make_unique<const VariableDeclaration>($1, $2, @1.begin.line);
     }
 ;
 
@@ -206,22 +206,22 @@ statements:
 
 statement:
     T_LBRACE statements T_RBRACE {
-        $$ = std::make_unique<const CompoundStatement>($2);
+        $$ = std::make_unique<const CompoundStatement>($2, @1.begin.line);
     }
     | T_IF T_LPARENTH expression T_RPARENTH statement T_ELSE statement {
-        $$ = std::make_unique<const ConditionalStatement>($3, $5, $7);
+        $$ = std::make_unique<const ConditionalStatement>($3, $5, $7, @1.begin.line);
     }
     | T_WHILE T_LPARENTH expression T_RPARENTH statement {
-        $$ = std::make_unique<const LoopStatement>($3, $5);
+        $$ = std::make_unique<const LoopStatement>($3, $5, @1.begin.line);
     }
     | T_SOUT T_LPARENTH expression T_RPARENTH T_SEMI {
-        $$ = std::make_unique<const PrintStatement>($3);
+        $$ = std::make_unique<const PrintStatement>($3, @1.begin.line);
     }
     | T_ID T_EQ expression T_SEMI {
-        $$ = std::make_unique<const AssignmentStatement>($1, $3);
+        $$ = std::make_unique<const AssignmentStatement>($1, $3, @1.begin.line);
     }
     | T_ID T_LBRACKET expression T_RBRACKET T_EQ expression T_SEMI {
-        $$ = std::make_unique<const ArrayAssignmentStatement>($1, $3, $6);
+        $$ = std::make_unique<const ArrayAssignmentStatement>($1, $3, $6, @1.begin.line);
     }
 ;
 
@@ -242,82 +242,82 @@ expressions:
 
 expression:
     expression T_AND expression {
-        $$ = std::make_unique<const BinaryOperationExpression>(BOT_And, $1, $3);
+        $$ = std::make_unique<const BinaryOperationExpression>(BOT_And, $1, $3, @1.begin.line);
     }
     | expression T_OR expression {
-        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Or, $1, $3);
+        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Or, $1, $3, @1.begin.line);
     }
     | expression T_LESS expression {
-        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Less, $1, $3);
+        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Less, $1, $3, @1.begin.line);
     }
     | expression T_PLUS expression {
-        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Add, $1, $3);
+        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Add, $1, $3, @1.begin.line);
     }
     | expression T_MINUS expression {
-        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Sub, $1, $3);
+        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Sub, $1, $3, @1.begin.line);
     }
     | expression T_MUL expression {
-        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Mul, $1, $3);
+        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Mul, $1, $3, @1.begin.line);
     }
     | expression T_MOD expression {
-        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Mod, $1, $3);
+        $$ = std::make_unique<const BinaryOperationExpression>(BOT_Mod, $1, $3, @1.begin.line);
     }
     | expression T_LBRACKET expression T_RBRACKET {
-        $$ = std::make_unique<const SquareBracketExpression>($1, $3);
+        $$ = std::make_unique<const SquareBracketExpression>($1, $3, @1.begin.line);
     }
     | expression T_DOT T_LENGTH {
-        $$ = std::make_unique<const LengthExpression>($1);
+        $$ = std::make_unique<const LengthExpression>($1, @1.begin.line);
     }
     | expression T_DOT T_ID T_LPARENTH expressions T_RPARENTH {
-        $$ = std::make_unique<const MethodCallExpression>($1, $3, $5);
+        $$ = std::make_unique<const MethodCallExpression>($1, $3, $5, @1.begin.line);
     }
     | T_NUM {
-        $$ = std::make_unique<const IntegerLiteralExpression>($1);
+        $$ = std::make_unique<const IntegerLiteralExpression>($1, @1.begin.line);
     }
     | T_TRUE {
-        $$ = std::make_unique<const BooleanLiteralExpression>(true);
+        $$ = std::make_unique<const BooleanLiteralExpression>(true, @1.begin.line);
     }
     | T_FALSE {
-        $$ = std::make_unique<const BooleanLiteralExpression>(false);
+        $$ = std::make_unique<const BooleanLiteralExpression>(false, @1.begin.line);
     }
     | T_ID {
-        $$ = std::make_unique<const IdentifierExpression>($1);
+        $$ = std::make_unique<const IdentifierExpression>($1, @1.begin.line);
     }
     | T_THIS {
-        $$ = std::make_unique<const ThisExpression>();
+        $$ = std::make_unique<const ThisExpression>(@1.begin.line);
     }
     | T_NEW T_INT T_LBRACKET expression T_RBRACKET {
-        $$ = std::make_unique<const NewArrayExpression>($4);
+        $$ = std::make_unique<const NewArrayExpression>($4, @1.begin.line);
     }
     | T_NEW T_ID T_LPARENTH T_RPARENTH {
-        $$ = std::make_unique<const NewExpression>($2);
+        $$ = std::make_unique<const NewExpression>($2, @1.begin.line);
     }
     | T_ANTI expression {
-        $$ = std::make_unique<const OppositeExpression>($2);
+        $$ = std::make_unique<const OppositeExpression>($2, @1.begin.line);
     }
     | T_LPARENTH expression T_RPARENTH {
-        $$ = std::make_unique<const ParenthesesExpression>($2);
+        $$ = std::make_unique<const ParenthesesExpression>($2, @1.begin.line);
     }
 ;
 
 type:
     T_INT T_LBRACKET T_RBRACKET {
-        $$ = std::make_unique<const Type>(T_IntArray);
+        $$ = std::make_unique<const Type>(T_IntArray, @1.begin.line);
     }
     | T_BOOLEAN {
-        $$ = std::make_unique<const Type>(T_Boolean);
+        $$ = std::make_unique<const Type>(T_Boolean, @1.begin.line);
     }
     | T_INT {
-        $$ = std::make_unique<const Type>(T_Int);
+        $$ = std::make_unique<const Type>(T_Int, @1.begin.line);
     }
     | T_ID {
-        $$ = std::make_unique<const Type>($1);
+        $$ = std::make_unique<const Type>($1, @1.begin.line);
     }
 ;
 
 %%
 
 void yy::Parser::error (const location_type& loc, const std::string& msg) {
-    std::cout << "error " << msg << std::endl;
+    std::cout << "error " << msg << " at " << loc.begin << " - " << loc.end << std::endl;
 } 
 

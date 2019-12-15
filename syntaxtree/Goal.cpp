@@ -3,11 +3,13 @@
 namespace SyntaxTree {
 
     Goal::Goal(std::unique_ptr<MainClass const>&& _mainClass,
-        std::vector<std::unique_ptr<ClassDeclaration const>>&& _classDeclarations)
+        std::vector<std::unique_ptr<ClassDeclaration const>>&& _classDeclarations, int _lineNumber)
 
     :   mainClass(std::move(_mainClass)),
         classDeclarations(std::move(_classDeclarations))
-        {}
+    {
+        lineNumber = _lineNumber;
+    }
 
     const ClassDeclaration* Goal::GetClassDeclaration(int index) const {
         assert(index >= 0 && index < classDeclarations.size());

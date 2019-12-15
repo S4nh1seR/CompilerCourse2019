@@ -5,4 +5,4 @@ include_directories(../visitor)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(syntax_tree STATIC Expressions.cpp Statements.cpp Declarations.cpp MainClass.cpp Goal.cpp)
+add_library(syntax_tree STATIC Expressions.cpp Statements.cpp Declarations.cpp MainClass.cpp Goal.cpp Identifier.cpp)

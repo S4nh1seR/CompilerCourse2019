@@ -11,13 +11,17 @@
 
 namespace SyntaxTree {
 
-    class TypeCheckerVisitor : public IVisitor {
+    class TypeCheckerVisitor : public IVisitor, public IIdentifierLogger {
     public:
         ~TypeCheckerVisitor() {}
 
         void RoundLaunch(std::shared_ptr<SymbolTable>& _symbolTable, const ISyntaxTreeNode* syntaxTreeRoot);
 
-        void VisitNode(const Identifier* identifier) override;
+        // Реализация IIdentifierLogger
+        void VisitNode(const Identifier* identifier, int _lineNumber) override; // пользуемся этим методом
+
+        // Реализация IVisitor
+        void VisitNode(const Identifier* identifier) override { assert(false); }
 
         void VisitNode(const IdentifierExpression* identifierExpression) override;
         void VisitNode(const BinaryOperationExpression* binaryOperationExpression) override;
@@ -65,13 +69,14 @@ namespace SyntaxTree {
         std::vector<std::wstring> typeErrors;
         std::unordered_set<std::wstring> undeclaredNames; // чтобы не дублировать имена, для которых уже выдали ошибку
 
-        bool checkClassExistence(const std::wstring& className);
+        bool checkClassExistence(const std::wstring& className, int lineNumber, const std::wstring& errorMessage);
         void checkVariableExistence(const std::wstring& variableName);
+        void checkVariableExistence(const std::wstring& variableName, int _lineNumber);
 
         const VariableInfo* getVariableInfo(const std::wstring& variableName);
         void checkMethodReturnType(const Type* type);
         std::wstring GetStandardName(TType type);
-        void checkCurrentType(std::wstring expectedTypeName, const std::wstring& errorMessage);
+        void checkCurrentType(std::wstring expectedTypeName, int lineNumber, const std::wstring& errorMessage);
         void checkBinaryOperationType(const BinaryOperationExpression* binaryOperationExpression, TType operandsType, const std::wstring& errorMessage);
     };
 
