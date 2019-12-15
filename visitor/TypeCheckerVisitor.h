@@ -67,10 +67,8 @@ namespace SyntaxTree {
         std::wstring currentTypeName;
 
         std::vector<std::wstring> typeErrors;
-        std::unordered_set<std::wstring> undeclaredNames; // чтобы не дублировать имена, для которых уже выдали ошибку
 
         bool checkClassExistence(const std::wstring& className, int lineNumber, const std::wstring& errorMessage);
-        void checkVariableExistence(const std::wstring& variableName);
         void checkVariableExistence(const std::wstring& variableName, int _lineNumber);
 
         const VariableInfo* getVariableInfo(const std::wstring& variableName);
