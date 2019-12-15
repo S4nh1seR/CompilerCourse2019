@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.10)
-project(syntax_tree CXX)
+project(irt CXX)
 
 include_directories(../syntaxtree)
 include_directories(../visitor)

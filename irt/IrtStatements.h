@@ -9,11 +9,6 @@
 
 namespace IrTree {
 
-    class IIrtStatement : public IIrTreeNode {
-    };
-
-    class IIrtExpression;
-
     class IrtExpressionStatement : public IIrtStatement {
     public:
         explicit IrtExpressionStatement(std::unique_ptr<const IIrtExpression>&& _expression) : expression(std::move(_expression)) {}
