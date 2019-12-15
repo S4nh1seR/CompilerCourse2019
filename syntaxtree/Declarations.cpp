@@ -8,17 +8,19 @@ namespace SyntaxTree {
         {}
 
     VariableDeclaration::VariableDeclaration(std::unique_ptr<const Type>&& _declarationType,
-        std::unique_ptr<const Identifier>&& _declarationIdentifier)
+        std::unique_ptr<const Identifier>&& _declarationIdentifier, int _lineNumber)
 
     :   declarationType(std::move(_declarationType)),
         declarationIdentifier(std::move(_declarationIdentifier))
-        {}
+    {
+        lineNumber = _lineNumber;
+    }
 
     MethodDeclaration::MethodDeclaration(std::unique_ptr<const Type>&& _returnType,
         std::unique_ptr<const Identifier>&& _methodIdentifier, std::unique_ptr<const IExpression>&& _returnExpression,
         std::vector<std::unique_ptr<const Argument>>&& _arguments,
         std::vector<std::unique_ptr<const VariableDeclaration>>&& _variableDeclarations,
-        std::vector<std::unique_ptr<const IStatement>>&& _statements)
+        std::vector<std::unique_ptr<const IStatement>>&& _statements, int _lineNumber)
 
     :   returnType(std::move(_returnType)),
         methodIdentifier(std::move(_methodIdentifier)),
@@ -26,7 +28,9 @@ namespace SyntaxTree {
         arguments(std::move(_arguments)),
         variableDeclarations(std::move(_variableDeclarations)),
         statements(std::move(_statements))
-        {}
+    {
+        lineNumber = _lineNumber;
+    }
 
 
     const Type* MethodDeclaration::GetArgumentType(int index) const {
@@ -80,12 +84,14 @@ namespace SyntaxTree {
     ClassDeclaration::ClassDeclaration(std::unique_ptr<const Identifier>&& _classIdentifier,
         std::unique_ptr<const Identifier>&& _baseClassIdentifier,
         std::vector<std::unique_ptr<const VariableDeclaration>>&& _variableDeclarations,
-        std::vector<std::unique_ptr<const MethodDeclaration>>&& _methodDeclarations)
+        std::vector<std::unique_ptr<const MethodDeclaration>>&& _methodDeclarations, int _lineNumber)
     :   classIdentifier(std::move(_classIdentifier)),
         baseClassIdentifier(std::move(_baseClassIdentifier)),
         variableDeclarations(std::move(_variableDeclarations)),
         methodDeclarations(std::move(_methodDeclarations))
-        {}
+    {
+        lineNumber = _lineNumber;
+    }
 
 
     const VariableDeclaration* ClassDeclaration::GetVariableDeclaration(int index) const {

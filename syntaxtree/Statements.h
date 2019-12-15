@@ -12,7 +12,7 @@ namespace SyntaxTree {
 
     class CompoundStatement : public IStatement {
     public:
-        explicit CompoundStatement(std::vector<std::unique_ptr<const IStatement>>&& _internalStatements);
+        explicit CompoundStatement(std::vector<std::unique_ptr<const IStatement>>&& _internalStatements, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -25,7 +25,8 @@ namespace SyntaxTree {
     class ConditionalStatement : public IStatement {
     public:
         ConditionalStatement(std::unique_ptr<const IExpression>&& _conditionExpression,
-            std::unique_ptr<const IStatement>&& _positiveStatement, std::unique_ptr<const IStatement>&& _negativeStatement);
+            std::unique_ptr<const IStatement>&& _positiveStatement, std::unique_ptr<const IStatement>&& _negativeStatement,
+            int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -42,7 +43,7 @@ namespace SyntaxTree {
     class LoopStatement : public IStatement {
     public:
         LoopStatement(std::unique_ptr<const IExpression>&& _conditionExpression,
-            std::unique_ptr<const IStatement>&& _internalStatement);
+            std::unique_ptr<const IStatement>&& _internalStatement, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -56,7 +57,7 @@ namespace SyntaxTree {
 
     class PrintStatement : public IStatement {
     public:
-        explicit PrintStatement(std::unique_ptr<const IExpression>&& _printOperand): printOperand(std::move(_printOperand)) {}
+        explicit PrintStatement(std::unique_ptr<const IExpression>&& _printOperand, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -67,7 +68,8 @@ namespace SyntaxTree {
 
     class AssignmentStatement : public IStatement {
     public:
-        AssignmentStatement(std::unique_ptr<const Identifier>&& _leftOperand, std::unique_ptr<const IExpression>&& _rightOperand);
+        AssignmentStatement(std::unique_ptr<const Identifier>&& _leftOperand, std::unique_ptr<const IExpression>&& _rightOperand,
+            int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
@@ -82,7 +84,7 @@ namespace SyntaxTree {
     class ArrayAssignmentStatement : public IStatement {
     public:
         ArrayAssignmentStatement(std::unique_ptr<const Identifier>&& _arrayIdentifier, std::unique_ptr<const IExpression>&& _arrayIndex,
-            std::unique_ptr<const IExpression>&& _rightOperand);
+            std::unique_ptr<const IExpression>&& _rightOperand, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 

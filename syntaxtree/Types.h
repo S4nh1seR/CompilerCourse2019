@@ -19,8 +19,8 @@ namespace SyntaxTree {
 
     class Type : public ISyntaxTreeNode {
     public:
-        Type(TType _type): type(_type) { assert(IsSimpleType()); }
-        Type(std::unique_ptr<const Identifier>&& _identifier): type(T_ClassType), identifier(std::move(_identifier)) { assert(identifier != 0); }
+        Type(TType _type, int _line): type(_type) { assert(IsSimpleType()); lineNumber = _line; }
+        Type(std::unique_ptr<const Identifier>&& _identifier, int _line): type(T_ClassType), identifier(std::move(_identifier)) { assert(identifier != 0); lineNumber = _line; }
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
