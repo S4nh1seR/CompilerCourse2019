@@ -35,6 +35,7 @@ target_include_directories(compiler
         ../visitor
         ../syntaxtree
         ../symbol_table
+        ../irt
         ${CMAKE_CURRENT_BINARY_DIR})
 set_property(TARGET compiler
              PROPERTY CXX_STANDARD 17)
