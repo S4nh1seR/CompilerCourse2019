@@ -1,0 +1,12 @@
+sudo: false
+
+dist: bionic
+
+language:
+        - cpp
+
+before_install:
+        - bash ./tests/setup.sh
+
+script:
+        - bash ./tests/build.sh
