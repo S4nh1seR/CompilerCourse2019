@@ -26,6 +26,7 @@ namespace SyntaxTree {
         const MethodInfo* GetMethodByName(const std::wstring& _methodName, bool searchParent = true) const;
 
         int& GetIdxCounterRef() { return idxCounter; }
+        int GetFieldsCount() const { return idxCounter; }
 
     private:
         const std::wstring& className;

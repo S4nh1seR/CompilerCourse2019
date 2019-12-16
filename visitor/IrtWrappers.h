@@ -49,7 +49,6 @@ namespace IrTree {
             const std::shared_ptr<const IrtLabel>& negativeLabel) const override = 0;
     };
 
-
     // пока поддерживаем только "меньше <"
     class RelativeConditionalWrapper : public ConditionalWrapper {
     public:
@@ -66,38 +65,38 @@ namespace IrTree {
 
     class AndConditionalWrapper : public ConditionalWrapper {
     public:
-        AndConditionalWrapper(const std::shared_ptr<ISubtreeWrapper>& _leftOperand,
-            const std::shared_ptr<ISubtreeWrapper>& _rightOperand);
+        AndConditionalWrapper(std::unique_ptr<const ISubtreeWrapper>&& _leftOperand,
+            std::unique_ptr<const ISubtreeWrapper>&& _rightOperand);
 
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
             const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
-        std::shared_ptr<ISubtreeWrapper> leftOperand;
-        std::shared_ptr<ISubtreeWrapper> rightOperand;
+        std::shared_ptr<const ISubtreeWrapper> leftOperand;
+        std::shared_ptr<const ISubtreeWrapper> rightOperand;
     };
 
     class OrConditionalWrapper : public ConditionalWrapper {
     public:
-        OrConditionalWrapper(const std::shared_ptr<ISubtreeWrapper>& _leftOperand,
-            const std::shared_ptr<ISubtreeWrapper>& _rightOperand);
+        OrConditionalWrapper(std::unique_ptr<const ISubtreeWrapper>&& _leftOperand,
+            std::unique_ptr<const ISubtreeWrapper>&& _rightOperand);
 
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
             const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
-        std::shared_ptr<ISubtreeWrapper> leftOperand;
-        std::shared_ptr<ISubtreeWrapper> rightOperand;
+        std::shared_ptr<const ISubtreeWrapper> leftOperand;
+        std::shared_ptr<const ISubtreeWrapper> rightOperand;
     };
 
     class OppositeConditionalWrapper : public ConditionalWrapper {
     public:
-        explicit OppositeConditionalWrapper(const std::shared_ptr<ISubtreeWrapper>& _wrapper) : internalWrapper(_wrapper) {}
+        explicit OppositeConditionalWrapper(std::unique_ptr<const ISubtreeWrapper>&& _wrapper) : internalWrapper(std::move(_wrapper)) {}
 
         std::shared_ptr<const IIrtStatement> ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
             const std::shared_ptr<const IrtLabel>& negativeLabel) const override;
 
     private:
-        std::shared_ptr<ISubtreeWrapper> internalWrapper;
+        std::shared_ptr<const ISubtreeWrapper> internalWrapper;
     };
 }

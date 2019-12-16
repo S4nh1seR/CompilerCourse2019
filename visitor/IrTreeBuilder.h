@@ -48,12 +48,14 @@ namespace SyntaxTree {
 
     private:
         void buildCompoundStatement(const std::vector<const IStatement*>& statements);
+        inline const ClassInfo* getClassByType(const Type* type);
 
         std::shared_ptr<const IrTree::IrtGoal> goal{nullptr};
 
         std::shared_ptr<const SymbolTable> symbolTable;
         const ClassInfo* currentClass{nullptr};
         const MethodInfo* currentMethod{nullptr};
+        const ClassInfo* currentObjectClass{nullptr};
         std::unique_ptr<const IrTree::ISubtreeWrapper> currentWrapper{nullptr};
     };
 }

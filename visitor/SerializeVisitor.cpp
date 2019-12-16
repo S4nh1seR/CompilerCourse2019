@@ -56,7 +56,7 @@ namespace SyntaxTree {
         // add the node to the hashtable
         name_mapping.insert(std::make_pair(node, nodeGraphName));
 
-        // make node vertex and edge connecting node and it's parent
+        // makeNode node vertex and edge connecting node and it's parent
         graph_ptr->AddVertex(nodeGraphName);
         graph_ptr->AddEdge(parentName, nodeGraphName);
     }
@@ -94,7 +94,7 @@ namespace SyntaxTree {
 
     void SerializeVisitor::VisitNode(const ArrayAssignmentStatement* arrayAssignmentStatement)
     {
-        // make arrayAssignmentStatement name and add it to the graph with this name
+        // makeNode arrayAssignmentStatement name and add it to the graph with this name
         std::wstring aAS_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.arrayAssignmentStatementNode);
         addNoRootNodeToGraph(arrayAssignmentStatement, aAS_Name);
 
@@ -330,7 +330,7 @@ namespace SyntaxTree {
         std::wstring g_Name = makeUniqueNameAndUpdate(nodesNameUniqueMaker.goalNode);
         name_mapping.insert(std::make_pair(goal, g_Name));
 
-        // make goal vertex in the graph
+        // makeNode goal vertex in the graph
         graph_ptr->AddVertex(g_Name);
 
         assert(parent_mapping.find(goal) == parent_mapping.end());
