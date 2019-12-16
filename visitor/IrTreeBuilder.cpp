@@ -1,4 +1,6 @@
 #include "IrTreeBuilder.h"
+#include "Make.h"
+
 #include <Types.h>
 #include <Statements.h>
 #include <Declarations.h>
@@ -7,7 +9,16 @@
 #include <MainClass.h>
 #include <Goal.h>
 
+namespace {
+
+    inline std::shared_ptr<const IrTree::IrtLabelStatement> makeMethodNameStm(const std::wstring& className, const std::wstring& methodName) {
+        return make<IrTree::IrtLabelStatement>(make<IrTree::IrtLabel>(className + L"::" + methodName));
+    }
+
+}
+
 namespace SyntaxTree {
+    using namespace IrTree;
 
     void IrTreeBuilder::VisitNode(const Identifier* identifier) {
 
@@ -99,23 +110,30 @@ namespace SyntaxTree {
 
     }
 
-    void IrTreeBuilder::VisitNode(const Goal* goal) {
-        goal->GetMainClass()->AcceptVisitor(this);
-        auto mainClassWrapper = std::move(currentWrapper);
+    void IrTreeBuilder::VisitNode(const Goal* _goal) {
+        _goal->GetMainClass()->AcceptVisitor(this);
+        auto mainMethodWrapper = std::move(currentWrapper);
+
+        goal = std::make_shared<const IrTree::IrtGoal>(mainMethodWrapper->ToStatement());
 
         std::vector<const ClassDeclaration*> classDeclarations;
-        goal->GetClassDeclarations(classDeclarations);
-        std::vector<std::shared_ptr<const IrTree::IIrtStatement>> classes;
+        _goal->GetClassDeclarations(classDeclarations);
         for (const auto classDeclaration : classDeclarations) {
             classDeclaration->AcceptVisitor(this);
-            classes.push_back(currentWrapper->ToStatement());
         }
-
-        this->goal = std::make_shared<const IrTree::IrtGoal>(mainClassWrapper->ToStatement(), std::move(classes));
     }
 
     void IrTreeBuilder::VisitNode(const MainClass* mainClass) {
+        currentClass = symbolTable->GetMainClass();
+        mainClass->GetInternalStatement()->AcceptVisitor(this);
+        auto internalStatementWrapper = std::move(currentWrapper);
 
+        currentWrapper = std::make_unique<const StatementWrapper>(
+            make<IrtSeqStatement>(
+                makeMethodNameStm(currentClass->GetClassName(), currentClass->GetFirstMethodName()),
+                internalStatementWrapper->ToStatement()
+            )
+        );
     }
 
 }

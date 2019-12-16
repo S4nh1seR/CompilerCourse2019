@@ -1,11 +1,6 @@
 #include "IrtWrappers.h"
+#include "Make.h"
 
-namespace {
-    template<typename T, class... Args>
-    std::shared_ptr<const T> make(Args... args) {
-        return std::make_shared<const T>(args...);
-    }
-}
 namespace IrTree {
 
     RelativeConditionalWrapper::RelativeConditionalWrapper(const std::shared_ptr<const IIrtExpression>& _leftOperand,
@@ -57,7 +52,8 @@ namespace IrTree {
                     )
                 )
             ),
-            tempExpression);
+            tempExpression
+        );
     }
 
     std::shared_ptr<const IIrtStatement> RelativeConditionalWrapper::ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
@@ -72,7 +68,8 @@ namespace IrTree {
         std::shared_ptr<const IrtLabel> midLabel = make<IrtLabel>(L"mid_L");
         return make<IrtSeqStatement>(
             leftOperand->ToConditional(midLabel, negativeLabel),
-            make<IrtSeqStatement>(make<IrtLabelStatement>(midLabel), rightOperand->ToConditional(positiveLabel, negativeLabel)));
+            make<IrtSeqStatement>(make<IrtLabelStatement>(midLabel), rightOperand->ToConditional(positiveLabel, negativeLabel))
+        );
     }
 
     std::shared_ptr<const IIrtStatement> OrConditionalWrapper::ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
@@ -81,7 +78,8 @@ namespace IrTree {
         std::shared_ptr<const IrtLabel> midLabel = make<IrtLabel>(L"mid_L");
         return make<IrtSeqStatement>(
             leftOperand->ToConditional(positiveLabel, midLabel),
-            make<IrtSeqStatement>(make<IrtLabelStatement>(midLabel), rightOperand->ToConditional(positiveLabel, negativeLabel)));
+            make<IrtSeqStatement>(make<IrtLabelStatement>(midLabel), rightOperand->ToConditional(positiveLabel, negativeLabel))
+        );
     }
 
     std::shared_ptr<const IIrtStatement> OppositeConditionalWrapper::ToConditional(const std::shared_ptr<const IrtLabel>& positiveLabel,
