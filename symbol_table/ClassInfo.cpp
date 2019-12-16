@@ -22,11 +22,11 @@ namespace SyntaxTree {
         return nullptr;
     }
 
-    const MethodInfo* ClassInfo::GetMethodByName(const std::wstring& _methodName) const {
+    const MethodInfo* ClassInfo::GetMethodByName(const std::wstring& _methodName, bool searchParent) const {
         if (classMethods.find(_methodName) != classMethods.end()) {
             return classMethods.at(_methodName).get();
         }
-        if (parentInfo != nullptr) {
+        if (searchParent && parentInfo != nullptr) {
             return parentInfo->GetMethodByName(_methodName);
         }
         return nullptr;

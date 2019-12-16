@@ -27,25 +27,25 @@ namespace IrTree {
     public:
         virtual ~IIrtVisitor() {}
 
-        virtual void VisitNode(const IrtGoal* identifier) = 0;
+        virtual void VisitNode(const IrtGoal* goal) = 0;
 
-        virtual void VisitNode(const IrtBinaryOperationExpression* identifier) = 0;
-        virtual void VisitNode(const IrtConstExpression* identifier) = 0;
-        virtual void VisitNode(const IrtESeqExpression* identifier) = 0;
-        virtual void VisitNode(const IrtMemoryExpression* identifier) = 0;
-        virtual void VisitNode(const IrtExpressionList* identifier) = 0;
-        virtual void VisitNode(const IrtCallExpression* identifier) = 0;
-        virtual void VisitNode(const IrtNameExpression* identifier) = 0;
-        virtual void VisitNode(const IrtTempExpression* identifier) = 0;
+        virtual void VisitNode(const IrtBinaryOperationExpression* expression) = 0;
+        virtual void VisitNode(const IrtConstExpression* expression) = 0;
+        virtual void VisitNode(const IrtESeqExpression* expression) = 0;
+        virtual void VisitNode(const IrtMemoryExpression* expression) = 0;
+        virtual void VisitNode(const IrtExpressionList* expression) = 0;
+        virtual void VisitNode(const IrtCallExpression* expression) = 0;
+        virtual void VisitNode(const IrtNameExpression* expression) = 0;
+        virtual void VisitNode(const IrtTempExpression* expression) = 0;
 
-        virtual void VisitNode(const IrtExpressionStatement* identifier) = 0;
-        virtual void VisitNode(const IrtMoveStatement* identifier) = 0;
-        virtual void VisitNode(const IrtSeqStatement* identifier) = 0;
-        virtual void VisitNode(const IrtJumpStatement* identifier) = 0;
-        virtual void VisitNode(const IrtCJumpStatement* identifier) = 0;
-        virtual void VisitNode(const IrtLabelStatement* identifier) = 0;
+        virtual void VisitNode(const IrtExpressionStatement* statement) = 0;
+        virtual void VisitNode(const IrtMoveStatement* statement) = 0;
+        virtual void VisitNode(const IrtSeqStatement* statement) = 0;
+        virtual void VisitNode(const IrtJumpStatement* statement) = 0;
+        virtual void VisitNode(const IrtCJumpStatement* statement) = 0;
+        virtual void VisitNode(const IrtLabelStatement* statement) = 0;
 
-        virtual void VisitNode(const IrtLabel* identifier) = 0;
-        virtual void VisitNode(const IrtTemp* identifier) = 0;
+        virtual void VisitNode(const IrtLabel* label) = 0;
+        virtual void VisitNode(const IrtTemp* temp) = 0;
     };
 }

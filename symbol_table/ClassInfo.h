@@ -22,8 +22,8 @@ namespace SyntaxTree {
         const std::wstring& GetParentName() const { return parentInfo->GetClassName(); }
 
         const VariableInfo* GetFieldByName(const std::wstring& _fieldName) const;
-        const MethodInfo* GetMethodByName(const std::wstring& _methodName) const;
         const MethodInfo* GetFirstMethod() const;
+        const MethodInfo* GetMethodByName(const std::wstring& _methodName, bool searchParent = true) const;
 
         int& GetIdxCounterRef() { return idxCounter; }
 

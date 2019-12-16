@@ -76,6 +76,7 @@ namespace SyntaxTree {
         std::wstring GetStandardName(TType type);
         void checkCurrentType(std::wstring expectedTypeName, int lineNumber, const std::wstring& errorMessage);
         void checkBinaryOperationType(const BinaryOperationExpression* binaryOperationExpression, TType operandsType, const std::wstring& errorMessage);
+        void checkCustomClassArgumentType(const std::wstring& argumentTypeName, int _lineNumber, const std::wstring errorMessage);
     };
 
 }

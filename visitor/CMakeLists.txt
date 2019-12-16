@@ -11,4 +11,4 @@ include_directories(. ${graph_dir} ${syntaxtree_dir} ${symbol_table_dir} ${irt_d
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(visitor SerializeVisitor.cpp BuildSymbolTableVisitor.cpp TypeCheckerVisitor.cpp IrTreeBuilder.cpp IrtWrappers.cpp)
+add_library(visitor SerializeVisitor.cpp BuildSymbolTableVisitor.cpp TypeCheckerVisitor.cpp IrTreeBuilder.cpp IrtWrappers.cpp IrtSerializeVisitor.cpp)

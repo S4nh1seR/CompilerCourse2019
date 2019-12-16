@@ -133,7 +133,7 @@ namespace SyntaxTree {
     }
 
     bool BuildSymbolTableVisitor::checkMethodRedefinition(const std::wstring& methodName, int lineNumber) {
-        if (currentClass->GetMethodByName(methodName) != nullptr) {
+        if (currentClass->GetMethodByName(methodName, false) != nullptr) {
             errors.push_back(L"Method redefinition: " + methodName + L" in class " + currentClass->GetClassName() +
                             L". Line: " + std::to_wstring(lineNumber) + L".");
             return true;
