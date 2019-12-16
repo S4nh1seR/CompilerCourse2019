@@ -23,7 +23,9 @@ public:
     using FlexLexer::yylex;
     virtual int yylex( yy::Parser::semantic_type* const lval,
  					   yy::Parser::location_type* loc );
-
+    ~Scanner() {
+        delete loc;
+    }
 private:
    /* yyval ptr */
    yy::Parser::location_type* loc = nullptr;
