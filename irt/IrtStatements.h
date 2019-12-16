@@ -26,7 +26,7 @@ namespace IrTree {
 
         explicit IrtJumpStatement(const std::shared_ptr<const IrtLabel>& _targetLabel) : targetLabel(_targetLabel) {}
 
-        const IrtLabel* GetTargetLabel() const { return targetLabel.get(); }
+        std::shared_ptr<const IrtLabel> GetTargetLabel() const { return targetLabel; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 

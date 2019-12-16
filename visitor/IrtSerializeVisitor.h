@@ -15,7 +15,7 @@ namespace IrTree {
     class IrtSerializeVisitor : public IIrtVisitor {
     public:
 
-        void RoundLaunch(std::shared_ptr<DirectedGraph>& _graph_ptr, const std::shared_ptr<const IrtGoal>& _root);
+        void RoundLaunch(std::shared_ptr<DirectedGraph>& _irtGraph, const std::shared_ptr<const IrtGoal>& _root);
 
         void VisitNode(const IrtGoal* goal) override;
 
@@ -40,6 +40,14 @@ namespace IrTree {
 
     private:
 
+        std::shared_ptr<DirectedGraph> irtGraph{nullptr};
+        const IIrTreeNode* currentParent{nullptr};
 
+        std::unordered_map<std::wstring, int> nameCounters;
+        std::unordered_map<const IIrTreeNode*, const std::wstring> nameMapping;
+
+        void makeUniqueName(const IIrTreeNode* node, const std::wstring& nodeType, std::wstring& nodeName);
+        void processSpecialNameCases(const IIrTreeNode* node, std::wstring& nodeName, const std::wstring& nodeType);
+        void makeGraphEdge(const IIrTreeNode* node, const std::wstring& nodeType);
     };
 }
