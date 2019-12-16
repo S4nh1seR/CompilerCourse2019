@@ -32,10 +32,10 @@ namespace SyntaxTree {
         return nullptr;
     }
 
-    const std::wstring& ClassInfo::GetFirstMethodName() const {
+    const MethodInfo* ClassInfo::GetFirstMethod() const {
         if (!classMethods.empty()) {
-            classMethods.cbegin()->second.get()->GetMethodName();
+            classMethods.cbegin()->second.get();
         }
-        return L"";
+        return nullptr;
     }
 }

@@ -9,16 +9,29 @@
 #include <MainClass.h>
 #include <Goal.h>
 
-namespace {
-
-    inline std::shared_ptr<const IrTree::IrtLabelStatement> makeMethodNameStm(const std::wstring& className, const std::wstring& methodName) {
-        return make<IrTree::IrtLabelStatement>(make<IrTree::IrtLabel>(className + L"::" + methodName));
-    }
-
-}
-
 namespace SyntaxTree {
     using namespace IrTree;
+
+    namespace {
+
+        inline std::shared_ptr<const IrtLabelStatement> makeMethodNameStm(const std::wstring& className, const std::wstring& methodName) {
+            return make<IrtLabelStatement>(make<IrtLabel>(className + L"::" + methodName));
+        }
+
+        const std::wstring kReturnRegister = L"ReturnRegister";
+        const std::wstring kThisRegister = L"ThisRegister";
+
+        inline std::shared_ptr<const IrtMemoryExpression> makeMemoryExp(const std::wstring& prefix, const int idx) {
+            // Адрес - строка с указанием места хранения (класс, регистр, метод) и индексом, если нужно
+            std::wstring address = (prefix == kReturnRegister) || (prefix == kThisRegister) ? prefix : prefix + L"_" + std::to_wstring(idx);
+            return make<IrtMemoryExpression>(
+                make<IrtTempExpression>(
+                    make<IrtTemp>(address)
+                )
+            );
+        }
+
+    }
 
     void IrTreeBuilder::VisitNode(const Identifier* identifier) {
 
@@ -99,7 +112,12 @@ namespace SyntaxTree {
     }
 
     void IrTreeBuilder::VisitNode(const ClassDeclaration* classDeclaration) {
-
+        currentClass = symbolTable->GetClassByName(classDeclaration->GetClassIdentifier()->GetIdentifier());
+        std::vector<const MethodDeclaration*> methodDeclarations;
+        classDeclaration->GetMethodDeclarations(methodDeclarations);
+        for (const auto method : methodDeclarations) {
+            method->AcceptVisitor(this);
+        }
     }
 
     void IrTreeBuilder::VisitNode(const VariableDeclaration* variableDeclaration) {
@@ -107,7 +125,37 @@ namespace SyntaxTree {
     }
 
     void IrTreeBuilder::VisitNode(const MethodDeclaration* methodDeclaration) {
+        currentMethod = currentClass->GetMethodByName(methodDeclaration->GetMethodIdentifier()->GetIdentifier());
 
+        std::vector<const IStatement*> statements;
+        methodDeclaration->GetStatements(statements);
+        buildCompoundStatement(statements);
+        auto statementsWrapper = std::move(currentWrapper);
+        methodDeclaration->GetReturnExpression()->AcceptVisitor(this);
+        auto returnExpressionWrapper = std::move(currentWrapper);
+
+        std::shared_ptr<const IIrtStatement> body = nullptr;
+        if (statementsWrapper) {
+            body = make<IrtSeqStatement>(
+                statementsWrapper->ToStatement(),
+                make<IrtMoveStatement>(
+                    makeMemoryExp(kReturnRegister, 0),
+                    returnExpressionWrapper->ToExpression()
+                )
+            );
+        } else {
+            body = make<IrtMoveStatement>(
+                makeMemoryExp(kReturnRegister, 0),
+                returnExpressionWrapper->ToExpression()
+            );
+        }
+
+        currentWrapper = std::make_unique<const StatementWrapper>(
+            make<IrtSeqStatement>(
+                makeMethodNameStm(currentClass->GetClassName(), currentMethod->GetMethodName()),
+                body
+            )
+        );
     }
 
     void IrTreeBuilder::VisitNode(const Goal* _goal) {
@@ -125,15 +173,34 @@ namespace SyntaxTree {
 
     void IrTreeBuilder::VisitNode(const MainClass* mainClass) {
         currentClass = symbolTable->GetMainClass();
+        currentMethod = currentClass->GetFirstMethod();
         mainClass->GetInternalStatement()->AcceptVisitor(this);
         auto internalStatementWrapper = std::move(currentWrapper);
 
         currentWrapper = std::make_unique<const StatementWrapper>(
             make<IrtSeqStatement>(
-                makeMethodNameStm(currentClass->GetClassName(), currentClass->GetFirstMethodName()),
+                makeMethodNameStm(currentClass->GetClassName(), currentMethod->GetMethodName()),
                 internalStatementWrapper->ToStatement()
             )
         );
+    }
+
+    void IrTreeBuilder::buildCompoundStatement(const std::vector<const IStatement*>& statements) {
+        std::unique_ptr<const ISubtreeWrapper> resultWrapper = nullptr;
+        for (const auto statement : statements) {
+            statement->AcceptVisitor(this);
+            if (resultWrapper) {
+                resultWrapper = std::make_unique<StatementWrapper>(
+                    make<IrtSeqStatement>(
+                        resultWrapper->ToStatement(),
+                        currentWrapper->ToStatement()
+                    )
+                );
+            } else {
+                resultWrapper = std::move(currentWrapper);
+            }
+        }
+        currentWrapper = std::move(resultWrapper);
     }
 
 }

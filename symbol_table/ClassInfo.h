@@ -23,7 +23,7 @@ namespace SyntaxTree {
 
         const VariableInfo* GetFieldByName(const std::wstring& _fieldName) const;
         const MethodInfo* GetMethodByName(const std::wstring& _methodName) const;
-        const std::wstring& GetFirstMethodName() const;
+        const MethodInfo* GetFirstMethod() const;
 
         int& GetIdxCounterRef() { return idxCounter; }
 

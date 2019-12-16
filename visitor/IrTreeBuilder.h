@@ -6,6 +6,8 @@
 
 namespace SyntaxTree {
 
+    class IStatement;
+
     class IrTreeBuilder : public IVisitor {
     public:
         IrTreeBuilder(const std::shared_ptr<const SymbolTable>& _symbolTable) : symbolTable(_symbolTable) {}
@@ -45,7 +47,9 @@ namespace SyntaxTree {
         std::shared_ptr<const IrTree::IrtGoal> GetGoal() const { return goal; }
 
     private:
-        std::shared_ptr<const IrTree::IrtGoal> goal;
+        void buildCompoundStatement(const std::vector<const IStatement*>& statements);
+
+        std::shared_ptr<const IrTree::IrtGoal> goal{nullptr};
 
         std::shared_ptr<const SymbolTable> symbolTable;
         const ClassInfo* currentClass{nullptr};
