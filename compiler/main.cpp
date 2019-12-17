@@ -14,7 +14,7 @@ enum ESerializeTree {
     ST_None
 };
 
-void serializeGraph(ESerializeTree serializeTree, std::istream& in, std::wostream& out = std::wcout) {
+int serializeGraph(ESerializeTree serializeTree, std::istream& in, std::wostream& out = std::wcout) {
     /* Построение SyntaxTree */
     auto lexer = std::make_unique<Scanner>();
     lexer->switch_streams(in, std::cerr);
@@ -43,6 +43,7 @@ void serializeGraph(ESerializeTree serializeTree, std::istream& in, std::wostrea
     typeChecker.RoundLaunch(symbolTable, syntaxTreeRoot.get());
     if (typeChecker.GetErrorsNumber() != 0) {
         typeChecker.DumpErrors();
+        return 1;
     }
 
     /* Построение IrTree */
@@ -57,32 +58,31 @@ void serializeGraph(ESerializeTree serializeTree, std::istream& in, std::wostrea
         visitor.RoundLaunch(graph, irTreeRoot);
         GraphSerializer::GraphSerialize(*graph, out);
     }
+
+    return 0;
 }
 
 int main(int argc, char** argv) {
     if (argc < 2) {
-        serializeGraph(ST_None, std::cin);
-    } else {
-        // Первый аргумент - дерево для сериализации, "ast" | "irt" | "none"
-        ESerializeTree serializeTree = ST_None;
-        if (std::string(argv[1]) == "ast") {
-            serializeTree = ST_SyntaxTree;
-        } else if (std::string(argv[1]) == "irt") {
-            serializeTree = ST_IrTree;
-        }
-        if (argc < 3) {
-            serializeGraph(serializeTree, std::cin);
-        } else {
-            // Второй аргумент - input файл
-            std::ifstream in(argv[2]);
-            if (argc < 4) {
-                serializeGraph(serializeTree, in);
-            } else {
-                // Третий аргумент - output файл
-                std::wofstream out(argv[3]);
-                serializeGraph(serializeTree, in, out);
-            }
-        }
+        return serializeGraph(ST_None, std::cin);
     }
+    // Первый аргумент - дерево для сериализации, "ast" | "irt" | "none"
+    ESerializeTree serializeTree = ST_None;
+    if (std::string(argv[1]) == "ast") {
+        serializeTree = ST_SyntaxTree;
+    } else if (std::string(argv[1]) == "irt") {
+        serializeTree = ST_IrTree;
+    }
+    if (argc < 3) {
+        return serializeGraph(serializeTree, std::cin);
+    }
+    // Второй аргумент - input файл
+    std::ifstream in(argv[2]);
+    if (argc < 4) {
+        return serializeGraph(serializeTree, in);
+    }
+    // Третий аргумент - output файл
+    std::wofstream out(argv[3]);
+    return serializeGraph(serializeTree, in, out);
 }
 
