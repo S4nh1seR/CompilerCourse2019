@@ -21,6 +21,9 @@ int serializeGraph(ESerializeTree serializeTree, std::istream& in, std::wostream
     std::unique_ptr<const SyntaxTree::Goal> syntaxTreeRoot;
     yy::Parser parser(syntaxTreeRoot, lexer);
     parser.parse();
+    if (!syntaxTreeRoot) {
+        return 1;
+    }
 
     /* Сериализация SyntaxTree */
     if (serializeTree == ST_SyntaxTree) {
@@ -36,6 +39,9 @@ int serializeGraph(ESerializeTree serializeTree, std::istream& in, std::wostream
     symbolTableBuilder.RoundLaunch(symbolTable, syntaxTreeRoot.get());
     if (symbolTableBuilder.GetErrorsNumber() != 0) {
         symbolTableBuilder.DumpErrors();
+    }
+    if (!symbolTable) {
+        return 1;
     }
 
     /* Проверка типов */
