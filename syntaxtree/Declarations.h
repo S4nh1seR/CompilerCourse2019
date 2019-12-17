@@ -36,18 +36,25 @@ namespace SyntaxTree {
         std::unique_ptr<const Identifier> declarationIdentifier;
     };
 
+    enum TAccessModifier {
+        AM_Private,
+        AM_Public
+    };
+
     class MethodDeclaration : public Declaration {
     public:
         MethodDeclaration(std::unique_ptr<const Type>&& _returnType, std::unique_ptr<const Identifier>&& _methodIdentifier,
             std::unique_ptr<const IExpression>&& _returnExpression, std::vector<std::unique_ptr<const Argument>>&& _arguments,
             std::vector<std::unique_ptr<const VariableDeclaration>>&& _variableDeclarations,
-            std::vector<std::unique_ptr<const IStatement>>&& _statements, int _lineNumber = InvalidLineNumber);
+            std::vector<std::unique_ptr<const IStatement>>&& _statements,
+            TAccessModifier _accessModifier, int _lineNumber = InvalidLineNumber);
 
         virtual void AcceptVisitor(IVisitor* visitor) const override { visitor->VisitNode(this); }
 
         const Type* GetReturnType() const { return returnType.get(); }
         const Identifier* GetMethodIdentifier() const { return methodIdentifier.get(); }
         const IExpression* GetReturnExpression() const { return returnExpression.get(); }
+        TAccessModifier GetAccessModifier() const { return accessModifier; }
 
         const Type* GetArgumentType(int index) const;
         const Identifier* GetArgumentIdentifier(int index) const;
@@ -63,6 +70,7 @@ namespace SyntaxTree {
         std::unique_ptr<const Type> returnType;
         std::unique_ptr<const Identifier> methodIdentifier;
         std::unique_ptr<const IExpression> returnExpression;
+        TAccessModifier accessModifier;
 
         const std::vector<std::unique_ptr<const Argument>> arguments;
         const std::vector<std::unique_ptr<const VariableDeclaration>> variableDeclarations;

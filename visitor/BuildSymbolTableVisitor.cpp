@@ -11,7 +11,6 @@
 
 namespace SyntaxTree {
 
-
     void BuildSymbolTableVisitor::RoundLaunch(std::shared_ptr<SymbolTable>& _symbolTable, const ISyntaxTreeNode* syntaxTreeRoot) {
         symbolTable = _symbolTable;
         syntaxTreeRoot->AcceptVisitor(this);
@@ -84,7 +83,7 @@ namespace SyntaxTree {
         if (!checkMethodRedefinition(methodName, methodDeclaration->lineNumber)) {
             currentScope = ST_Method;
             const Type* returnType = methodDeclaration->GetReturnType();
-            currentMethod = std::make_unique<MethodInfo>(methodName, returnType);
+            currentMethod = std::make_unique<MethodInfo>(methodName, returnType, methodDeclaration->GetAccessModifier());
 
             std::vector<const VariableDeclaration*> variableDeclarations;
             methodDeclaration->GetVariableDeclarations(variableDeclarations);
@@ -115,7 +114,7 @@ namespace SyntaxTree {
         currentClass = std::make_unique<ClassInfo>(mainClassName, nullptr);
 
         const std::wstring& mainFuncName = mainClass->GetMainFuncIdentifier()->GetIdentifier();
-        std::unique_ptr<MethodInfo> main = std::make_unique<MethodInfo>(mainFuncName, nullptr); // пока заглушка, потом если надо будет, добавим тип void
+        std::unique_ptr<MethodInfo> main = std::make_unique<MethodInfo>(mainFuncName, nullptr, AM_Public); // пока заглушка, потом если надо будет, добавим тип void
 
         const std::wstring& stringArgName = mainClass->GetStringArgIdentifier()->GetIdentifier();
         std::unique_ptr<VariableInfo> mainArg = std::make_unique<VariableInfo>(nullptr, stringArgName, main->GetArgsIdxCounterRef()); // то же самое здесь для String

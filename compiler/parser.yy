@@ -154,10 +154,10 @@ method_declarations:
 
 method_declaration:
     T_PUBLIC type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
-        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9, @1.begin.line);
+        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9, AM_Public, @1.begin.line);
     }
     | T_PRIVATE type T_ID T_LPARENTH arguments T_RPARENTH T_LBRACE variable_declarations statements T_RETURN expression T_SEMI T_RBRACE {
-        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9, @1.begin.line);
+        $$ = std::make_unique<const MethodDeclaration>($2, $3, $11, $5, $8, $9, AM_Private, @1.begin.line);
     }
 ;
 
