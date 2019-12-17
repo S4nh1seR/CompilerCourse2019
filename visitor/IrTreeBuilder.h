@@ -51,7 +51,7 @@ namespace SyntaxTree {
         void buildCompoundStatement(const std::vector<const IStatement*>& statements);
         inline const ClassInfo* getClassByType(const Type* type);
 
-        std::shared_ptr<const IrTree::IrtGoal> goal{nullptr};
+        std::shared_ptr<IrTree::IrtGoal> goal{nullptr};
 
         std::shared_ptr<const SymbolTable> symbolTable;
         const ClassInfo* currentClass{nullptr};

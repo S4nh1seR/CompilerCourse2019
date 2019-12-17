@@ -17,7 +17,7 @@ namespace SyntaxTree {
         const int kSizeOfInt = 4;
 
         inline std::shared_ptr<const IrtLabel> makeMethodName(const std::wstring& className, const std::wstring& methodName) {
-            return makeNode<IrtLabel>(className + L"_" + methodName);
+            return makeNode<IrtLabel>(className + L"::" + methodName);
         }
 
         const std::wstring kReturnRegister = L"ReturnRegister";
@@ -389,6 +389,7 @@ namespace SyntaxTree {
         classDeclaration->GetMethodDeclarations(methodDeclarations);
         for (const auto method : methodDeclarations) {
             method->AcceptVisitor(this);
+            goal->AddMethod(currentWrapper->ToStatement());
         }
     }
 
@@ -436,7 +437,7 @@ namespace SyntaxTree {
         _goal->GetMainClass()->AcceptVisitor(this);
         const auto mainMethodWrapper = std::move(currentWrapper);
 
-        goal = std::make_shared<const IrTree::IrtGoal>(mainMethodWrapper->ToStatement());
+        goal = std::make_shared<IrTree::IrtGoal>(mainMethodWrapper->ToStatement());
 
         std::vector<const ClassDeclaration*> classDeclarations;
         _goal->GetClassDeclarations(classDeclarations);

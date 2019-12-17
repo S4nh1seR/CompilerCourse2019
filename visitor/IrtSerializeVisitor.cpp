@@ -79,14 +79,15 @@ namespace IrTree {
 
     void IrtSerializeVisitor::processSpecialNameCases(const IIrTreeNode* node, std::wstring& nodeName, const std::wstring& nodeType) {
         if (nodeType == binaryOperationExpressionNodeName) {
-            nodeName += (L": " + GetOperationName(dynamic_cast<const IrtBinaryOperationExpression*>(node)->GetOperationType()));
+            nodeName += L": " + GetOperationName(dynamic_cast<const IrtBinaryOperationExpression*>(node)->GetOperationType());
         } else if (nodeType == constExpressionNodeName) {
-            nodeName += (L": " + std::to_wstring(dynamic_cast<const IrtConstExpression*>(node)->GetConstValue()));
+            nodeName += L": " + std::to_wstring(dynamic_cast<const IrtConstExpression*>(node)->GetConstValue());
         } else if (nodeType == labelNodeName) {
-            nodeName += (L": " + dynamic_cast<const IrtLabel*>(node)->GetLabel());
+            nodeName += L": " + dynamic_cast<const IrtLabel*>(node)->GetLabel();
         } else if (nodeType == tempNodeName) {
-            nodeName += (L": " + dynamic_cast<const IrtTemp*>(node)->GetLabel());
+            nodeName += L": " + dynamic_cast<const IrtTemp*>(node)->GetLabel();
         }
+        nodeName = L"\"" + nodeName + L"\"";
     }
 
     void IrtSerializeVisitor::makeUniqueName(const IIrTreeNode* node, const std::wstring& nodeType, std::wstring& nodeName) {
