@@ -23,13 +23,11 @@ namespace SyntaxTree {
         const std::wstring kReturnRegister = L"ReturnRegister";
         const std::wstring kThisRegister = L"ThisRegister";
 
-        inline std::shared_ptr<const IrtMemoryExpression> makeMemoryExp(const std::wstring& prefix, const int idx) {
+        inline std::shared_ptr<const IIrtExpression> makeMemoryUnit(const std::wstring& prefix, const int idx) {
             // Адрес - строка с указанием места хранения (класс, регистр, метод) и индексом, если нужно
             std::wstring address = (prefix == kReturnRegister) || (prefix == kThisRegister) ? prefix : prefix + L"_" + std::to_wstring(idx);
-            return makeNode<IrtMemoryExpression>(
-                makeNode<IrtTempExpression>(
-                    makeNode<IrtTemp>(address)
-                )
+            return makeNode<IrtTempExpression>(
+                makeNode<IrtTemp>(address)
             );
         }
 
@@ -41,15 +39,15 @@ namespace SyntaxTree {
         const VariableInfo* variable = nullptr;
         if ((variable = currentMethod->GetArgumentByName(identifier->GetIdentifier()))) {
             currentWrapper = makeWrapper<ExpressionWrapper>(
-                makeMemoryExp(currentMethod->GetMethodName() + L"_Arg", variable->GetIdx())
+                makeMemoryUnit(currentMethod->GetMethodName() + L"_Arg", variable->GetIdx())
             );
         } else if ((variable = currentMethod->GetLocalVariableByName(identifier->GetIdentifier()))) {
             currentWrapper = makeWrapper<ExpressionWrapper>(
-                makeMemoryExp(currentMethod->GetMethodName() + L"_Local", variable->GetIdx())
+                makeMemoryUnit(currentMethod->GetMethodName() + L"_Local", variable->GetIdx())
             );
         } else if ((variable = currentClass->GetFieldByName(identifier->GetIdentifier()))) {
             currentWrapper = makeWrapper<ExpressionWrapper>(
-                makeMemoryExp(currentClass->GetClassName() + L"_Field", variable->GetIdx())
+                makeMemoryUnit(currentClass->GetClassName() + L"_Field", variable->GetIdx())
             );
         } else {
             assert(false);
@@ -173,7 +171,7 @@ namespace SyntaxTree {
 
     void IrTreeBuilder::VisitNode(const ThisExpression*) {
         currentWrapper = makeWrapper<ExpressionWrapper>(
-            makeMemoryExp(kThisRegister, 0)
+            makeMemoryUnit(kThisRegister, 0)
         );
         currentObjectClass = currentClass;
     }
@@ -412,13 +410,13 @@ namespace SyntaxTree {
             body = makeNode<IrtSeqStatement>(
                 statementsWrapper->ToStatement(),
                 makeNode<IrtMoveStatement>(
-                    makeMemoryExp(kReturnRegister, 0),
+                    makeMemoryUnit(kReturnRegister, 0),
                     returnExpressionWrapper->ToExpression()
                 )
             );
         } else {
             body = makeNode<IrtMoveStatement>(
-                makeMemoryExp(kReturnRegister, 0),
+                makeMemoryUnit(kReturnRegister, 0),
                 returnExpressionWrapper->ToExpression()
             );
         }
