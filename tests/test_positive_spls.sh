@@ -2,7 +2,7 @@ programms=(BinarySearch BinaryTree Factorial LinearSearch LinkedList QuickSort T
 touch err_file.txt
 for program in ${programms[*]}
 do
-	${PWD}/build/compiler/compiler ${PWD}/tests/PositiveSamples/${program}.java /dev/null 2> err_file.txt
+	${PWD}/build/compiler/compiler none ${PWD}/tests/PositiveSamples/${program}.java /dev/null 2> err_file.txt
         if [ -s err_file.txt ]
 	then
 	printf "%s.java not passed!\n" $program
