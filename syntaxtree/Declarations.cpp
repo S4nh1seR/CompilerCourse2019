@@ -20,14 +20,17 @@ namespace SyntaxTree {
         std::unique_ptr<const Identifier>&& _methodIdentifier, std::unique_ptr<const IExpression>&& _returnExpression,
         std::vector<std::unique_ptr<const Argument>>&& _arguments,
         std::vector<std::unique_ptr<const VariableDeclaration>>&& _variableDeclarations,
-        std::vector<std::unique_ptr<const IStatement>>&& _statements, int _lineNumber)
+        std::vector<std::unique_ptr<const IStatement>>&& _statements,
+        TAccessModifier _accessModifier, int _lineNumber)
 
     :   returnType(std::move(_returnType)),
         methodIdentifier(std::move(_methodIdentifier)),
         returnExpression(std::move(_returnExpression)),
+        accessModifier(_accessModifier),
         arguments(std::move(_arguments)),
         variableDeclarations(std::move(_variableDeclarations)),
         statements(std::move(_statements))
+
     {
         lineNumber = _lineNumber;
     }

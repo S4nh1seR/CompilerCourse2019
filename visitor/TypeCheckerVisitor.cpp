@@ -351,6 +351,11 @@ namespace SyntaxTree {
                 const std::wstring& methodName = methodCallExpression->GetMethodIdentifier()->GetIdentifier();
                 const MethodInfo* methodInfo = callerClass->GetMethodByName(methodName);
                 if (methodInfo != nullptr) {
+                    if (methodInfo->GetAccessModifier() == AM_Private && callerClass->GetClassName() != currentClass->GetClassName()) {
+                        std::wstring wrongMethodErrorMessage(L"Cannot call private method " + methodName + L" outside the class " + currentTypeName
+                                                             + L". Line: " + std::to_wstring(methodCallExpression->lineNumber) + L".");
+                        typeErrors.push_back(wrongMethodErrorMessage);
+                    }
                     std::vector<const IExpression*> methodArguments;
                     methodCallExpression->GetAllArguments(methodArguments);
                     if (methodInfo->GetArgumentsQuantity() == methodArguments.size()) {
