@@ -3,7 +3,7 @@ touch err_file.txt
 fails=0
 for program in ${programms[*]}
 do
-	${PWD}/build/compiler/compiler none ${PWD}/tests/NegativeSamples/${program}.java /dev/null 2> err_file.txt | cat >> err_file.txt
+	${PWD}/build/compiler/compiler irt ${PWD}/tests/NegativeSamples/${program}.java /dev/null 2> err_file.txt | cat >> err_file.txt
         if [ -s err_file.txt ]
 	then
 	printf "%s.java error detected, passed\n" $program
