@@ -2,7 +2,6 @@
 %option yylineno
 %{
     #include "Scanner.h"
-    //#include "common.h"
     #include "parser.tab.hh"
     #include <Identifier.h>
     #include <iostream>
@@ -12,7 +11,7 @@
     #undef  YY_DECL
     #define YY_DECL int Scanner::yylex( yy::Parser::semantic_type * const lval, yy::Parser::location_type *loc )
 
-    #define YY_USER_ACTION loc->columns(yyleng); 
+    #define YY_USER_ACTION loc->columns(yyleng);
 
 %}
 
@@ -72,7 +71,6 @@ T_SPACE		(" "|"\v"|"\r")+
 %{
     yylval = lval;
     loc->step();
-
 %}
 
 {T_N} 	{ Process(Tokens::T_N); loc->lines(yyleng); loc->step(); }
@@ -139,7 +137,20 @@ T_SPACE		(" "|"\v"|"\r")+
     return Process(Tokens::T_NUM);
 }
 
-{T_COMMENT}	{ Process(Tokens::T_COMMENT); }
+{T_COMMENT}	{
+    Process(Tokens::T_COMMENT);
+    std::string data = YYText();
+
+    int lines = 0;
+    for(auto i : data) {
+        if (i == '\n')
+            lines += 1;
+    }
+    loc->lines(lines);
+    loc->begin.column = 0;
+    loc->end.column = 0;
+    loc->step();
+}
 {T_SPACE}   { Process(Tokens::T_SPACE); loc->step();}
 
 . { printf("unknown"); return Process(Tokens::T_Unknown); }

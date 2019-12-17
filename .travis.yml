@@ -1,0 +1,17 @@
+sudo: false
+
+dist: bionic
+
+language:
+        - cpp
+
+before_install:
+        - bash ./tests/setup.sh
+
+script:
+        - bash ./tests/build.sh
+        - bash ./tests/test_positive_spls.sh
+        - bash ./tests/test_negative_spls.sh
+
+notifications:
+        email: false
