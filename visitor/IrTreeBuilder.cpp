@@ -17,7 +17,7 @@ namespace SyntaxTree {
         const int kSizeOfInt = 4;
 
         inline std::shared_ptr<const IrtLabel> makeMethodName(const std::wstring& className, const std::wstring& methodName) {
-            return makeNode<IrtLabel>(className + L"::" + methodName);
+            return makeNode<IrtLabel>(className + L"_" + methodName);
         }
 
         const std::wstring kReturnRegister = L"ReturnRegister";
@@ -152,7 +152,7 @@ namespace SyntaxTree {
         currentWrapper = makeWrapper<ExpressionWrapper>(
             makeNode<IrtCallExpression>(
                 makeNode<IrtNameExpression>(
-                    makeMethodName(currentClass->GetClassName(), currentMethod->GetMethodName())
+                    makeMethodName(objectOperandClass->GetClassName(), methodInfo->GetMethodName())
                 ),
                 makeNode<IrtExpressionList>(std::move(arguments))
             )
@@ -191,6 +191,7 @@ namespace SyntaxTree {
                 makeNode<IrtExpressionList>(std::move(arguments))
             )
         );
+        currentObjectClass = classInfo;
     }
     void IrTreeBuilder::VisitNode(const NewArrayExpression* newArrayExpression) {
         newArrayExpression->GetSizeOperand()->AcceptVisitor(this);
@@ -480,6 +481,10 @@ namespace SyntaxTree {
 
     const ClassInfo* IrTreeBuilder::getClassByType(const Type* type)  {
         return symbolTable->GetClassByName(type->GetIdentifier()->GetIdentifier());
+    }
+
+    void IrTreeBuilder::RoundLaunch(const Goal* syntaxTreeRoot) {
+        syntaxTreeRoot->AcceptVisitor(this);
     }
 
 }

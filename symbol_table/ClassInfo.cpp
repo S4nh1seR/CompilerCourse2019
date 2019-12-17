@@ -34,7 +34,7 @@ namespace SyntaxTree {
 
     const MethodInfo* ClassInfo::GetFirstMethod() const {
         if (!classMethods.empty()) {
-            classMethods.cbegin()->second.get();
+            return classMethods.cbegin()->second.get();
         }
         return nullptr;
     }

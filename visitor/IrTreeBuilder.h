@@ -44,6 +44,7 @@ namespace SyntaxTree {
         virtual void VisitNode(const Goal* goal) override;
         virtual void VisitNode(const MainClass* mainClass) override;
 
+        void RoundLaunch(const Goal* syntaxTreeRoot);
         std::shared_ptr<const IrTree::IrtGoal> GetGoal() const { return goal; }
 
     private:
