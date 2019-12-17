@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Visitor.h"
+#include "IrtWrappers.h"
+#include <SymbolTable.h>
 
 namespace SyntaxTree {
 
+    class IStatement;
+
     class IrTreeBuilder : public IVisitor {
     public:
-        IrTreeBuilder() = default;
+        IrTreeBuilder(const std::shared_ptr<const SymbolTable>& _symbolTable) : symbolTable(_symbolTable) {}
         virtual ~IrTreeBuilder() {}
 
         virtual void VisitNode(const Identifier* identifier) override;
@@ -40,7 +44,19 @@ namespace SyntaxTree {
         virtual void VisitNode(const Goal* goal) override;
         virtual void VisitNode(const MainClass* mainClass) override;
 
-    private:
+        void RoundLaunch(const Goal* syntaxTreeRoot);
+        std::shared_ptr<const IrTree::IrtGoal> GetGoal() const { return goal; }
 
+    private:
+        void buildCompoundStatement(const std::vector<const IStatement*>& statements);
+        inline const ClassInfo* getClassByType(const Type* type);
+
+        std::shared_ptr<IrTree::IrtGoal> goal{nullptr};
+
+        std::shared_ptr<const SymbolTable> symbolTable;
+        const ClassInfo* currentClass{nullptr};
+        const MethodInfo* currentMethod{nullptr};
+        const ClassInfo* currentObjectClass{nullptr};
+        std::unique_ptr<const IrTree::ISubtreeWrapper> currentWrapper{nullptr};
     };
 }

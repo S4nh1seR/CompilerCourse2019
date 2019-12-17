@@ -6,4 +6,4 @@ include_directories(../visitor)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(irt_tree STATIC IrtExpressions.cpp IrtStatements.cpp)
+add_library(irt_tree STATIC IrtExpressions.cpp IrtStatements.cpp Label.cpp)

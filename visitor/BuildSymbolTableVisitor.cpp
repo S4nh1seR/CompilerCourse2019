@@ -65,7 +65,8 @@ namespace SyntaxTree {
     void BuildSymbolTableVisitor::VisitNode(const VariableDeclaration* variableDeclaration) {
         const Type* variableType = variableDeclaration->GetDeclarationType();
         const std::wstring& variableName = variableDeclaration->GetDeclarationIdentifier()->GetIdentifier();
-        std::unique_ptr<VariableInfo> variableInfo = std::make_unique<VariableInfo>(variableType, variableName);
+        int& idxCounterRef = currentScope == ST_Class ? currentClass->GetIdxCounterRef() : currentMethod->GetVarsIdxCounterRef();
+        std::unique_ptr<VariableInfo> variableInfo = std::make_unique<VariableInfo>(variableType, variableName, idxCounterRef);
 
         if (currentMethod != nullptr) {
             if (!checkMethodVariableRedefinition(variableName, variableDeclaration->lineNumber)) {
@@ -81,6 +82,7 @@ namespace SyntaxTree {
     void BuildSymbolTableVisitor::VisitNode(const MethodDeclaration* methodDeclaration) {
         const std::wstring& methodName = methodDeclaration->GetMethodIdentifier()->GetIdentifier();
         if (!checkMethodRedefinition(methodName, methodDeclaration->lineNumber)) {
+            currentScope = ST_Method;
             const Type* returnType = methodDeclaration->GetReturnType();
             currentMethod = std::make_unique<MethodInfo>(methodName, returnType);
 
@@ -96,14 +98,15 @@ namespace SyntaxTree {
             methodDeclaration->GetArgumentIdentifiers(argumentIdentifiers);
             for (int i = 0; i < argumentTypes.size(); ++i) {
                 const std::wstring& currArgumentName = argumentIdentifiers[i]->GetIdentifier();
-                std::unique_ptr<VariableInfo> currArgumentInfo = std::make_unique<VariableInfo>(argumentTypes[i],
-                                                                                                currArgumentName);
+                std::unique_ptr<VariableInfo> currArgumentInfo =
+                    std::make_unique<VariableInfo>(argumentTypes[i], currArgumentName, currentMethod->GetArgsIdxCounterRef());
                 if (!checkMethodVariableRedefinition(currArgumentName, argumentTypes[i]->lineNumber)) {
                     currentMethod->AddArgument(currArgumentName, std::move(currArgumentInfo));
                 }
             }
 
             currentClass->AddClassMethod(methodName, std::move(currentMethod));
+            currentScope = ST_Class;
         }
     }
 
@@ -115,7 +118,7 @@ namespace SyntaxTree {
         std::unique_ptr<MethodInfo> main = std::make_unique<MethodInfo>(mainFuncName, nullptr); // пока заглушка, потом если надо будет, добавим тип void
 
         const std::wstring& stringArgName = mainClass->GetStringArgIdentifier()->GetIdentifier();
-        std::unique_ptr<VariableInfo> mainArg = std::make_unique<VariableInfo>(nullptr, stringArgName); // то же самое здесь для String
+        std::unique_ptr<VariableInfo> mainArg = std::make_unique<VariableInfo>(nullptr, stringArgName, main->GetArgsIdxCounterRef()); // то же самое здесь для String
         main->AddArgument(stringArgName, std::move(mainArg));
         currentClass->AddClassMethod(mainFuncName, std::move(main));
         symbolTable->AddMainClass(std::move(currentClass));
@@ -130,7 +133,7 @@ namespace SyntaxTree {
     }
 
     bool BuildSymbolTableVisitor::checkMethodRedefinition(const std::wstring& methodName, int lineNumber) {
-        if (currentClass->GetMethodByName(methodName) != nullptr) {
+        if (currentClass->GetMethodByName(methodName, false) != nullptr) {
             errors.push_back(L"Method redefinition: " + methodName + L" in class " + currentClass->GetClassName() +
                             L". Line: " + std::to_wstring(lineNumber) + L".");
             return true;

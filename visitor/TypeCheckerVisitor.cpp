@@ -326,6 +326,21 @@ namespace SyntaxTree {
         currentTypeName = GetStandardName(T_Int);
     }
 
+    void TypeCheckerVisitor::checkCustomClassArgumentType(const std::wstring& argumentTypeName, int _lineNumber, const std::wstring errorMessage) {
+        std::wstring classTypeName = currentTypeName;
+        const ClassInfo* argumentClassInfo = symbolTable->GetClassByName(classTypeName);
+
+        while (classTypeName != argumentTypeName) {
+            argumentClassInfo = argumentClassInfo->GetParentInfo();
+            if (argumentClassInfo == nullptr) {
+                typeErrors.push_back(errorMessage + L" Expected type: " + argumentTypeName + L". Got type: " + currentTypeName
+                                     + L". Line: " + std::to_wstring(_lineNumber) + L".");
+                break;
+            }
+            classTypeName = argumentClassInfo->GetClassName();
+        }
+    }
+
     void TypeCheckerVisitor::VisitNode(const MethodCallExpression* methodCallExpression) {
         const IExpression* objectOperand = methodCallExpression->GetObjectOperand();
         objectOperand->AcceptVisitor(this);
@@ -344,10 +359,14 @@ namespace SyntaxTree {
                             methodArguments[i]->AcceptVisitor(this);
 
                             const Type* currArgType = methodInfo->GetArgumentByIndex(i)->GetVariableType();
-                            std::wstring argTypeName = currArgType->IsSimpleType() ? GetStandardName(currArgType->GetType())
-                                                                                   : currArgType->GetIdentifier()->GetIdentifier();
                             std::wstring argWrongTypeError(L"Wrong type of method argument " + std::to_wstring(i) + L"!");
-                            checkCurrentType(argTypeName, methodCallExpression->lineNumber, argWrongTypeError);
+                            if (currArgType->IsSimpleType()) {
+                                std::wstring argTypeName = GetStandardName(currArgType->GetType());
+                                checkCurrentType(argTypeName, methodCallExpression->lineNumber, argWrongTypeError);
+                            } else {
+                                std::wstring argTypeName = currArgType->GetIdentifier()->GetIdentifier();
+                                checkCustomClassArgumentType(argTypeName, methodCallExpression->lineNumber, argWrongTypeError);
+                            }
                         }
 
                         const Type* returnType = methodInfo->GetReturnType();

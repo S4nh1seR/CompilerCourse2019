@@ -11,93 +11,92 @@ namespace IrTree {
 
     class IrtExpressionStatement : public IIrtStatement {
     public:
-        explicit IrtExpressionStatement(std::unique_ptr<const IIrtExpression>&& _expression) : expression(std::move(_expression)) {}
+        explicit IrtExpressionStatement(const std::shared_ptr<const IIrtExpression>& _expression) : expression(_expression) {}
 
-        const IIrtExpression* GetExpression() const { return expression.get(); }
+        std::shared_ptr<const IIrtExpression> GetExpression() const { return expression; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IIrtExpression> expression;
+        std::shared_ptr<const IIrtExpression> expression;
     };
 
     class IrtJumpStatement : public IIrtStatement {
     public:
 
-        explicit IrtJumpStatement(std::unique_ptr<const IrtLabel>&& _targetLabel) : targetLabel(std::move(_targetLabel)) {}
+        explicit IrtJumpStatement(const std::shared_ptr<const IrtLabel>& _targetLabel) : targetLabel(_targetLabel) {}
 
-        const IrtLabel* GetTargetLabel() const { return targetLabel.get(); }
+        std::shared_ptr<const IrtLabel> GetTargetLabel() const { return targetLabel; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IrtLabel> targetLabel;
+        std::shared_ptr<const IrtLabel> targetLabel;
     };
 
     // пока рассматриваем только условие "меньше <"
     class IrtCJumpStatement : public IIrtStatement {
     public:
-        IrtCJumpStatement(std::unique_ptr<const IIrtExpression>&& _leftExpression,
-            std::unique_ptr<const IIrtExpression>&& _rightExpression,
-            std::unique_ptr<const IrtLabel>&& _positiveLabel,
-            std::unique_ptr<const IrtLabel>&& _negativeLabel);
+        IrtCJumpStatement(const std::shared_ptr<const IIrtExpression>& _leftExpression,
+            const std::shared_ptr<const IIrtExpression>& _rightExpression,
+            const std::shared_ptr<const IrtLabel>& _positiveLabel,
+            const std::shared_ptr<const IrtLabel>& _negativeLabel);
 
-        const IIrtExpression* GetLeftExpression() const { return leftExpression.get(); }
-        const IIrtExpression* GetRightExpression() const { return rightExpression.get(); }
-
-        const IrtLabel* GetPositiveLabel() const { return positiveLabel.get(); }
-        const IrtLabel* GetnegativeLabel() const { return negativeLabel.get(); }
+        std::shared_ptr<const IIrtExpression> GetLeftExpression() const { return leftExpression; }
+        std::shared_ptr<const IIrtExpression> GetRightExpression() const { return rightExpression; }
+        std::shared_ptr<const IrtLabel> GetPositiveLabel() const { return positiveLabel; }
+        std::shared_ptr<const IrtLabel> GetnegativeLabel() const { return negativeLabel; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IIrtExpression> leftExpression;
-        std::unique_ptr<const IIrtExpression> rightExpression;
-        std::unique_ptr<const IrtLabel> positiveLabel;
-        std::unique_ptr<const IrtLabel> negativeLabel;
+        std::shared_ptr<const IIrtExpression> leftExpression;
+        std::shared_ptr<const IIrtExpression> rightExpression;
+        std::shared_ptr<const IrtLabel> positiveLabel;
+        std::shared_ptr<const IrtLabel> negativeLabel;
     };
 
 
     class IrtLabelStatement : public IIrtStatement {
     public:
-        explicit IrtLabelStatement(std::unique_ptr<const IrtLabel>&& _label) : label(std::move(_label)) {}
+        explicit IrtLabelStatement(const std::shared_ptr<const IrtLabel>& _label) : label(_label) {}
 
-        const IrtLabel* GetLabel() const { return label.get(); }
+        std::shared_ptr<const IrtLabel> GetLabel() const { return label; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IrtLabel> label;
+        std::shared_ptr<const IrtLabel> label;
     };
 
     class IrtMoveStatement : public IIrtStatement {
     public:
-        IrtMoveStatement(std::unique_ptr<const IIrtExpression>&& _destinationExpression,
-            std::unique_ptr<const IIrtExpression>&& _sourceExpression);
+        IrtMoveStatement(const std::shared_ptr<const IIrtExpression>& _destinationExpression,
+            const std::shared_ptr<const IIrtExpression>& _sourceExpression);
 
-        const IIrtExpression* GetDestinationExpression() const { return destinationExpression.get(); }
-        const IIrtExpression* GetSourceExpression() const { return sourceExpression.get(); }
+        std::shared_ptr<const IIrtExpression> GetDestinationExpression() const { return destinationExpression; }
+        std::shared_ptr<const IIrtExpression> GetSourceExpression() const { return sourceExpression; }
 
         void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IIrtExpression> destinationExpression;
-        std::unique_ptr<const IIrtExpression> sourceExpression;
+        std::shared_ptr<const IIrtExpression> destinationExpression;
+        std::shared_ptr<const IIrtExpression> sourceExpression;
     };
 
     class IrtSeqStatement : public IIrtStatement {
     public:
-        IrtSeqStatement(std::unique_ptr<const IIrtStatement>&& _leftStatement,
-            std::unique_ptr<const IIrtStatement>&& _rightStatement);
+        IrtSeqStatement(const std::shared_ptr<const IIrtStatement>& _leftStatement,
+            const std::shared_ptr<const IIrtStatement>& _rightStatement);
 
-        const IIrtStatement* GetLeftStatement() const { leftStatement.get(); }
-        const IIrtStatement* GetRightStatement() const { rightStatement.get(); }
+        std::shared_ptr<const IIrtStatement> GetLeftStatement() const { return leftStatement; }
+        std::shared_ptr<const IIrtStatement> GetRightStatement() const { return rightStatement; }
 
-        virtual void AcceptVisitor(IIrtVisitor* visitor) { visitor->VisitNode(this); }
+        virtual void AcceptVisitor(IIrtVisitor* visitor) const override { visitor->VisitNode(this); }
 
     private:
-        std::unique_ptr<const IIrtStatement> leftStatement;
-        std::unique_ptr<const IIrtStatement> rightStatement;
+        std::shared_ptr<const IIrtStatement> leftStatement;
+        std::shared_ptr<const IIrtStatement> rightStatement;
     };
 
 }

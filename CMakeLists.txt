@@ -11,7 +11,7 @@ add_subdirectory(compiler)
 add_subdirectory(syntaxtree)
 add_subdirectory(visitor)
 add_subdirectory(symbol_table)
-#add_subdirectory(irt)
+add_subdirectory(irt)
 
 add_custom_target(
         cppcheck

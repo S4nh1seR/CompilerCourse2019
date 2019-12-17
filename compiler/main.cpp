@@ -5,20 +5,32 @@
 #include <SerializeVisitor.h>
 #include <BuildSymbolTableVisitor.h>
 #include <TypeCheckerVisitor.h>
+#include <IrTreeBuilder.h>
+#include <IrtSerializeVisitor.h>
 
-void serializeGraph(std::istream& in, std::wostream& out = std::wcout) {
+enum ESerializeTree {
+    ST_SyntaxTree,
+    ST_IrTree,
+    ST_None
+};
+
+void serializeGraph(ESerializeTree serializeTree, std::istream& in, std::wostream& out = std::wcout) {
+    /* Построение SyntaxTree */
     auto lexer = std::make_unique<Scanner>();
     lexer->switch_streams(in, std::cerr);
     std::unique_ptr<const SyntaxTree::Goal> syntaxTreeRoot;
     yy::Parser parser(syntaxTreeRoot, lexer);
     parser.parse();
 
-    SerializeVisitor visitor;
-    auto graph = std::make_shared<SyntaxTree::DirectedGraph>(L"SyntaxTreeGraph");
-    visitor.RoundLaunch(graph, syntaxTreeRoot.get());
-    SyntaxTree::GraphSerializer::GraphSerialize(*graph, out);
+    /* Сериализация SyntaxTree */
+    if (serializeTree == ST_SyntaxTree) {
+        SerializeVisitor visitor;
+        auto graph = std::make_shared<DirectedGraph>(L"SyntaxTreeGraph");
+        visitor.RoundLaunch(graph, syntaxTreeRoot.get());
+        GraphSerializer::GraphSerialize(*graph, out);
+    }
 
-    /* Построение symbol_table */
+    /* Построение SymbolTable */
     BuildSymbolTableVisitor symbolTableBuilder;
     auto symbolTable = std::make_shared<SyntaxTree::SymbolTable>();
     symbolTableBuilder.RoundLaunch(symbolTable, syntaxTreeRoot.get());
@@ -33,18 +45,43 @@ void serializeGraph(std::istream& in, std::wostream& out = std::wcout) {
         typeChecker.DumpErrors();
     }
 
+    /* Построение IrTree */
+    IrTreeBuilder irTreeBuilder(symbolTable);
+    irTreeBuilder.RoundLaunch(syntaxTreeRoot.get());
+    const auto irTreeRoot = irTreeBuilder.GetGoal();
+
+    /* Сериализация IrTree */
+    if (serializeTree == ST_IrTree) {
+        IrTree::IrtSerializeVisitor visitor;
+        auto graph = std::make_shared<DirectedGraph>(L"IrTreeGraph");
+        visitor.RoundLaunch(graph, irTreeRoot);
+        GraphSerializer::GraphSerialize(*graph, out);
+    }
 }
 
 int main(int argc, char** argv) {
     if (argc < 2) {
-        serializeGraph(std::cin);
+        serializeGraph(ST_None, std::cin);
     } else {
-        std::ifstream in(argv[1]);
+        // Первый аргумент - дерево для сериализации, "ast" | "irt" | "none"
+        ESerializeTree serializeTree = ST_None;
+        if (std::string(argv[1]) == "ast") {
+            serializeTree = ST_SyntaxTree;
+        } else if (std::string(argv[1]) == "irt") {
+            serializeTree = ST_IrTree;
+        }
         if (argc < 3) {
-            serializeGraph(in);
+            serializeGraph(serializeTree, std::cin);
         } else {
-            std::wofstream out(argv[2]);
-            serializeGraph(in, out);
+            // Второй аргумент - input файл
+            std::ifstream in(argv[2]);
+            if (argc < 4) {
+                serializeGraph(serializeTree, in);
+            } else {
+                // Третий аргумент - output файл
+                std::wofstream out(argv[3]);
+                serializeGraph(serializeTree, in, out);
+            }
         }
     }
 }
